@@ -12,6 +12,49 @@ say when that needs re-pasting.
 
 ---
 
+## v20 — 2026-08-24 · network layout replaced
+The ring-and-chords layout was hard to read as edge count grew. Replaced with
+a proper graph layout plus density controls.
+
+- **Layout: stress majorization (SMACOF) on graph-theoretic distances** — the
+  Kamada–Kawai objective. Densely connected variables land near one another,
+  so clusters carry structural meaning. Seeded circularly with a fixed
+  iteration count, so positions are deterministic: the same node always lays
+  out the same way. Verified minimum node separation 68–99 px across the
+  worst cases (modern F03 at 24 nodes / 82 edges, century v2svstterr at
+  19 / 77).
+- Edges are straight paths with arrowheads; reciprocal pairs bow apart so
+  both directions stay visible.
+- **Visual hierarchy:** the focus node's own edges are drawn at full strength,
+  edges among neighbours at roughly half — measured 0.66 vs 0.26 mean opacity
+  on modern F03.
+- **Hover isolation:** hovering any node fades everything not incident to it
+  (82 edges down to the 7 that touch the hovered node in the F03 case).
+  Crossings are unavoidable at this density under any layout, so isolation
+  does the work that geometry cannot.
+- Labels carry a paper-coloured halo so overlaps stay legible.
+
+## v19 — 2026-08-24 · ego network view
+The Structure tab's neighbourhood panel gains a Table/Network toggle. The
+network draws the induced subgraph on the focus node and its neighbours —
+including edges *among* the neighbours, which the table cannot show.
+
+- Layout: focus at centre, neighbours on a ring ordered by relation to the
+  focus (incoming, both, outgoing) and then by score. Focus edges are radial
+  spokes; neighbour-to-neighbour edges are chords curved toward the centre.
+  Arrowheads carry direction; thickness and opacity encode the causal score.
+- Edge classes are visually distinct: consensus blue, majority-only grey,
+  aggregation-adjacent amber. Structural (source-only) nodes are drawn hollow
+  grey with the ICC tooltip.
+- The network mirrors the **table's** edge set (all retained edges) rather
+  than the matrix's consensus filter, so the two views of the same node never
+  report different counts. Verified: polyarchy shows 13 incoming + 5 outgoing
+  in both, plus 52 edges among neighbours visible only in the network.
+- Clicking any neighbour recentres the network on it; hovering any edge or
+  node gives the same tooltip detail as the matrix.
+- Largest cases render cleanly: century `v2svstterr` (19 nodes) and modern
+  `F03` (23 nodes).
+
 ## v18 — 2026-08-24 · corrected bundles installed
 Ships the Stage 6/7/7b v2 re-export for both panels. Verified before
 packaging: all twenty validation figures reproduce the handoff table exactly;
@@ -27,10 +70,13 @@ including structural ones, with polyarchy agreeing to 5.0e-05.
   for every node in both panels.
 - Methods reports the endogenous/structural split and states that accuracy
   figures cover endogenous nodes only.
-- **Note:** the handoff §3 says the per-row `validated` flag is still in
-  `forecasts.json`; it is not present in either panel. No impact — the
-  validated/unvalidated split has always been drawn from
-  `meta.validated_horizon`.
+- **Horizon split source, confirmed:** `forecasts.json` carries no per-row
+  `validated` flag by design; that flag lives only in the pipeline-side
+  `forecasts.csv` and is not exported. `meta.validated_horizon` (currently 5)
+  is the intended single source of truth — horizons at or below it are
+  validated, above it unvalidated. The portal has drawn the split from that
+  field since v1, which the pipeline session confirms is correct. The handoff
+  document's §3 said otherwise and has been corrected.
 
 ## v17 — 2026-08-24 · endogenous-only forecasts, portal moved
 Code prepared for the re-export; bundles still the old ones. Superseded by

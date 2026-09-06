@@ -278,7 +278,24 @@ select:focus-visible, input:focus-visible, a:focus-visible {
   font-size: 13px;
 }
 .ego-edge .mono { font-family: var(--mono); font-size: 12px; }
-.ego-close { float: right; }
+.ego-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.ego-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.seg-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.seg-toggle .seg {
+  font-family: var(--sans); font-size: 12.5px; font-weight: 500;
+  background: var(--card); color: var(--muted);
+  border: none; padding: 6px 13px; cursor: pointer;
+}
+.seg-toggle .seg + .seg { border-left: 1px solid var(--line); }
+.seg-toggle .seg:hover { background: var(--paper); color: var(--ink); }
+.seg-toggle .seg.on { background: var(--blue); color: #fff; }
+.ego-net-host { margin-top: 10px; }
+.ego-net { width: 100%; height: auto; display: block; }
+.ego-net-node, .ego-net-label { cursor: pointer; }
+.ego-net-node:hover { stroke-width: 3; }
+.ego-net-label:hover { fill: var(--blue-deep); text-decoration: underline; }
+.ego-edge-line { cursor: help; }
+.ego-edge-line:hover { opacity: 1 !important; }
 
 /* ── Badges ───────────────────────────────────────────── */
 .badge {

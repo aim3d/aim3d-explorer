@@ -7,7 +7,7 @@
 
 /* ───────────────────────── State ───────────────────────── */
 
-const BUILD = "v18";
+const BUILD = "v20";
 const BUILD_DATE = "2026-08-24";
 
 const PANELS = {
@@ -25,6 +25,7 @@ const S = {
   history: {},       // per-panel, lazy; null when the bundle has no history.json
   view: "structure",
   egoNode: null,
+  egoView: "table",   // "table" | "network"
   edgeSort: { key: "score_median", dir: -1 },
   lambdaSel: null,   // Set of node ids
   trajCountry: null,
@@ -414,6 +415,299 @@ function attachMatrixTooltip(wrap) {
   wrap.addEventListener("mouseleave", () => { tip.hidden = true; });
 }
 
+
+/* ── Ego network: induced subgraph on the focus node and its neighbours ──
+   Shows edges among the neighbours as well as the focus node's own edges,
+   which the table cannot convey. Focus at centre, neighbours on a ring;
+   ego edges are radial spokes, neighbour-to-neighbour edges are chords. */
+
+function buildEgoGraph(d, focusId, includeMajority) {
+  const edges = d.edges.filter((e) => e.consensus || includeMajority);
+  const inc = edges.filter((e) => e.target === focusId);
+  const out = edges.filter((e) => e.source === focusId);
+  const nbrs = new Set([...inc.map((e) => e.source), ...out.map((e) => e.target)]);
+  const all = new Set([focusId, ...nbrs]);
+  const among = edges.filter((e) =>
+    all.has(e.source) && all.has(e.target) &&
+    e.source !== focusId && e.target !== focusId);
+  return { inc, out, nbrs: [...nbrs], among };
+}
+
+function edgeStyle(e, maxScore) {
+  const t = maxScore ? e.score_median / maxScore : 0;
+  return {
+    stroke: e.aggregation_adjacent ? "#9a6b1f" : (e.consensus ? "#2456c4" : "#8a93a5"),
+    width: 1 + 2.6 * Math.sqrt(t),
+    opacity: 0.3 + 0.6 * Math.sqrt(t),
+    marker: e.aggregation_adjacent ? "arrow-amber" : (e.consensus ? "arrow-blue" : "arrow-grey"),
+  };
+}
+
+function drawEgoNetwork(host, d, focusId) {
+  const byId = nodeById(d);
+  /* The network mirrors the table's edge set — every retained edge for this
+     node — rather than following the matrix's consensus filter, so the two
+     views of the same panel never disagree. Majority-only edges are drawn
+     grey instead of being hidden. */
+  const g = buildEgoGraph(d, focusId, true);
+  const focus = byId[focusId];
+
+  if (!g.nbrs.length) {
+    host.innerHTML = `<p class="footnote">No retained edges for this node.</p>`;
+    return;
+  }
+
+  const ids = [focusId, ...g.nbrs];
+  const idx = {};
+  ids.forEach((id, i) => (idx[id] = i));
+  const n = ids.length;
+  const egoEdges = [...g.inc, ...g.out];
+  const allEdges = [...egoEdges, ...g.among];
+
+  // ── Graph-theoretic distances (undirected BFS) ──────────────────────
+  const adj = ids.map(() => []);
+  allEdges.forEach((e) => {
+    const a = idx[e.source], b = idx[e.target];
+    if (a === undefined || b === undefined || a === b) return;
+    if (!adj[a].includes(b)) adj[a].push(b);
+    if (!adj[b].includes(a)) adj[b].push(a);
+  });
+  const D = ids.map((_, s) => {
+    const dist = new Array(n).fill(Infinity);
+    dist[s] = 0;
+    const q = [s];
+    for (let h = 0; h < q.length; h++) {
+      for (const v of adj[q[h]]) {
+        if (dist[v] === Infinity) { dist[v] = dist[q[h]] + 1; q.push(v); }
+      }
+    }
+    return dist.map((x) => (x === Infinity ? 3 : x));   // disconnected fallback
+  });
+
+  // ── Stress majorization (SMACOF), the Kamada–Kawai objective ────────
+  // Deterministic: circular seed, fixed iteration count. Small graphs
+  // (n <= ~25 here), so cost is negligible.
+  const L = 130;                                  // target unit edge length
+  let X = ids.map((_, i) => {
+    const a = (2 * Math.PI * i) / n;
+    return [L * Math.cos(a), L * Math.sin(a)];
+  });
+  const w = D.map((row) => row.map((dij) => (dij > 0 ? 1 / (dij * dij) : 0)));
+  for (let it = 0; it < 300; it++) {
+    const Y = X.map((p) => p.slice());
+    for (let i = 0; i < n; i++) {
+      let sx = 0, sy = 0, sw = 0;
+      for (let j = 0; j < n; j++) {
+        if (i === j) continue;
+        const dx = X[i][0] - X[j][0], dy = X[i][1] - X[j][1];
+        const dist = Math.hypot(dx, dy) || 1e-6;
+        const target = L * D[i][j];
+        sx += w[i][j] * (X[j][0] + (target * dx) / dist);
+        sy += w[i][j] * (X[j][1] + (target * dy) / dist);
+        sw += w[i][j];
+      }
+      if (sw > 0) { Y[i][0] = sx / sw; Y[i][1] = sy / sw; }
+    }
+    X = Y;
+  }
+
+  // ── Fit to the viewBox, leaving room for labels ─────────────────────
+  const W = 860, H = 620;
+  const PAD = { x: 132, y: 46 };
+  const xs = X.map((p) => p[0]), ys = X.map((p) => p[1]);
+  const spanX = Math.max(...xs) - Math.min(...xs) || 1;
+  const spanY = Math.max(...ys) - Math.min(...ys) || 1;
+  const scale = Math.min((W - 2 * PAD.x) / spanX, (H - 2 * PAD.y) / spanY);
+  const midX = (Math.max(...xs) + Math.min(...xs)) / 2;
+  const midY = (Math.max(...ys) + Math.min(...ys)) / 2;
+  const pos = {};
+  ids.forEach((id, i) => {
+    pos[id] = {
+      x: W / 2 + (X[i][0] - midX) * scale,
+      y: H / 2 + (X[i][1] - midY) * scale,
+    };
+  });
+  const cxAll = W / 2;
+
+  const maxScore = Math.max(...allEdges.map((e) => e.score_median), 1e-9);
+  const NR = 6, FR = 10;
+
+  const svg = el("svg", {
+    viewBox: `0 0 ${W} ${H}`, class: "ego-net",
+    role: "img", "aria-label": `Network around ${focus ? focus.label : focusId}`,
+  });
+
+  const defs = el("defs");
+  [["arrow-blue", "#2456c4"], ["arrow-amber", "#9a6b1f"], ["arrow-grey", "#8a93a5"]]
+    .forEach(([id, color]) => {
+      const m = el("marker", {
+        id, viewBox: "0 0 10 10", refX: 9, refY: 5,
+        markerWidth: 6, markerHeight: 6, orient: "auto-start-reverse",
+      });
+      m.appendChild(el("path", { d: "M0,1 L10,5 L0,9 z", fill: color }));
+      defs.appendChild(m);
+    });
+  svg.appendChild(defs);
+
+  const tipFor = (e) => {
+    const s = byId[e.source], t = byId[e.target];
+    return `${s ? s.label : e.source} → ${t ? t.label : e.target}\u0001` +
+      `${e.source} → ${e.target}\nscore ${fmt(e.score_median, 4)} [${fmt(e.score_min, 4)}–${fmt(e.score_max, 4)}]\n` +
+      `retained ${e.retention}${e.consensus ? " (consensus)" : ""}` +
+      (e.aggregation_adjacent ? "\n" + AGG_TIP : "");
+  };
+  const radiusOf = (id) => (id === focusId ? FR : NR);
+
+  // Reciprocal pairs get a slight bow so both directions stay visible.
+  const pairKey = (a, b) => [a, b].sort().join("|");
+  const pairCount = {};
+  allEdges.forEach((e) => {
+    const k = pairKey(e.source, e.target);
+    pairCount[k] = (pairCount[k] || 0) + 1;
+  });
+
+  const edgesG = el("g");
+  allEdges.forEach((e) => {
+    const a = pos[e.source], b = pos[e.target];
+    if (!a || !b) return;
+    const st = edgeStyle(e, maxScore);
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len, uy = dy / len;
+    const sx = a.x + ux * (radiusOf(e.source) + 1);
+    const sy = a.y + uy * (radiusOf(e.source) + 1);
+    const ex = b.x - ux * (radiusOf(e.target) + 5);
+    const ey = b.y - uy * (radiusOf(e.target) + 5);
+    const isEgo = e.source === focusId || e.target === focusId;
+    const baseOp = isEgo ? Math.min(1, st.opacity + 0.15) : st.opacity * 0.5;
+    const attrs = {
+      fill: "none", stroke: st.stroke,
+      "stroke-width": isEgo ? st.width : st.width * 0.8,
+      opacity: baseOp, "marker-end": `url(#${st.marker})`,
+      "data-tip": tipFor(e), class: "ego-edge-line",
+      "data-s": e.source, "data-t": e.target, "data-op": baseOp.toFixed(3),
+    };
+    if (pairCount[pairKey(e.source, e.target)] > 1) {
+      // bow perpendicular to the segment, direction fixed by node order
+      const sign = e.source < e.target ? 1 : -1;
+      const bow = Math.min(26, len * 0.14) * sign;
+      const mx = (sx + ex) / 2 - uy * bow, my = (sy + ey) / 2 + ux * bow;
+      attrs.d = `M${sx.toFixed(1)},${sy.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`;
+      edgesG.appendChild(el("path", attrs));
+    } else {
+      attrs.d = `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`;
+      edgesG.appendChild(el("path", attrs));
+    }
+  });
+  svg.appendChild(edgesG);
+
+  // ── Nodes and labels ────────────────────────────────────────────────
+  const nodesG = el("g");
+  ids.forEach((id) => {
+    const nd = byId[id], p = pos[id];
+    const isFocus = id === focusId;
+    const structural = nd && isStructural(nd);
+    nodesG.appendChild(el("circle", {
+      cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: radiusOf(id),
+      fill: isFocus ? "#16233b" : (structural ? "#eef0f3" : "#ffffff"),
+      stroke: isFocus ? "#16233b" : (structural ? "#8a93a5" : "#2456c4"),
+      "stroke-width": isFocus ? 2 : 1.8,
+      class: isFocus ? "" : "ego-net-node",
+      ...(isFocus ? {} : { "data-node": id }),
+      "data-tip": `${nd ? nd.label : id}\u0001${id}${structural ? "\n" + STRUCTURAL_TIP : ""}`,
+    }));
+  });
+
+  // Labels: side chosen by position, white halo so overlaps stay legible.
+  ids.forEach((id) => {
+    const nd = byId[id], p = pos[id];
+    const isFocus = id === focusId;
+    const right = p.x >= cxAll;
+    const raw = nd ? nd.label : id;
+    const label = raw.length > 26 ? raw.slice(0, 25) + "…" : raw;
+    const off = radiusOf(id) + 7;
+    nodesG.appendChild(el("text", {
+      x: (p.x + (right ? off : -off)).toFixed(1),
+      y: (p.y + 3.8).toFixed(1),
+      "text-anchor": right ? "start" : "end",
+      "font-size": isFocus ? 12.5 : 11,
+      "font-weight": isFocus ? 600 : 400,
+      fill: isFocus ? "#16233b" : "#2a3342",
+      "font-family": "IBM Plex Sans, sans-serif",
+      stroke: "#fbfbf9", "stroke-width": 3.5, "paint-order": "stroke fill",
+      class: isFocus ? "" : "ego-net-label",
+      ...(isFocus ? {} : { "data-node": id }),
+      "data-tip": `${raw}\u0001${id}`,
+    }, label));
+  });
+  svg.appendChild(nodesG);
+
+  host.innerHTML = "";
+  host.appendChild(svg);
+
+  const legend = document.createElement("div");
+  legend.className = "chart-legend";
+  legend.innerHTML =
+    `<span class="key"><span class="key-line" style="border-color:#2456c4"></span>consensus edge</span>` +
+    `<span class="key"><span class="key-line" style="border-color:#8a93a5"></span>majority only (2 of 3 seeds)</span>` +
+    `<span class="key"><span class="key-line" style="border-color:#9a6b1f"></span>aggregation-adjacent</span>` +
+    `<span class="key"><span class="key-band" style="background:#eef0f3;border:1px solid #8a93a5"></span>structural (source-only)</span>` +
+    `<span class="key">${g.nbrs.length} neighbours · ${egoEdges.length} edges to focus · ${g.among.length} among neighbours</span>`;
+  host.appendChild(legend);
+
+  const note = document.createElement("p");
+  note.className = "footnote";
+  note.textContent =
+    "Layout is by stress majorization on graph distances (Kamada–Kawai objective): " +
+    "densely connected variables are placed near one another, so clusters are structural, " +
+    "not decorative. Positions are deterministic — the same node always lays out the same way. " +
+    "Thickness and opacity encode the causal score; arrows show direction. " +
+    "The focus node's own edges are drawn more strongly than edges among its neighbours. " +
+    "Hover any node to isolate its edges; click a neighbour to centre the network on it.";
+  host.appendChild(note);
+
+  attachMatrixTooltip(host);
+  host.querySelectorAll("[data-node]").forEach((nEl) =>
+    nEl.addEventListener("click", () => { S.egoNode = nEl.dataset.node; renderStructure(); }));
+
+  /* Hover isolation. Dense neighbourhoods cross a lot however they are laid
+     out, so hovering a node fades everything not incident to it. */
+  const edgeEls = [...svg.querySelectorAll("path[data-s]")];
+  const nodeEls = [...svg.querySelectorAll("circle[data-tip]")];
+  const labelEls = [...svg.querySelectorAll("text[data-tip]")];
+  const posOf = {};
+  ids.forEach((id) => (posOf[id] = true));
+
+  const isolate = (id) => {
+    const keep = new Set([id]);
+    edgeEls.forEach((p) => {
+      const on = p.dataset.s === id || p.dataset.t === id;
+      p.setAttribute("opacity", on ? 1 : 0.06);
+      p.setAttribute("stroke-width",
+        String(parseFloat(p.getAttribute("stroke-width")) || 1));
+      if (on) { keep.add(p.dataset.s); keep.add(p.dataset.t); }
+    });
+    nodeEls.forEach((c) => {
+      const cid = c.dataset.node || focusId;
+      c.setAttribute("opacity", keep.has(cid) ? 1 : 0.25);
+    });
+    labelEls.forEach((t) => {
+      const tid = t.dataset.node || focusId;
+      t.setAttribute("opacity", keep.has(tid) ? 1 : 0.2);
+    });
+  };
+  const clearIsolate = () => {
+    edgeEls.forEach((p) => p.setAttribute("opacity", p.dataset.op));
+    nodeEls.forEach((c) => c.setAttribute("opacity", 1));
+    labelEls.forEach((t) => t.setAttribute("opacity", 1));
+  };
+  [...nodeEls, ...labelEls].forEach((elm) => {
+    const id = elm.dataset.node || focusId;
+    elm.addEventListener("mouseenter", () => isolate(id));
+    elm.addEventListener("mouseleave", clearIsolate);
+  });
+}
+
 function renderEgo() {
   const panelEl = $("ego-panel");
   if (!S.egoNode) { panelEl.hidden = true; return; }
@@ -438,16 +732,33 @@ function renderEgo() {
   const structuralNote = isStructural(n)
     ? `<div class="ego-meta"><span class="badge badge-structural">structural · source-only</span> ${esc(STRUCTURAL_TIP)}</div>` : "";
 
+  const isNet = S.egoView === "network";
   panelEl.innerHTML =
-    `<button class="btn-quiet ego-close" id="ego-close">Close</button>` +
-    `<h3>${esc(n.label)}</h3><span class="ego-id">${esc(n.id)} · ${esc(KIND_LABEL[n.kind] || n.kind)} · ICC ${fmt(n.icc, 3)}</span>` +
+    `<div class="ego-head">` +
+      `<div><h3>${esc(n.label)}</h3>` +
+      `<span class="ego-id">${esc(n.id)} · ${esc(KIND_LABEL[n.kind] || n.kind)} · ICC ${fmt(n.icc, 3)}</span></div>` +
+      `<div class="ego-actions">` +
+        `<span class="seg-toggle" role="group" aria-label="Neighbourhood view">` +
+          `<button class="seg${isNet ? "" : " on"}" id="ego-view-table" aria-pressed="${!isNet}">Table</button>` +
+          `<button class="seg${isNet ? " on" : ""}" id="ego-view-network" aria-pressed="${isNet}">Network</button>` +
+        `</span>` +
+        `<button class="btn-quiet" id="ego-close">Close</button>` +
+      `</div>` +
+    `</div>` +
     members + structuralNote +
-    `<div class="ego-cols">` +
-    `<div><h4>Incoming (${inc.length})</h4>${inc.map((e) => edgeRow(e, e.source)).join("") || '<div class="ego-meta">None in retained set.</div>'}</div>` +
-    `<div><h4>Outgoing (${out.length})</h4>${out.map((e) => edgeRow(e, e.target)).join("") || '<div class="ego-meta">None in retained set.</div>'}</div>` +
-    `</div>`;
+    (isNet
+      ? `<div class="ego-net-host" id="ego-net-host"></div>`
+      : `<div class="ego-cols">` +
+        `<div><h4>Incoming (${inc.length})</h4>${inc.map((e) => edgeRow(e, e.source)).join("") || '<div class="ego-meta">None in retained set.</div>'}</div>` +
+        `<div><h4>Outgoing (${out.length})</h4>${out.map((e) => edgeRow(e, e.target)).join("") || '<div class="ego-meta">None in retained set.</div>'}</div>` +
+        `</div>`);
   panelEl.hidden = false;
+
+  if (isNet) drawEgoNetwork($("ego-net-host"), d, n.id);
+
   $("ego-close").addEventListener("click", () => { S.egoNode = null; renderStructure(); });
+  $("ego-view-table").addEventListener("click", () => { S.egoView = "table"; renderEgo(); });
+  $("ego-view-network").addEventListener("click", () => { S.egoView = "network"; renderEgo(); });
 }
 
 /* ───────────────────────── View: Edges ──────────────────── */
