@@ -7,7 +7,7 @@
 
 /* ───────────────────────── State ───────────────────────── */
 
-const BUILD = "v20";
+const BUILD = "v21";
 const BUILD_DATE = "2026-08-24";
 
 const PANELS = {
@@ -23,6 +23,12 @@ const S = {
   data: {},          // per-panel: {manifest, nodes, edges, ice, dcnar, validation}
   forecasts: {},     // per-panel, lazy
   history: {},       // per-panel, lazy; null when the bundle has no history.json
+  irfAgg: {},        // per-panel, lazy: invariant system response surface
+  cfact: {},         // "panel/country" -> counterfactual trajectories, lazy
+  irfShock: null,    // selected shock node
+  irfScope: "aggregate",
+  irfCountry: null,
+  cfactNode: null,
   view: "structure",
   egoNode: null,
   egoView: "table",   // "table" | "network"
@@ -152,6 +158,27 @@ async function loadHistory(panel) {
     S.history[panel] = null;
   }
   return S.history[panel];
+}
+
+async function loadIrfAggregate(panel) {
+  if (panel in S.irfAgg) return S.irfAgg[panel];
+  try {
+    const r = await fetch(`data/${panel}/irf_aggregate.json`);
+    S.irfAgg[panel] = r.ok ? await r.json() : null;
+  } catch (e) { S.irfAgg[panel] = null; }
+  return S.irfAgg[panel];
+}
+
+/* Counterfactual trajectories are one file per country and are fetched only
+   when that country is selected. */
+async function loadCfact(panel, country) {
+  const key = `${panel}/${country}`;
+  if (key in S.cfact) return S.cfact[key];
+  try {
+    const r = await fetch(`data/${panel}/cfact/${encodeURIComponent(country)}.json`);
+    S.cfact[key] = r.ok ? await r.json() : null;
+  } catch (e) { S.cfact[key] = null; }
+  return S.cfact[key];
 }
 
 async function loadForecasts(panel) {
@@ -965,33 +992,202 @@ function renderDynamics() {
     `<span class="key"><span class="key-line" style="border-color:#2456c4"></span>constrained (as deployed)</span>` +
     `<span class="key"><span class="key-line dashed" style="border-color:#8a93a5"></span>unconstrained (diagnostic)</span>`;
   $("rho-note").textContent =
+    "The spectral radius summarises the whole fitted system at each point in time, " +
+    "so there is one series per panel: it does not vary with the nodes selected above. " +
     `Constrained: ρ(τ=1) = ${fmt(st.rho_tau1, 4)}, grid max ${fmt(st.rho_max, 4)}. ` +
     `Unconstrained diagnostic: ρ(τ=1) = ${fmt(st.rho_tau1_unconstrained, 4)}, grid max ${fmt(st.rho_max_unconstrained, 4)}. ` +
     `The deployed system is constrained to remain below the unit root (ε = ${st.epsilon_used}).`;
 
-  /* IRF */
-  const irf = d.dcnar.irf;
-  const shockLabel = byIdL[irf.shock_var] ? byIdL[irf.shock_var].label : irf.shock_var;
-  $("irf-title").textContent = `Impulse responses — ${meta.shock_size_sd} SD shock to ${shockLabel} (${irf.shock_var})`;
-  const nodes = Object.keys(irf.response);
-  const vmax = Math.max(...nodes.flatMap((n) => irf.response[n].map((v) => Math.abs(v)))) || 1;
-  let html = `<table class="irf-table"><thead><tr><th>node</th>${irf.horizons.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>`;
+  /* IRF / counterfactual section — populated asynchronously. */
+  renderIrfSection();
+}
+
+/* ── Impulse responses and counterfactual trajectories ──────────────────
+   Two scopes, which are different objects and are labelled as such:
+   - Aggregate: the system response A^h s. State-independent by linearity,
+     so it is identical for every country — not an average.
+   - Country: baseline vs shocked trajectories from that country's last
+     observed state. The difference between them IS the aggregate response;
+     what varies by country is the state it is added to. */
+
+async function renderIrfSection() {
+  const d = S.data[S.panel];
+  const byId = nodeById(d);
+  const A = await loadIrfAggregate(S.panel);
+  const st = d.dcnar.meta.stability;
+
+  if (!A) {   // older bundle: fall back to the single exported shock
+    const irf = d.dcnar.irf;
+    $("irf-shock").parentElement.hidden = true;
+    renderIrfHeatmap(irf.response, irf.horizons, byId, irf.shock_var);
+    return;
+  }
+
+  const shocks = Object.keys(A.shocks).sort((a, b) => {
+    const la = byId[a] ? byId[a].label : a, lb = byId[b] ? byId[b].label : b;
+    return la.localeCompare(lb);
+  });
+  if (!shocks.includes(S.irfShock)) S.irfShock = d.dcnar.irf.shock_var || shocks[0];
+
+  const sSel = $("irf-shock");
+  if (sSel.dataset.panel !== S.panel) {
+    sSel.innerHTML = shocks.map((id) => {
+      const n = byId[id];
+      const src = n && isStructural(n) ? " (source-only)" : "";
+      return `<option value="${esc(id)}">${esc(n ? n.label : id)}${src}</option>`;
+    }).join("");
+    sSel.dataset.panel = S.panel;
+  }
+  sSel.value = S.irfShock;
+  $("irf-scope").value = S.irfScope;
+
+  const shockLabel = byId[S.irfShock] ? byId[S.irfShock].label : S.irfShock;
+  $("irf-title").textContent =
+    `${S.irfScope === "aggregate" ? "Impulse response" : "Counterfactual trajectory"} — ` +
+    `${A.shock_size_sd} SD shock to ${shockLabel}`;
+
+  const stabLine =
+    `Stability: ${st.mode}, ε = ${st.epsilon_used}; ρ(τ=1) = ${fmt(st.rho_tau1, 4)}, ` +
+    `grid max ${fmt(st.rho_max, 4)} (unconstrained ${fmt(st.rho_max_unconstrained, 4)}).`;
+
+  if (S.irfScope === "aggregate") {
+    $("irf-country-wrap").hidden = true;
+    $("irf-aggregate-view").hidden = false;
+    $("irf-country-view").hidden = true;
+    renderIrfHeatmap(A.shocks[S.irfShock], A.horizons, byId, S.irfShock);
+    const nearPermanent = st.rho_max > 0.99;
+    $("irf-note").textContent =
+      "This surface is the system's response to the shock, in standardized units. " +
+      "It is state-independent by linearity, so it is identical for every country — " +
+      "not an average across them. " +
+      (nearPermanent
+        ? `With constrained ρ reaching ${fmt(st.rho_max, 4)}, shocks are near-permanent over the ${A.horizons.length}-year horizon: responses accumulate rather than mean-revert. `
+        : "") + stabLine;
+    $("irf-def").textContent = A.definition || "";
+    return;
+  }
+
+  // ── Country scope ──
+  $("irf-country-wrap").hidden = false;
+  $("irf-aggregate-view").hidden = true;
+  $("irf-country-view").hidden = false;
+
+  const fc = await loadForecasts(S.panel);
+  const countries = Object.keys(fc.countries);
+  const cSel = $("irf-country");
+  if (cSel.dataset.panel !== S.panel) {
+    cSel.innerHTML = countries.map((c) => `<option>${esc(c)}</option>`).join("");
+    cSel.dataset.panel = S.panel;
+  }
+  if (!countries.includes(S.irfCountry)) S.irfCountry = S.trajCountry && countries.includes(S.trajCountry) ? S.trajCountry : countries[0];
+  cSel.value = S.irfCountry;
+
+  const C = await loadCfact(S.panel, S.irfCountry);
+  if (!C || !C.shocks[S.irfShock]) {
+    $("irf-note").textContent = "No counterfactual trajectories exported for this country.";
+    return;
+  }
+  drawCfact(C, byId);
+  $("irf-note").textContent =
+    `Baseline is the linear system's path from ${esc(C.country)}'s last observed state ` +
+    `(${C.state_year}), decaying toward the panel mean because stationarity was imposed. ` +
+    "It is not the validated NAVAR forecast shown in the Trajectories view, and the two " +
+    "should not be read as the same object. The gap between baseline and shocked is the " +
+    "system response above, which is the same for every country; what differs here is the " +
+    "state it is added to. " +
+    (st.rho_max > 0.99
+      ? `With constrained ρ reaching ${fmt(st.rho_max, 4)}, the shock's effect is near-permanent over this horizon rather than mean-reverting. `
+      : "") + stabLine;
+  $("irf-def").textContent = C.definition || "";
+}
+
+function renderIrfHeatmap(response, horizons, byId, shockVar) {
+  const nodes = Object.keys(response);
+  const vmax = Math.max(...nodes.flatMap((n) => response[n].map((v) => Math.abs(v)))) || 1;
+  let html = `<table class="irf-table"><thead><tr><th>node</th>${
+    horizons.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>`;
   nodes.forEach((nid) => {
-    const rowLbl = byIdL[nid] ? byIdL[nid].label : nid;
-    html += `<tr><th title="${esc(rowLbl)}">${esc(nid)}</th>`;
-    irf.response[nid].forEach((v) => {
+    const n = byId[nid];
+    const own = nid === shockVar ? ' style="font-weight:600"' : "";
+    html += `<tr><th title="${esc(n ? n.label : nid)}"${own}>${esc(nid)}</th>`;
+    response[nid].forEach((v) => {
       const bg = divergingColor(v / vmax);
       const dark = Math.abs(v / vmax) > 0.6;
-      html += `<td style="background:${bg};${dark ? "color:#fff" : ""}" title="${esc(nid)} at ${esc(String(v))}">${fmt(v, 3)}</td>`;
+      html += `<td style="background:${bg};${dark ? "color:#fff" : ""}">${fmt(v, 3)}</td>`;
     });
     html += "</tr>";
   });
   $("irf-wrap").innerHTML = html + "</tbody></table>";
+}
 
-  const nearPermanent = S.panel === "modern_factors";
-  $("irf-note").textContent = nearPermanent
-    ? `Responses are in standardized units. With constrained ρ reaching ${fmt(st.rho_max, 4)}, shocks are near-permanent over the ${meta.H_irf}-year horizon: responses accumulate rather than mean-revert.`
-    : `Responses are in standardized units over a ${meta.H_irf}-year horizon under the constrained system (ρ max ${fmt(st.rho_max, 4)}).`;
+function drawCfact(C, byId) {
+  const rec = C.shocks[S.irfShock];
+  const H = C.horizons;
+
+  /* 1. System displacement: the L2 norm pair. Shown with the caveat that a
+        norm hides sign, which is why the per-node path sits beneath it. */
+  const nb = C.l2_norm_baseline, ns = rec.l2_norm_shocked;
+  const lo = Math.min(...nb, ...ns), hi = Math.max(...nb, ...ns);
+  const pad = (hi - lo) * 0.12 || 0.05;
+  const f1 = chartFrame($("cfact-norm-chart"), {
+    xmin: H[0], xmax: H[H.length - 1], ymin: Math.max(0, lo - pad), ymax: hi + pad,
+    xlabel: "Horizon (years)", ylabel: `‖state‖ over ${C.l2_norm_over}`,
+    xticks: H,
+  });
+  addLine(f1, H.map((h, i) => [h, nb[i]]), "#16233b", { width: 2.2 });
+  addLine(f1, H.map((h, i) => [h, ns[i]]), "#2456c4", { width: 2.2, dash: "6 4" });
+  const falls = ns.some((v, i) => v < nb[i]);
+  $("cfact-norm-legend").innerHTML =
+    `<span class="key"><span class="key-line" style="border-color:#16233b"></span>baseline</span>` +
+    `<span class="key"><span class="key-line dashed" style="border-color:#2456c4"></span>shocked</span>` +
+    (falls ? `<span class="key" style="color:var(--red)">shocked norm falls below baseline at some horizon — the shock moves this country toward the panel mean on net</span>` : "");
+
+  /* 2. Ranked per-node effect, then one signed path. */
+  const diffs = Object.keys(rec.shocked).map((nid) => {
+    const b = C.baseline[nid] || [];
+    const dif = rec.shocked[nid].map((v, i) => v - (b[i] || 0));
+    return { nid, peak: Math.max(...dif.map(Math.abs)), signed: dif[dif.length - 1] };
+  }).sort((a, b) => b.peak - a.peak);
+
+  const nodeSel = $("cfact-node");
+  const key = `${S.panel}/${S.irfShock}`;
+  if (nodeSel.dataset.key !== key) {
+    nodeSel.innerHTML = diffs.map((x) => {
+      const n = byId[x.nid];
+      return `<option value="${esc(x.nid)}">${esc(n ? n.label : x.nid)}</option>`;
+    }).join("");
+    nodeSel.dataset.key = key;
+    S.cfactNode = diffs[0].nid;
+  }
+  if (!diffs.some((x) => x.nid === S.cfactNode)) S.cfactNode = diffs[0].nid;
+  nodeSel.value = S.cfactNode;
+
+  $("cfact-rank").innerHTML = "most displaced: " + diffs.slice(0, 3).map((x) => {
+    const n = byId[x.nid];
+    return `${esc(n ? n.label : x.nid)} (${x.signed >= 0 ? "+" : ""}${fmt(x.signed, 3)})`;
+  }).join(" · ");
+
+  const nid = S.cfactNode;
+  const b = C.baseline[nid], sh = rec.shocked[nid];
+  const all = b.concat(sh);
+  const l2 = Math.min(...all), h2 = Math.max(...all);
+  const p2 = (h2 - l2) * 0.15 || 0.05;
+  const f2 = chartFrame($("cfact-node-chart"), {
+    xmin: H[0], xmax: H[H.length - 1], ymin: l2 - p2, ymax: h2 + p2,
+    xlabel: "Horizon (years)",
+    ylabel: `${byId[nid] ? byId[nid].label : nid} (standardized)`,
+    xticks: H,
+  });
+  f2.svg.appendChild(el("line", {
+    x1: f2.m.left, x2: f2.W - f2.m.right, y1: f2.y(0), y2: f2.y(0),
+    stroke: "#b8bdc7", "stroke-dasharray": "3 3",
+  }));
+  addLine(f2, H.map((h, i) => [h, b[i]]), "#16233b", { width: 2.2 });
+  addLine(f2, H.map((h, i) => [h, sh[i]]), "#2456c4", { width: 2.2, dash: "6 4" });
+  $("cfact-node-legend").innerHTML =
+    `<span class="key"><span class="key-line" style="border-color:#16233b"></span>baseline path</span>` +
+    `<span class="key"><span class="key-line dashed" style="border-color:#2456c4"></span>after the shock</span>` +
+    `<span class="key">signed difference at h=${H[H.length - 1]}: ${sh[sh.length - 1] - b[b.length - 1] >= 0 ? "+" : ""}${fmt(sh[sh.length - 1] - b[b.length - 1], 4)}</span>`;
 }
 
 /* ────────────────────── View: Trajectories ──────────────── */
@@ -1284,7 +1480,9 @@ function renderMethods() {
         <dt>ρ unconstrained</dt><dd class="mono">τ=1: ${fmt(st.rho_tau1_unconstrained, 6)} · grid max: ${fmt(st.rho_max_unconstrained, 6)}</dd>
       </dl>
       <p>The unconstrained fit for this panel exceeds 1 (${fmt(st.rho_max_unconstrained, 4)} at grid maximum), meaning disturbances would compound without bound and impulse responses would not be well defined. The deployed system is therefore constrained below the unit root; both series are shown in the Dynamics view rather than only the constrained one, because the gap between them is itself a diagnostic about how close the estimated system sits to non-stationarity.${isModern ? ` With the constrained maximum at ${fmt(st.rho_max, 4)}, shocks in this panel are near-permanent over the horizon shown: the system barely mean-reverts.` : ""}</p>
-      <p>Impulse responses trace a ${dm.shock_size_sd} standard-deviation shock to ${esc(shockLabel)} (${esc(dm.shock_var)}) over ${dm.H_irf} years across all nodes.</p>
+      <p>Impulse responses trace a ${dm.shock_size_sd} standard-deviation shock over ${dm.H_irf} years. Any node may be shocked, structural nodes included; responders are the endogenous nodes plus the shocked node's own decay path.</p>
+      ${p.irf ? `<div class="prov">${esc(p.irf)}</div>` : ""}
+      ${p.counterfactual_trajectories ? `<h3 class="block-title" style="margin-top:18px">Counterfactual trajectories</h3><div class="prov">${esc(p.counterfactual_trajectories)}</div>` : ""}
     </div>
 
     <div class="methods-card">
@@ -1401,6 +1599,10 @@ function init() {
   $("ice-edge").addEventListener("change", renderICE);
   $("traj-country").addEventListener("change", (e) => { S.trajCountry = e.target.value; renderTrajectories(); });
   $("traj-node").addEventListener("change", (e) => { S.trajNode = e.target.value; renderTrajectories(); });
+  $("irf-shock").addEventListener("change", (e) => { S.irfShock = e.target.value; renderIrfSection(); });
+  $("irf-scope").addEventListener("change", (e) => { S.irfScope = e.target.value; renderIrfSection(); });
+  $("irf-country").addEventListener("change", (e) => { S.irfCountry = e.target.value; renderIrfSection(); });
+  $("cfact-node").addEventListener("change", (e) => { S.cfactNode = e.target.value; renderIrfSection(); });
   $("btn-validation").addEventListener("click", () => {
     const b = $("validation-block");
     b.hidden = !b.hidden;

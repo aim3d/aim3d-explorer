@@ -12,6 +12,38 @@ say when that needs re-pasting.
 
 ---
 
+## v21 — 2026-08-24 · selectable shocks and counterfactual trajectories
+Ships Stage 7c `irf_aggregate.json` and Stage 7d `cfact/<country>.json` for
+both panels, plus the updated manifests carrying `provenance.irf` and
+`provenance.counterfactual_trajectories`.
+
+Dynamics gains a shock selector (every node, structural included) and a scope
+selector. The two scopes are different objects and are labelled as such:
+
+- **System response (all countries)** — the invariant response surface. Copy
+  states it is state-independent by linearity and therefore identical for
+  every country, *not* an average.
+- **Country trajectory** — baseline vs shocked paths from that country's last
+  observed state, with the L2-norm pair and a signed per-node path beneath it,
+  plus a ranked list of the most displaced nodes. Copy states the baseline is
+  the linear system's path decaying toward the panel mean, and is **not** the
+  validated NAVAR forecast in the Trajectories view.
+
+Verified before packaging: 160 and 138 country files matching the manifests;
+shocked − baseline reproduces the aggregate response to 1e-05 across 670,500
+values, confirming the linearity claim; L2 norms recompute from the per-node
+series to 1.4e-05; structural nodes are shockable (8/8 modern, 40 responders
+each including their own path). The shocked norm falls below baseline at some
+horizon in 38% of century and 43% of modern country-shock pairs — the
+published Peru case reproduces (Peru + party competition across regions), and
+the legend flags it, which is why signed per-node paths sit alongside the norm
+rather than the norm standing alone.
+
+Also fixed: the ρ chart now states that the spectral radius is a property of
+the whole system and does not vary with the node chips above it, and those
+chips are relabelled "Series shown in this chart". The earlier layout implied
+they controlled ρ and the IRF, which they never did.
+
 ## v20 — 2026-08-24 · network layout replaced
 The ring-and-chords layout was hard to read as edge count grew. Replaced with
 a proper graph layout plus density controls.

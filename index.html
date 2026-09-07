@@ -98,7 +98,7 @@
 
       <h3 class="block-title">Nodal influence trajectories (λ paths)</h3>
       <div class="controls-row">
-        <span class="ctl-label">Series</span>
+        <span class="ctl-label">Series shown in this chart</span>
         <div class="chip-row" id="lambda-chips"></div>
       </div>
       <div class="chart-card"><svg id="lambda-chart" class="chart" role="img" aria-label="Lambda paths"></svg></div>
@@ -110,8 +110,37 @@
       <p class="footnote" id="rho-note"></p>
 
       <h3 class="block-title" id="irf-title">Impulse responses</h3>
-      <div class="irf-wrap" id="irf-wrap"></div>
+      <div class="controls-row">
+        <label class="ctl-label" for="irf-shock">Shock</label>
+        <select id="irf-shock" class="ctl-select" aria-label="Variable to shock"></select>
+        <label class="ctl-label" for="irf-scope">Scope</label>
+        <select id="irf-scope" class="ctl-select" aria-label="Scope">
+          <option value="aggregate">System response (all countries)</option>
+          <option value="country">Country trajectory</option>
+        </select>
+        <span id="irf-country-wrap" hidden>
+          <label class="ctl-label" for="irf-country">Country</label>
+          <select id="irf-country" class="ctl-select" aria-label="Country"></select>
+        </span>
+      </div>
+      <div id="irf-aggregate-view">
+        <div class="irf-wrap" id="irf-wrap"></div>
+      </div>
+      <div id="irf-country-view" hidden>
+        <div class="chart-card"><svg id="cfact-norm-chart" class="chart" role="img" aria-label="System displacement"></svg>
+          <div class="chart-legend" id="cfact-norm-legend"></div>
+        </div>
+        <div class="controls-row">
+          <label class="ctl-label" for="cfact-node">Node path</label>
+          <select id="cfact-node" class="ctl-select" aria-label="Node"></select>
+          <span class="legend-inline" id="cfact-rank"></span>
+        </div>
+        <div class="chart-card"><svg id="cfact-node-chart" class="chart" role="img" aria-label="Baseline vs shocked path"></svg>
+          <div class="chart-legend" id="cfact-node-legend"></div>
+        </div>
+      </div>
       <p class="footnote" id="irf-note"></p>
+      <p class="footnote" id="irf-def"></p>
     </section>
 
     <section class="view" id="view-trajectories" hidden>
