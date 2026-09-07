@@ -96,7 +96,9 @@
    "scope": "endogenous (dynamic) nodes only; structural source-only nodes are not fitted as targets and are therefore neither forecast nor scored",
    "weights": "train-fitted (validated models)",
    "uncertainty": "ensemble min/median/max across seeds"
-  }
+  },
+  "irf": "System impulse response of the pooled stability-constrained tvNAR(1) evaluated at tau=1 (end of series): response_h = A^h s with A=(W+I)*lambda(1), s = one-standard-deviation shock to a single node, propagated linearly for H steps. State-independent by linearity, hence identical for every country; not an average. Responders are endogenous nodes plus the shocked node's own decay path. Units standardized.",
+  "counterfactual_trajectories": "Counterfactual trajectories of the pooled stability-constrained tvNAR(1) at tau=1 from the country's last observed standardized state y_T: baseline_h = A^h y_T; shocked_h = baseline_h + A^h s_j, with s_j a one-standard-deviation shock to node j. The response A^h s_j is identical for every country (linearity); country differences, including in the L2 norm, arise from y_T \u2014 the projection of an invariant response onto the country's own state. The baseline is the linear companion's path, decaying toward the panel mean because stationarity was imposed; it is not the validated NAVAR forecast. Units standardized."
  },
  "files": [
   "nodes.json",
@@ -104,6 +106,9 @@
   "ice.json",
   "dcnar.json",
   "forecasts.json",
-  "validation.json"
- ]
+  "validation.json",
+  "irf_aggregate.json"
+ ],
+ "cfact_dir": "cfact/",
+ "n_cfact_countries": 138
 }
