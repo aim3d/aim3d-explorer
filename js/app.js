@@ -7,7 +7,7 @@
 
 /* ───────────────────────── State ───────────────────────── */
 
-const BUILD = "v22";
+const BUILD = "v24";
 const BUILD_DATE = "2026-10-03";
 
 const PANELS = {
@@ -1468,7 +1468,7 @@ function renderMethods() {
       <h3>Stage 2 — Measurement model</h3>
       <p><strong>October 2026 revision.</strong> The factor layer was replaced by a theoretical confirmatory measurement model (a fixed structure specified from democratic theory, with a common-method-bias adjustment and, on the modern panel, a demographic-accounting block). The complete pipeline, including all networks, effect curves, dynamics, forecasts, and counterfactuals, was recomputed under this model. Earlier results were produced under an exploratory factor structure and are superseded.</p>
       <div class="prov">${esc(p.measurement)}</div>
-      <p>The electoral democracy index is protected: it always enters as an observed variable and is never absorbed into a factor. This panel resolves to ${m.n_nodes} nodes — ${esc(kindLine)}. Factor nodes are theoretical constructs; until construct names are published here, each factor is identified by its member indicators (shown in its neighborhood view on the Structure page). A full description of the revised measurement model is forthcoming.</p>
+      <p>The electoral democracy index is protected: it always enters as an observed variable and is never absorbed into a factor. This panel resolves to ${m.n_nodes} nodes — ${esc(kindLine)}. Factor nodes are theoretical constructs from the confirmatory model; each displays its construct name, and its member indicators are listed in its neighborhood view on the Structure page. A full description of the revised measurement model is forthcoming.</p>
       ${nStructural
         ? `<p>Of these, <strong>${nStructural} nodes are structural (source-only)</strong>: their between-country variance dominates their within-country variance, measured by the intraclass correlation, leaving too little within-country signal to identify what affects them. They act as sources only, and their target columns are greyed in the Structure view. This is a statement about identifiability, not a finding that nothing affects them.</p>`
         : `<p>In this panel every node retains enough within-country variation to serve as both source and target, so there are no structural source-only nodes.</p>`}
@@ -1545,7 +1545,7 @@ function renderMethods() {
 
     <div class="methods-card">
       <h3>Node naming</h3>
-      <p>Observed indicators display their V-Dem codebook names (v15) where a verified name is on file; newly added indicators show their raw V-Dem code until the labels refresh. Latent factors are theoretical constructs from the confirmatory measurement model and are identified by their member indicators, listed in each factor's neighborhood view on the Structure page; construct names will be added with the revised methods description. Factor numbering is panel-specific: the same number does not denote the same construct across the Century and Modern views. Plain-language explanations of every method and quantity are in the Reader's guide.</p>
+      <p>Observed indicators display their V-Dem codebook names (v15) where a verified name is on file; newly added indicators show their raw V-Dem code until the labels refresh. Latent factors are theoretical constructs from the confirmatory measurement model; each displays the construct name assigned by the lab, and its member indicators are listed in its neighborhood view on the Structure page. Factor numbering is panel-specific: the same number does not denote the same construct across the Century and Modern views. Plain-language explanations of every method and quantity are in the Reader's guide.</p>
     </div>
 
     <div class="methods-card">

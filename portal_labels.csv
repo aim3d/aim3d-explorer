@@ -1,13 +1,13 @@
 panel,id,kind,bundle_label,display_label,status,note
 century_factors,v2x_polyarchy,protected_observed,Electoral democracy (ERT; computed where ERT missing),Electoral democracy (polyarchy),CODEBOOK,"V-Dem Codebook v15 TOC, verified 2026-10-03"
-century_factors,F01,reflective_factor,Factor: v2caassemb / v2clpolcl / v2csrlgrep,Civil liberties (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F02,reflective_factor,Factor: v2capolit / v2canonpol / v2catrauni,Engagement in independent associations (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F03,reflective_factor,Factor: v2psorgs / v2psprbrch,Party institutionalization (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F04,reflective_factor,Factor: v2jupurge / v2jupack,Politicized judiciary (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F05,reflective_factor,Factor: v2exl_legitideol / v2exl_legitlead / v2caautmob,Autocratic legitimacy (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F06,reflective_factor,Factor: v2cafexch / v2cafres / v2casurv,Academic freedom (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F07,reflective_factor,Factor: v2exthftps / v2exbribe / v2excrptps,Corruption (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-century_factors,F08,reflective_factor,Factor: v2peasbgen / v2peasbsoc / v2peasjgen,Inclusive development (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
+century_factors,F01,reflective_factor,Factor: v2caassemb / v2clpolcl / v2csrlgrep,Civil liberties (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F02,reflective_factor,Factor: v2capolit / v2canonpol / v2catrauni,Engagement in independent associations (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F03,reflective_factor,Factor: v2psorgs / v2psprbrch,Party institutionalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F04,reflective_factor,Factor: v2jupurge / v2jupack,Politicized judiciary (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F05,reflective_factor,Factor: v2exl_legitideol / v2exl_legitlead / v2caautmob,Autocratic legitimacy (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F06,reflective_factor,Factor: v2cafexch / v2cafres / v2casurv,Academic freedom (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F07,reflective_factor,Factor: v2exthftps / v2exbribe / v2excrptps,Corruption (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+century_factors,F08,reflective_factor,Factor: v2peasbgen / v2peasbsoc / v2peasjgen,Inclusive development (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
 century_factors,C_v2casoe,formative_composite,Composite: v2casoe (alr-mean),State of emergency (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 century_factors,C_v2csstruc,formative_composite,Composite: v2csstruc (alr-mean),CSO structure (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 century_factors,v2cacamps,singleton,v2cacamps,Political polarization,CODEBOOK,"V-Dem Codebook v15 TOC, verified 2026-10-03"
@@ -60,22 +60,22 @@ century_factors,v2xel_locelec,singleton,v2xel_locelec,Local government index,COD
 century_factors,v2xel_regelec,singleton,v2xel_regelec,Regional government index,CODEBOOK,"V-Dem Codebook v15 TOC, verified 2026-10-03 (corrected from v1)"
 century_factors,v2xlg_legcon,singleton,v2xlg_legcon,Legislative constraints on the executive index,CODEBOOK,"V-Dem Codebook v15 TOC, verified 2026-10-03"
 modern_factors,v2x_polyarchy,protected_observed,Electoral democracy (ERT; computed where ERT missing),Electoral democracy (polyarchy),CODEBOOK,"V-Dem Codebook v15 TOC, verified 2026-10-03"
-modern_factors,F01,reflective_factor,Factor: v2caassemb / v2clpolcl / v2csrlgrep,Civil liberties (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F02,reflective_factor,Factor: v2capolit / v2canonpol / v2catrauni,Engagement in independent associations (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F03,reflective_factor,Factor: v2psorgs / v2psprbrch,Party institutionalization (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F04,reflective_factor,Factor: v2jupurge / v2jupack,Politicized judiciary (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F05,reflective_factor,Factor: v2exl_legitideol / v2exl_legitlead / v2caautmob,Autocratic legitimacy (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F06,reflective_factor,Factor: v2cafres / v2cafexch / v2casurv,Academic freedom (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F07,reflective_factor,Factor: v2exthftps / v2exbribe / v2excrptps,Corruption (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F08,reflective_factor,Factor: v2peasbgen / v2peapspol / v2peasjsoc,Inclusive development (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F09,reflective_factor,"Factor: GDP pc, current US$ / GDP per capita (Maddison) / GDP pc, const 2015 US$",GDP per capita (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F10,reflective_factor,Factor: GDP pc growth / GDP growth,Economic growth (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F11,reflective_factor,Factor: Population growth (WPP) / Population growth,Polulation growth (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F12,reflective_factor,Factor: Informational globalization (de jure) / Interpersonal globalization (de jure) / Interpersonal globalization (de facto),Cultural globalization (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F13,reflective_factor,Factor: Financial globalization (de facto) / Trade globalization (de jure) / Financial globalization (de jure),Economic globalization (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F14,reflective_factor,Factor: Political globalization (de jure) / Political globalization (de facto),Political globalization (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F15,reflective_factor,Factor: Net migration rate / Net migrants,Migration (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
-modern_factors,F16,reflective_factor,Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),Population density (factor),FACTOR_PENDING,theoretical construct; name arrives with the Methods pass (v1 interpretive name suppressed)
+modern_factors,F01,reflective_factor,Factor: v2caassemb / v2clpolcl / v2csrlgrep,Civil liberties (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F02,reflective_factor,Factor: v2capolit / v2canonpol / v2catrauni,Engagement in independent associations (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F03,reflective_factor,Factor: v2psorgs / v2psprbrch,Party institutionalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F04,reflective_factor,Factor: v2jupurge / v2jupack,Politicized judiciary (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F05,reflective_factor,Factor: v2exl_legitideol / v2exl_legitlead / v2caautmob,Autocratic legitimacy (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F06,reflective_factor,Factor: v2cafres / v2cafexch / v2casurv,Academic freedom (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F07,reflective_factor,Factor: v2exthftps / v2exbribe / v2excrptps,Corruption (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F08,reflective_factor,Factor: v2peasbgen / v2peapspol / v2peasjsoc,Inclusive development (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F09,reflective_factor,"Factor: GDP pc, current US$ / GDP per capita (Maddison) / GDP pc, const 2015 US$",GDP per capita (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F10,reflective_factor,Factor: GDP pc growth / GDP growth,Economic growth (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F11,reflective_factor,Factor: Population growth (WPP) / Population growth,Population growth (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03 (typo corrected)"
+modern_factors,F12,reflective_factor,Factor: Informational globalization (de jure) / Interpersonal globalization (de jure) / Interpersonal globalization (de facto),Cultural globalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F13,reflective_factor,Factor: Financial globalization (de facto) / Trade globalization (de jure) / Financial globalization (de jure),Economic globalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F14,reflective_factor,Factor: Political globalization (de jure) / Political globalization (de facto),Political globalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F15,reflective_factor,Factor: Net migration rate / Net migrants,Migration (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
+modern_factors,F16,reflective_factor,Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),CONSTRUCT_PENDING,name supplied did not match members (mortality indicators); awaiting confirmation
 modern_factors,C_v2casoe,formative_composite,Composite: v2casoe (alr-mean),State of emergency (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 modern_factors,C_v2csstruc,formative_composite,Composite: v2csstruc (alr-mean),CSO structure (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 modern_factors,m_pop,singleton,Population (Maddison),Population (Maddison),KEEP,bundle label already readable (KOF / World Bank / UN WPP source name)

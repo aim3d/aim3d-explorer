@@ -12,6 +12,46 @@ say when that needs re-pasting.
 
 ---
 
+## v24 — 2026-10-03 · factor construct names
+The lab supplied construct names for the theoretical factors (8 century,
+16 modern), replacing the member-list fallback. Applied to 23 of 24; one typo
+corrected ("Polulation growth" → "Population growth").
+
+**Held: modern F16.** The name supplied was "Population density (factor)" but
+the factor's members are infant mortality and under-5 mortality (WPP). Held
+at the member list pending confirmation rather than displaying a name that
+does not match its indicators.
+
+Copy in Methods and the glossary that said construct names were pending now
+says they are shown. The test that forbade any F-id in the overlay (correct
+for pass 1) is replaced by one that forbids any v1 interpretive name from
+resurfacing and requires every construct name to carry the "(factor)" mark.
+Digests regenerated.
+
+**Minimal upload for this build** — the large data directories are untouched,
+so only these files change: `js/app.js`, `data/glossary.json`,
+`data/{panel}/labels.json`, `data/{panel}/digest.json`, `portal_labels.csv`,
+`smoke_test.js`, `CHANGELOG.md`.
+
+## v23 — 2026-10-03 · all V-Dem node names verified against Codebook v15
+Every V-Dem indicator and index on both panels (52 ids) now displays its name
+from the V-Dem Codebook v15 table of contents, fetched from v-dem.net and
+transcribed into `tier3/codebook_names_v15.json`. No raw V-Dem code remains
+on display. The 24 singletons new in v2 are named, and the full existing set
+was re-checked against the same source rather than trusted.
+
+Two v1 names marked as verified were wrong and are corrected:
+`v2stfisccap` "State fiscal capacity" → **State fiscal source of revenue**;
+`v2xel_regelec` "Regional elections index" → **Regional government index**.
+Six long index titles are displayed verbatim (e.g. "Freedom of expression and
+alternative sources of information index"); a handful of abbreviated
+codebook titles are expanded for readers ("HOS age" → "Age of head of
+state"), with the codebook wording retained in the record.
+
+Still pending: the 8 and 16 theoretical factor construct names (pass 3).
+Digests regenerated with the new labels. `portal_labels.csv` records the
+source and verification date for every row.
+
 ## v22 — 2026-10-03 · v2 results release, pass 1 (data swap + notice)
 Data bundles swapped to the v2 export: the pipeline was rerun under a
 confirmatory theoretical measurement model (A-CMB century, A-CMB-DU modern).
@@ -75,6 +115,16 @@ the panel node sets, shock sets matching the aggregates, every country in
 `forecasts.json`, and shocked − baseline reproducing the invariant aggregate
 response to 1e-05 across 487,400 values. The staleness guard stays silent on
 them and fires on the v1 fixture. Safe to upload `cfact/` from Drive.
+
+`portal_labels.csv` regenerated from the v2 bundles (142 rows, from 76):
+statuses CODEBOOK (verified name shown), KEEP (bundle label already
+readable), FACTOR_PENDING (construct name due in pass 3), RAW_PENDING (new v2
+singleton, raw code until the labels refresh). Eight verified codebook names
+that existed on only one panel in v1 are propagated to the other panel where
+the same variable now appears (century +6, modern +2) — same V-Dem variable,
+same name, no new verification needed. 24 singletons remain RAW_PENDING;
+most are V-Dem component indices (v2x_*, v2xel_*, v2xeg_*) whose codebook
+names are straightforward to verify in pass 3.
 
 Also fixed in the test harness: its fetch shim did not decode percent-encoded
 paths, so any country with a space in its name (e.g. `Costa Rica.json`)
