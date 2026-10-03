@@ -11,7 +11,7 @@
             "adjacency matrix"
           ],
           "short": "The grid on the Structure page. Each row is a source variable, each column a target; a coloured square means the model found a link from that row to that column, with darker blue meaning a stronger link.",
-          "long": "An adjacency matrix is a compact way to display a network. Every variable appears twice: once as a row (acting as a source) and once as a column (acting as a target). A coloured cell at row i, column j means the model retained a link from variable i to variable j, and the depth of the blue encodes the causal score. Blank cells mean no retained link. The diagonal is hatched because a variable's link to itself is not displayed. Greyed-out columns are structural source-only variables, which the model never treats as targets. Hovering any cell shows the two variable names, the score with its seed range, and any flags; clicking a row or column label opens that variable's neighborhood view. This format is used instead of a drawn network because with 29 to 47 variables and hundreds of links, a node-and-arrow diagram becomes unreadable."
+          "long": "An adjacency matrix is a compact way to display a network. Every variable appears twice: once as a row (acting as a source) and once as a column (acting as a target). A coloured cell at row i, column j means the model retained a link from variable i to variable j, and the depth of the blue encodes the causal score. Blank cells mean no retained link. The diagonal is hatched because a variable's link to itself is not displayed. Greyed-out columns are structural source-only variables, which the model never treats as targets. Hovering any cell shows the two variable names, the score with its seed range, and any flags; clicking a row or column label opens that variable's neighborhood view. This format is used instead of a drawn network because with dozens of variables and hundreds of links, a node-and-arrow diagram becomes unreadable."
         },
         {
           "id": "node_edge",
@@ -158,14 +158,14 @@
       "terms": [
         {
           "id": "factor",
-          "term": "Reflective factor",
+          "term": "Latent factor",
           "aliases": [
             "reflective factor",
             "latent factor",
             "factors (F01"
           ],
-          "short": "Many closely related indicators summarized by one underlying dimension (e.g. dozens of civil-liberty indicators behind one 'Liberal-institutional core'). Factor names are interpretive labels by the AIM-3D Lab.",
-          "long": "V-Dem measures some concepts with many strongly correlated indicators. Feeding them into the model separately creates redundancy that destabilizes estimation, so groups of related indicators are summarized by latent factors estimated with exploratory factor analysis: each factor is one underlying dimension that its member indicators reflect. The number of factors is chosen by parallel analysis, and factor scores enter the model in place of their members. Display names like 'Mass mobilization' are interpretive labels assigned by the lab - the authoritative definition of each factor is its member list, shown in the node's neighborhood view. Factor numbering is panel-specific: F05 in the Century view and F05 in the Modern view are different constructs."
+          "short": "Many closely related indicators summarized by one underlying construct, specified from democratic theory in a confirmatory measurement model. Each factor is defined by its member indicators, listed in its neighborhood view.",
+          "long": "V-Dem measures some concepts with many strongly correlated indicators. Feeding them into the model separately creates redundancy that destabilizes estimation, so groups of related indicators are summarized by latent factors. In the current results the factor structure is confirmatory: which indicators belong to which construct is fixed in advance from democratic theory rather than discovered from the data, with adjustments described in Methods and data. Factor scores enter the model in place of their members. The authoritative definition of each factor is its member list, shown in the node's neighborhood view; construct names are being added with the revised methods description. Factor numbering is panel-specific: the same F-number in the Century view and the Modern view are different constructs."
         },
         {
           "id": "composite",
@@ -244,7 +244,7 @@
             "rho"
           ],
           "short": "A one-number summary of whether disturbances fade out (below 1) or persist and compound (at or above 1). The deployed system is constrained to stay below 1; the unconstrained value is shown as a diagnostic.",
-          "long": "The spectral radius summarizes the system's stability at each point in time: below 1, disturbances gradually fade; at or above 1, they persist or compound. The deployed system is constrained to remain just below 1 so that impulse responses are well-defined, and the portal shows both this constrained series and the unconstrained diagnostic. Where the constrained value runs extremely close to 1 - as in the Modern panel, whose maximum is 0.9993 - shocks are effectively near-permanent over the horizon shown: the system barely mean-reverts."
+          "long": "The spectral radius summarizes the system's stability at each point in time: below 1, disturbances gradually fade; at or above 1, they persist or compound. The deployed system is constrained to remain just below 1 so that impulse responses are well-defined, and the portal shows both this constrained series and the unconstrained diagnostic. Where the constrained value runs extremely close to 1, shocks are effectively near-permanent over the horizon shown: the system barely mean-reverts. The Dynamics view reports the exact values for each panel."
         },
         {
           "id": "irf",
