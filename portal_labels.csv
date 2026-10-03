@@ -75,7 +75,7 @@ modern_factors,F12,reflective_factor,Factor: Informational globalization (de jur
 modern_factors,F13,reflective_factor,Factor: Financial globalization (de facto) / Trade globalization (de jure) / Financial globalization (de jure),Economic globalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
 modern_factors,F14,reflective_factor,Factor: Political globalization (de jure) / Political globalization (de facto),Political globalization (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
 modern_factors,F15,reflective_factor,Factor: Net migration rate / Net migrants,Migration (factor),CONSTRUCT,"construct name supplied by the lab, 2026-10-03"
-modern_factors,F16,reflective_factor,Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),CONSTRUCT_PENDING,name supplied did not match members (mortality indicators); awaiting confirmation
+modern_factors,F16,reflective_factor,Factor: Infant mortality rate (WPP) / Under-5 mortality rate (WPP),Population density (factor),CONSTRUCT_PENDING,name supplied did not match members (mortality indicators); awaiting confirmation
 modern_factors,C_v2casoe,formative_composite,Composite: v2casoe (alr-mean),State of emergency (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 modern_factors,C_v2csstruc,formative_composite,Composite: v2csstruc (alr-mean),CSO structure (composite),CODEBOOK,"composite of the V-Dem item named; V-Dem Codebook v15 TOC, verified 2026-10-03"
 modern_factors,m_pop,singleton,Population (Maddison),Population (Maddison),KEEP,bundle label already readable (KOF / World Bank / UN WPP source name)
