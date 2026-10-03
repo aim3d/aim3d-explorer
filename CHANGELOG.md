@@ -12,6 +12,75 @@ say when that needs re-pasting.
 
 ---
 
+## v22 — 2026-10-03 · v2 results release, pass 1 (data swap + notice)
+Data bundles swapped to the v2 export: the pipeline was rerun under a
+confirmatory theoretical measurement model (A-CMB century, A-CMB-DU modern).
+Every number on the portal changes. Later passes add hazard views (2), the
+Methods rewrite with construct names and citations (3), and the glossary and
+assistant update (4).
+
+**Deployment workflow change.** `cfact/` and `hzfan/` (~165 MB) no longer
+travel in this package. Upload them into `data/{panel}/` directly from Drive
+(`Democratization/v2_theoretical/outputs/portal_export/`). Everything else
+in `data/` ships here as before. The package is the build for code and small
+data; the two large directories are the documented exception.
+
+Verified before packaging (both panels): node counts 60/82 and factor counts
+8/16 match the handoff and manifests; edge counts 745/509/5 and 1600/1280/1
+agree with `edges.json`; every edge endpoint and ICE key resolves; no edge
+targets a structural node; `forecast` flags match `role` (modern: 16
+structural, up from 8); forecast keys equal the endogenous set; history covers
+every node and every forecast country; all 82 modern nodes are shockable;
+the five hazard files parse and are referenced by no code.
+
+- **Corrected-results notice**: dated, dismissible banner at the top of every
+  page; returns in a fresh session (sessionStorage).
+- **Factor names suppressed**: v1 interpretive names are wrong for v2
+  constructs and are removed from `labels.json` for every F-id. Factor nodes
+  show their bundle label (the member list) until pass 3. The 48 verified
+  V-Dem singleton and composite names are preserved; 30 (century) and 26
+  (modern) newly added singletons show raw ids until the labels refresh.
+- **Methods, Stage 2 only**: the exploratory-factor-analysis prose was wrong
+  in its own terms for v2, not merely stale, and is replaced by the October
+  2026 revision paragraph plus the manifest's measurement provenance string.
+  The full rewrite and method citations (including Bussmann's NAVAR) wait
+  for the pipeline session's write-up. The node-naming card no longer calls
+  factor labels interpretive.
+- **Glossary**: three v1-specific references generalized (modern ρ 0.9993,
+  "29 to 47 variables", the EFA description in the factor entry). The pass-4
+  rewrite is unchanged in scope.
+- **Assistant digests regenerated** and scoped for v2 size: consensus edges
+  only, and effect curves into the outcome node only (16 and 28 of 509 and
+  1280); the digest states what it omits and points to the views. Modern
+  digest 110 KB, down from a 378 KB first regeneration. The framing rule that
+  named v1 factors is rewritten. **No Worker re-paste needed** — digests are
+  fetched live.
+- **Staleness guard**: a `cfact/` file whose node or shock set does not match
+  the current bundle is refused with an explanation instead of being drawn
+  against the v2 aggregate. Added because the sample `cfact` files supplied
+  with this pass were v1 (29 and 47 nodes); see the open item below. A v1
+  file is kept as `tier3/fixtures/stale_cfact.json` to test the guard.
+- Near-permanent IRF framing is now asserted from each panel's ρ rather than
+  by panel name: modern's constrained max is 0.9944 (above the 0.99 rule),
+  century's 0.9899 (below).
+- Tests made manifest-driven where they hard-coded `F05` or v1 counts.
+- Network density worst case grew: modern `v2xel_frefair` has 52 neighbours
+  and 700 edges among them (min node gap 22 px, from 68 px in v1). Hover
+  isolation still reduces it to the hovered node's edges; a score-threshold
+  control is the natural next step if the default view is judged too busy.
+
+**Resolved**: the first `cfact/` samples were from the old folder. Corrected
+v2 samples (6 century, 5 modern) verified: 60 and 82 baseline nodes matching
+the panel node sets, shock sets matching the aggregates, every country in
+`forecasts.json`, and shocked − baseline reproducing the invariant aggregate
+response to 1e-05 across 487,400 values. The staleness guard stays silent on
+them and fires on the v1 fixture. Safe to upload `cfact/` from Drive.
+
+Also fixed in the test harness: its fetch shim did not decode percent-encoded
+paths, so any country with a space in its name (e.g. `Costa Rica.json`)
+404ed under test while working in browsers and on Pages. Both test files now
+decode, matching real resolution.
+
 ## v21 — 2026-08-24 · selectable shocks and counterfactual trajectories
 Ships Stage 7c `irf_aggregate.json` and Stage 7d `cfact/<country>.json` for
 both panels, plus the updated manifests carrying `provenance.irf` and

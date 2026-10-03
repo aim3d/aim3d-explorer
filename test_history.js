@@ -71,7 +71,7 @@ process.on("exit", restore);
     });
     const { window } = dom;
     window.fetch = async (p) => {
-      const fp = path.join(root, p);
+      const fp = path.join(root, decodeURIComponent(p));
       if (!fs.existsSync(fp)) return { ok: false, status: 404 };
       return { ok: true, status: 200, json: async () => JSON.parse(fs.readFileSync(fp, "utf8")) };
     };

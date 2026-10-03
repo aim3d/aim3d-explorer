@@ -26,7 +26,7 @@ FRAMING_RULES = [
     "Horizons 6-10 are unvalidated. Never characterize them as reliable.",
     "Edges flagged aggregation_adjacent have a source containing a polyarchy aggregation component. They are correct model structure but must NOT be described as discovered causal drivers of democracy.",
     "Structural (source-only) nodes are never modeled as targets: between-country variance dominates their within-country signal (low ICC), so effects onto them are not identified. Never claim the model found 'no effect' on them; the model does not estimate effects on them at all.",
-    "Factor numbering is panel-specific. Century F05 and Modern F05 are different constructs. Never cross-reference factors by number across panels; use display names, and note that Century 'Egalitarianism' and Modern 'Inclusive development' are related but not identical constructs.",
+    "Factor numbering is panel-specific: an F-id in the Century view and the same F-id in the Modern view are different constructs. Never cross-reference factors by number across panels. Factors are theoretical constructs from a confirmatory measurement model; where no construct name is available, describe a factor by its member indicators, never by a guessed name.",
     "All ICE, IRF, and lambda values are in standardized units. Polyarchy displays in native 0-1 units only in the Trajectories view.",
     "Scores are NAVAR causal scores (median across a 3-seed ensemble); 'consensus' means retained in all 3 seeds, 'majority' means 2 of 3. The consensus graph is the canonical object.",
     "Latent factor display names are interpretive labels assigned by the AIM-3D Lab; the constituent V-Dem indicators define each factor.",
@@ -71,8 +71,12 @@ def build_digest(panel):
         }
 
     # Compact positional schema; see "edges_schema" in the digest.
+    # v2 panels are large (up to 1,600 retained edges); the digest carries
+    # the consensus set only, which is the canonical graph.
     edge_out = []
     for e in edges:
+        if not e["consensus"]:
+            continue
         edge_out.append([
             e["source"], e["target"], e["retention"],
             1 if e["consensus"] else 0,
@@ -81,8 +85,12 @@ def build_digest(panel):
         ])
 
     # Grid is identical across regimes; stored once per edge. 5 stored points.
+    # Size control for v2: only effect curves INTO the outcome node travel with
+    # the digest; every other curve is viewable in the Effect curves view.
     ice_out = {}
     for key, regimes in ice.items():
+        if not key.endswith("->v2x_polyarchy"):
+            continue
         ice_out[key] = {
             "grid": rnd(downsample(regimes["low"]["grid"], 5), 3),
             **{r: rnd(downsample(regimes[r]["delta"], 5), 4)
@@ -133,7 +141,12 @@ def build_digest(panel):
         "validation": validation,
         "not_in_digest": (
             "Per-country history and per-country model-implied trajectories are not included. "
-            "Direct users to the Trajectories view for any country-specific series."
+            "Direct users to the Trajectories view for any country-specific series. "
+            "Edges: only the consensus set (retained in all seeds) is listed; majority-only edges "
+            "are viewable in the Edges view. Effect curves: only curves into the electoral democracy "
+            "index are included; curves for every other consensus edge are in the Effect curves view. "
+            "Impulse responses and counterfactual trajectories for selectable shocks are in the "
+            "Dynamics view and are not in this digest beyond the single exported shock."
         ),
     }
     return digest

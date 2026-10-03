@@ -1,0 +1,45 @@
+{
+ "generated": "2026-10-03",
+ "panel": "modern",
+ "measurement": "v2 models of record (A-CMB century / A-CMB-DU modern, manual edits), hazard track rebuilt on v2 blocks",
+ "pipeline": [
+  "Pipeline_H1_Blocks",
+  "Pipeline_H2_BlockFactors",
+  "Pipeline_H3_BlockEnsembles",
+  "Pipeline_H4_Dataset",
+  "Pipeline_H5_Models",
+  "Pipeline_H5c_RiskSelector",
+  "Pipeline_H6_Products",
+  "Pipeline_H7_Vector_Joint_Selector",
+  "Pipeline_S7e_Hazard_Export"
+ ],
+ "published_risk_rule": "argmin window log loss per combo; locked; evaluation scope 2006+; fitted candidates (p_pool) eligible only with >= 10 window events (minimum-events rule, adopted 2026-10-03 after the modern aut h1 pool failure); below 10 window events selection is suppressed and the product takes p_avg3 (equal-weight combination; forecast-combination-puzzle rule, adopted 2026-10-03 after the guarded run showed 8-event selection noise; all intermediate rules and outcomes are retained in the project record)",
+ "fan_gate": "lgb_s2",
+ "fan_scope": "2006+",
+ "caveats": [
+  "central 50% fan band under-covers (~0.33-0.36; shared by the unconditional benchmark); 90% band near-nominal",
+  "modern aut h1 is label-starved (18 training positives): published column is the equal-weight combination per the selector rule",
+  "per-block NAVAR ft_val is not comparable across blocks (masked loss divides by the dynamic-target count)",
+  "near-constant nodes (flagged in the leaderboard) have uninformative CRPS ratios"
+ ],
+ "sources_sha256_16": {
+  "risk_selector/modern_dem_h1_risk_predictions.csv": "2a151ca54c8d4e2b",
+  "risk_selector/modern_dem_h3_risk_predictions.csv": "3b73d31b276fbfe3",
+  "risk_selector/modern_dem_h5_risk_predictions.csv": "5fb8e12f11c5c4d0",
+  "risk_selector/modern_aut_h1_risk_predictions.csv": "0813affc5fe82d63",
+  "risk_selector/modern_aut_h3_risk_predictions.csv": "e7190aa54dcc9073",
+  "risk_selector/modern_aut_h5_risk_predictions.csv": "31ed519808aac31f",
+  "distributional/modern_h1_rowwise.csv": "a5a0a05a446b48be",
+  "distributional/modern_h3_rowwise.csv": "024c305ee6765a0d",
+  "distributional/modern_h5_rowwise.csv": "f1e7886118aa9ac6",
+  "joint/modern_h1_fan_lgb_s2.csv": "42ed1641e5578cba",
+  "joint/modern_h3_fan_lgb_s2.csv": "e961f91bd9f4c1b8",
+  "joint/modern_h5_fan_lgb_s2.csv": "543eb832ffb8d5fb",
+  "risk_selector/risk_selector_manifest.json": "b6610538a5c9ef2e",
+  "risk_selector/risk_selector_metrics.csv": "2185471455c706f5",
+  "distributional/dist_metrics.csv": "09f8dd6fdda3ad91",
+  "selector/selector_node_results.csv": "2417f88195659c16",
+  "joint/joint_node_marginals.csv": "aeaf01ff687fabea",
+  "vector/vector_node_results.csv": "2bfc3ef697c3c37e"
+ }
+}

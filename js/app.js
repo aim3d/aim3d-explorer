@@ -7,8 +7,8 @@
 
 /* ───────────────────────── State ───────────────────────── */
 
-const BUILD = "v21";
-const BUILD_DATE = "2026-08-24";
+const BUILD = "v22";
+const BUILD_DATE = "2026-10-03";
 
 const PANELS = {
   century_factors: { name: "Century view", span: "1900–2023" },
@@ -1085,6 +1085,24 @@ async function renderIrfSection() {
   const C = await loadCfact(S.panel, S.irfCountry);
   if (!C || !C.shocks[S.irfShock]) {
     $("irf-note").textContent = "No counterfactual trajectories exported for this country.";
+    $("cfact-norm-chart").innerHTML = ""; $("cfact-node-chart").innerHTML = "";
+    $("cfact-norm-legend").innerHTML = ""; $("cfact-node-legend").innerHTML = ""; $("cfact-rank").innerHTML = "";
+    return;
+  }
+  /* Guard against a counterfactual file from a different export generation:
+     its node and shock sets must match this panel's bundle exactly. */
+  const panelIds = new Set(Object.keys(byId));
+  const stale =
+    Object.keys(C.baseline).some((k) => !panelIds.has(k)) ||
+    Object.keys(C.shocks).length !== Object.keys(A.shocks).length ||
+    Object.keys(C.shocks).some((k) => !(k in A.shocks));
+  if (stale) {
+    $("irf-note").textContent =
+      "This country's counterfactual file does not match the current results bundle " +
+      "(different node or shock set) and is not shown. It needs re-exporting under the current model.";
+    $("cfact-norm-chart").innerHTML = ""; $("cfact-node-chart").innerHTML = "";
+    $("cfact-norm-legend").innerHTML = ""; $("cfact-node-legend").innerHTML = ""; $("cfact-rank").innerHTML = "";
+    $("irf-def").textContent = "";
     return;
   }
   drawCfact(C, byId);
@@ -1448,9 +1466,9 @@ function renderMethods() {
 
     <div class="methods-card">
       <h3>Stage 2 — Measurement model</h3>
-      <p>V-Dem measures several concepts with many strongly correlated indicators. Entering them individually creates near-collinear families that destabilize estimation, so related indicators are summarized before the causal stage. Groups are reduced by exploratory factor analysis with maximum-likelihood extraction and varimax rotation; the number of factors is chosen by parallel analysis rather than fixed in advance, indicators are assigned to a factor at a salience threshold of θ = 0.50, and factor scores are computed as groupwise BLUP. Items recorded as shares across categories are compositional rather than reflective, and are handled separately as additive log-ratio mean composites.</p>
-      <p>The electoral democracy index is protected: it always enters as an observed variable and is never absorbed into a factor. This panel resolves to ${m.n_nodes} nodes — ${esc(kindLine)}.</p>
+      <p><strong>October 2026 revision.</strong> The factor layer was replaced by a theoretical confirmatory measurement model (a fixed structure specified from democratic theory, with a common-method-bias adjustment and, on the modern panel, a demographic-accounting block). The complete pipeline, including all networks, effect curves, dynamics, forecasts, and counterfactuals, was recomputed under this model. Earlier results were produced under an exploratory factor structure and are superseded.</p>
       <div class="prov">${esc(p.measurement)}</div>
+      <p>The electoral democracy index is protected: it always enters as an observed variable and is never absorbed into a factor. This panel resolves to ${m.n_nodes} nodes — ${esc(kindLine)}. Factor nodes are theoretical constructs; until construct names are published here, each factor is identified by its member indicators (shown in its neighborhood view on the Structure page). A full description of the revised measurement model is forthcoming.</p>
       ${nStructural
         ? `<p>Of these, <strong>${nStructural} nodes are structural (source-only)</strong>: their between-country variance dominates their within-country variance, measured by the intraclass correlation, leaving too little within-country signal to identify what affects them. They act as sources only, and their target columns are greyed in the Structure view. This is a statement about identifiability, not a finding that nothing affects them.</p>`
         : `<p>In this panel every node retains enough within-country variation to serve as both source and target, so there are no structural source-only nodes.</p>`}
@@ -1527,7 +1545,7 @@ function renderMethods() {
 
     <div class="methods-card">
       <h3>Node naming</h3>
-      <p>Observed indicators display their V-Dem codebook names (v15). Latent factors display interpretive labels assigned by the AIM-3D Lab; the constituent V-Dem indicators for every factor are listed in its neighborhood view on the Structure page. Factor numbering is panel-specific: the same number does not denote the same construct across the Century and Modern views. Plain-language explanations of every method and quantity are in the Reader's guide.</p>
+      <p>Observed indicators display their V-Dem codebook names (v15) where a verified name is on file; newly added indicators show their raw V-Dem code until the labels refresh. Latent factors are theoretical constructs from the confirmatory measurement model and are identified by their member indicators, listed in each factor's neighborhood view on the Structure page; construct names will be added with the revised methods description. Factor numbering is panel-specific: the same number does not denote the same construct across the Century and Modern views. Plain-language explanations of every method and quantity are in the Reader's guide.</p>
     </div>
 
     <div class="methods-card">
@@ -1588,7 +1606,22 @@ async function switchPanel(panel) {
   await showView(S.view);
 }
 
+const NOTICE_KEY = "aim3d-notice-dismissed-2026-10";
+
+function initNotice() {
+  const n = $("notice");
+  if (!n) return;
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem(NOTICE_KEY) === "1"; } catch (e) { /* storage unavailable */ }
+  n.hidden = dismissed;
+  $("notice-close").addEventListener("click", () => {
+    n.hidden = true;
+    try { sessionStorage.setItem(NOTICE_KEY, "1"); } catch (e) { /* ignore */ }
+  });
+}
+
 function init() {
+  initNotice();
   document.querySelectorAll(".panel-tag").forEach((b) =>
     b.addEventListener("click", () => switchPanel(b.dataset.panel)));
   window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
