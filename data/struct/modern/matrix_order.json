@@ -1,0 +1,1122 @@
+{
+ "panel": "modern_factors",
+ "method": "consensus of Louvain modularity partitions on symmetrized |score| of majority edges: 100 starts, nodes grouped when they share a block in more than 50% of runs, repeated until every start agrees; average-linkage optimal leaf ordering within and between blocks; structural nodes as a separate first band",
+ "meaning": "an ordering that places strongly linked nodes next to each other; the groupings are an aid to reading, not statistically distinct clusters",
+ "modularity": 0.1902,
+ "stability_ari": 0.65,
+ "single_run_agreement_ari": 0.502,
+ "consensus_converged": true,
+ "modularity_best_single_run": 0.1931,
+ "modularity_rewired_mean": 0.1802,
+ "modularity_rewired_sd": 0.0066,
+ "modularity_z": 2.0,
+ "membership": {
+  "F01": {
+   "block": 3,
+   "strength": 0.6,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.263
+  },
+  "F02": {
+   "block": 4,
+   "strength": 0.801,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.082
+  },
+  "F03": {
+   "block": 5,
+   "strength": 0.747,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.151
+  },
+  "F04": {
+   "block": 4,
+   "strength": 0.458,
+   "borderline": true,
+   "next_block": 5,
+   "next_strength": 0.478
+  },
+  "F05": {
+   "block": 5,
+   "strength": 0.814,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.135
+  },
+  "F06": {
+   "block": 4,
+   "strength": 0.778,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.117
+  },
+  "F09": {
+   "block": 2,
+   "strength": 0.803,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.235
+  },
+  "F10": {
+   "block": 2,
+   "strength": 0.803,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.146
+  },
+  "F11": {
+   "block": 1,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.304
+  },
+  "F12": {
+   "block": 2,
+   "strength": 0.753,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.111
+  },
+  "F13": {
+   "block": 2,
+   "strength": 0.803,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.235
+  },
+  "F14": {
+   "block": 2,
+   "strength": 0.803,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.146
+  },
+  "F15": {
+   "block": 2,
+   "strength": 0.798,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.245
+  },
+  "F16": {
+   "block": 2,
+   "strength": 0.753,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.111
+  },
+  "C_v2casoe": {
+   "block": 5,
+   "strength": 0.653,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.287
+  },
+  "C_v2csstruc": {
+   "block": 3,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.136
+  },
+  "v2cacamps": {
+   "block": 5,
+   "strength": 0.814,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.135
+  },
+  "v2caconmob": {
+   "block": 3,
+   "strength": 0.706,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.187
+  },
+  "v2cademmob": {
+   "block": 3,
+   "strength": 0.796,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.092
+  },
+  "v2cagenmob": {
+   "block": 3,
+   "strength": 0.796,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.092
+  },
+  "v2caviol": {
+   "block": 3,
+   "strength": 0.797,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.091
+  },
+  "v2clstown": {
+   "block": 5,
+   "strength": 0.814,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.135
+  },
+  "v2csantimv": {
+   "block": 3,
+   "strength": 0.796,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.092
+  },
+  "v2ddyrall": {
+   "block": 1,
+   "strength": 0.736,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.187
+  },
+  "v2eldonate": {
+   "block": 5,
+   "strength": 0.815,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.13
+  },
+  "v2elffelrbin": {
+   "block": 5,
+   "strength": 0.771,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.127
+  },
+  "v2elpubfin": {
+   "block": 5,
+   "strength": 0.815,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.13
+  },
+  "v2exagehos": {
+   "block": 2,
+   "strength": 0.789,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.134
+  },
+  "v2exl_legitperf": {
+   "block": 4,
+   "strength": 0.644,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.145
+  },
+  "v2exl_legitratio": {
+   "block": 1,
+   "strength": 0.606,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.188
+  },
+  "v2juaccnt": {
+   "block": 1,
+   "strength": 0.731,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.197
+  },
+  "v2jupoatck": {
+   "block": 5,
+   "strength": 0.615,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.342
+  },
+  "v2jureform": {
+   "block": 4,
+   "strength": 0.73,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.137
+  },
+  "v2jureview": {
+   "block": 1,
+   "strength": 0.705,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.207
+  },
+  "v2mecorrpt": {
+   "block": 4,
+   "strength": 0.73,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.137
+  },
+  "v2mefemjrn": {
+   "block": 1,
+   "strength": 0.705,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.228
+  },
+  "v2pscohesv": {
+   "block": 5,
+   "strength": 0.747,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.151
+  },
+  "v2pscomprg": {
+   "block": 3,
+   "strength": 0.719,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.16
+  },
+  "v2psnatpar": {
+   "block": 4,
+   "strength": 0.518,
+   "borderline": true,
+   "next_block": 5,
+   "next_strength": 0.154
+  },
+  "v2psprlnks": {
+   "block": 3,
+   "strength": 0.649,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.244
+  },
+  "v2pssunpar": {
+   "block": 4,
+   "strength": 0.518,
+   "borderline": true,
+   "next_block": 5,
+   "next_strength": 0.154
+  },
+  "v2strenarm": {
+   "block": 5,
+   "strength": 0.801,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.158
+  },
+  "v2svdomaut": {
+   "block": 1,
+   "strength": 0.606,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.188
+  },
+  "v2svinlaut": {
+   "block": 1,
+   "strength": 0.606,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.188
+  },
+  "v2svstterr": {
+   "block": 1,
+   "strength": 0.703,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.141
+  },
+  "v2x_cspart": {
+   "block": 4,
+   "strength": 0.811,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.08
+  },
+  "v2x_elecoff": {
+   "block": 3,
+   "strength": 0.601,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.244
+  },
+  "v2x_frassoc_thick": {
+   "block": 4,
+   "strength": 0.6,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.195
+  },
+  "v2x_freexp_altinf": {
+   "block": 4,
+   "strength": 0.778,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.117
+  },
+  "v2x_jucon": {
+   "block": 4,
+   "strength": 0.778,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.059
+  },
+  "v2x_suffr": {
+   "block": 5,
+   "strength": 0.624,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.177
+  },
+  "v2xcl_rol": {
+   "block": 4,
+   "strength": 0.766,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.116
+  },
+  "v2xdd_dd": {
+   "block": 2,
+   "strength": 0.645,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.149
+  },
+  "v2xdl_delib": {
+   "block": 4,
+   "strength": 0.801,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.065
+  },
+  "v2xeg_eqaccess": {
+   "block": 4,
+   "strength": 0.796,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.078
+  },
+  "v2xeg_eqprotec": {
+   "block": 4,
+   "strength": 0.796,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.078
+  },
+  "v2xel_frefair": {
+   "block": 5,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.221
+  },
+  "v2xel_locelec": {
+   "block": 5,
+   "strength": 0.771,
+   "borderline": false,
+   "next_block": 4,
+   "next_strength": 0.127
+  },
+  "v2xel_regelec": {
+   "block": 5,
+   "strength": 0.825,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.12
+  },
+  "v2xlg_legcon": {
+   "block": 4,
+   "strength": 0.778,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.059
+  },
+  "wb_gni_curr": {
+   "block": 2,
+   "strength": 0.803,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.146
+  },
+  "wb_life_expectancy": {
+   "block": 2,
+   "strength": 0.753,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.111
+  },
+  "wb_oil_rents_gdp": {
+   "block": 5,
+   "strength": 0.814,
+   "borderline": false,
+   "next_block": 1,
+   "next_strength": 0.135
+  },
+  "wb_rural_pop_growth": {
+   "block": 1,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.304
+  },
+  "wb_urban_pop_growth": {
+   "block": 1,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.304
+  }
+ },
+ "borderline_threshold": 0.6,
+ "n_borderline": 3,
+ "share_of_strength_within_blocks": 0.405,
+ "share_expected_if_unrelated": 0.198,
+ "n_blocks": 5,
+ "chance_comparison": {
+  "observed": 0.1931,
+  "rewired_mean": 0.1802,
+  "rewired_sd": 0.0066,
+  "note": "like for like: the best single-run modularity of the real graph against the best single-run modularity of randomly rewired graphs. Quote these two numbers together; do not pair the stabilized modularity with the rewired figure"
+ },
+ "caption": "Variables are ordered so that strongly linked ones sit together. The groupings are an aid to reading and are not statistically distinct clusters: modularity 0.193, against 0.180 in randomly rewired graphs of the same density.",
+ "order": [
+  "v2exl_legitratio",
+  "v2svdomaut",
+  "v2svinlaut",
+  "v2jureview",
+  "v2svstterr",
+  "wb_rural_pop_growth",
+  "F11",
+  "wb_urban_pop_growth",
+  "v2mefemjrn",
+  "v2ddyrall",
+  "v2juaccnt",
+  "F10",
+  "wb_gni_curr",
+  "F14",
+  "F15",
+  "F09",
+  "F13",
+  "F12",
+  "wb_life_expectancy",
+  "F16",
+  "v2exagehos",
+  "v2xdd_dd",
+  "v2caconmob",
+  "C_v2csstruc",
+  "v2cagenmob",
+  "v2cademmob",
+  "v2csantimv",
+  "v2caviol",
+  "v2x_elecoff",
+  "v2psprlnks",
+  "F01",
+  "v2pscomprg",
+  "v2exl_legitperf",
+  "v2psnatpar",
+  "v2pssunpar",
+  "F04",
+  "F02",
+  "F06",
+  "v2x_freexp_altinf",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqaccess",
+  "v2jureform",
+  "v2mecorrpt",
+  "v2x_frassoc_thick",
+  "C_v2casoe",
+  "v2jupoatck",
+  "v2xel_frefair",
+  "v2eldonate",
+  "v2elpubfin",
+  "v2strenarm",
+  "v2xel_regelec",
+  "v2pscohesv",
+  "F03",
+  "v2xel_locelec",
+  "v2elffelrbin",
+  "wb_oil_rents_gdp",
+  "v2clstown",
+  "F05",
+  "v2cacamps",
+  "v2x_suffr",
+  "F07",
+  "wpp_sex_ratio_jul",
+  "wpp_median_age_jul",
+  "m_pop",
+  "v2strenadm",
+  "wpp_live_births_surviving_age1",
+  "wb_urban_pop_share",
+  "v2xeg_eqdr",
+  "wb_pop_density",
+  "wpp_infant_deaths",
+  "wb_agri_land_share",
+  "wb_land_area",
+  "v2elsnlsff",
+  "v2stfisccap",
+  "v2psplats",
+  "F08"
+ ],
+ "row_order": [
+  "v2exl_legitratio",
+  "v2svdomaut",
+  "v2svinlaut",
+  "v2jureview",
+  "v2svstterr",
+  "wb_rural_pop_growth",
+  "F11",
+  "wb_urban_pop_growth",
+  "v2mefemjrn",
+  "v2ddyrall",
+  "v2juaccnt",
+  "F10",
+  "wb_gni_curr",
+  "F14",
+  "F15",
+  "F09",
+  "F13",
+  "F12",
+  "wb_life_expectancy",
+  "F16",
+  "v2exagehos",
+  "v2xdd_dd",
+  "v2caconmob",
+  "C_v2csstruc",
+  "v2cagenmob",
+  "v2cademmob",
+  "v2csantimv",
+  "v2caviol",
+  "v2x_elecoff",
+  "v2psprlnks",
+  "F01",
+  "v2pscomprg",
+  "v2exl_legitperf",
+  "v2psnatpar",
+  "v2pssunpar",
+  "F04",
+  "F02",
+  "F06",
+  "v2x_freexp_altinf",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqaccess",
+  "v2jureform",
+  "v2mecorrpt",
+  "v2x_frassoc_thick",
+  "C_v2casoe",
+  "v2jupoatck",
+  "v2xel_frefair",
+  "v2eldonate",
+  "v2elpubfin",
+  "v2strenarm",
+  "v2xel_regelec",
+  "v2pscohesv",
+  "F03",
+  "v2xel_locelec",
+  "v2elffelrbin",
+  "wb_oil_rents_gdp",
+  "v2clstown",
+  "F05",
+  "v2cacamps",
+  "v2x_suffr",
+  "F07",
+  "wpp_sex_ratio_jul",
+  "wpp_median_age_jul",
+  "m_pop",
+  "v2strenadm",
+  "wpp_live_births_surviving_age1",
+  "wb_urban_pop_share",
+  "v2xeg_eqdr",
+  "wb_pop_density",
+  "wpp_infant_deaths",
+  "wb_agri_land_share",
+  "wb_land_area",
+  "v2elsnlsff",
+  "v2stfisccap",
+  "v2psplats",
+  "F08"
+ ],
+ "column_order": [
+  "v2exl_legitratio",
+  "v2svdomaut",
+  "v2svinlaut",
+  "v2jureview",
+  "v2svstterr",
+  "wb_rural_pop_growth",
+  "F11",
+  "wb_urban_pop_growth",
+  "v2mefemjrn",
+  "v2ddyrall",
+  "v2juaccnt",
+  "F10",
+  "wb_gni_curr",
+  "F14",
+  "F15",
+  "F09",
+  "F13",
+  "F12",
+  "wb_life_expectancy",
+  "F16",
+  "v2exagehos",
+  "v2xdd_dd",
+  "v2caconmob",
+  "C_v2csstruc",
+  "v2cagenmob",
+  "v2cademmob",
+  "v2csantimv",
+  "v2caviol",
+  "v2x_elecoff",
+  "v2psprlnks",
+  "F01",
+  "v2pscomprg",
+  "v2exl_legitperf",
+  "v2psnatpar",
+  "v2pssunpar",
+  "F04",
+  "F02",
+  "F06",
+  "v2x_freexp_altinf",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqaccess",
+  "v2jureform",
+  "v2mecorrpt",
+  "v2x_frassoc_thick",
+  "C_v2casoe",
+  "v2jupoatck",
+  "v2xel_frefair",
+  "v2eldonate",
+  "v2elpubfin",
+  "v2strenarm",
+  "v2xel_regelec",
+  "v2pscohesv",
+  "F03",
+  "v2xel_locelec",
+  "v2elffelrbin",
+  "wb_oil_rents_gdp",
+  "v2clstown",
+  "F05",
+  "v2cacamps",
+  "v2x_suffr"
+ ],
+ "blocks": [
+  {
+   "id": 1,
+   "name": "Block 1",
+   "kind": "cohesive",
+   "nodes": [
+    "v2exl_legitratio",
+    "v2svdomaut",
+    "v2svinlaut",
+    "v2jureview",
+    "v2svstterr",
+    "wb_rural_pop_growth",
+    "F11",
+    "wb_urban_pop_growth",
+    "v2mefemjrn",
+    "v2ddyrall",
+    "v2juaccnt"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 2,
+   "name": "Block 2",
+   "kind": "cohesive",
+   "nodes": [
+    "F10",
+    "wb_gni_curr",
+    "F14",
+    "F15",
+    "F09",
+    "F13",
+    "F12",
+    "wb_life_expectancy",
+    "F16",
+    "v2exagehos",
+    "v2xdd_dd"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 3,
+   "name": "Block 3",
+   "kind": "cohesive",
+   "nodes": [
+    "v2caconmob",
+    "C_v2csstruc",
+    "v2cagenmob",
+    "v2cademmob",
+    "v2csantimv",
+    "v2caviol",
+    "v2x_elecoff",
+    "v2psprlnks",
+    "F01",
+    "v2pscomprg"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 4,
+   "name": "Block 4",
+   "kind": "cohesive",
+   "nodes": [
+    "v2exl_legitperf",
+    "v2psnatpar",
+    "v2pssunpar",
+    "F04",
+    "F02",
+    "F06",
+    "v2x_freexp_altinf",
+    "v2x_cspart",
+    "v2xdl_delib",
+    "v2xlg_legcon",
+    "v2x_jucon",
+    "v2xcl_rol",
+    "v2xeg_eqprotec",
+    "v2xeg_eqaccess",
+    "v2jureform",
+    "v2mecorrpt",
+    "v2x_frassoc_thick"
+   ],
+   "borderline": [
+    "v2psnatpar",
+    "v2pssunpar",
+    "F04"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "Block 5",
+   "kind": "cohesive",
+   "nodes": [
+    "C_v2casoe",
+    "v2jupoatck",
+    "v2xel_frefair",
+    "v2eldonate",
+    "v2elpubfin",
+    "v2strenarm",
+    "v2xel_regelec",
+    "v2pscohesv",
+    "F03",
+    "v2xel_locelec",
+    "v2elffelrbin",
+    "wb_oil_rents_gdp",
+    "v2clstown",
+    "F05",
+    "v2cacamps",
+    "v2x_suffr"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 0,
+   "name": "Structural (sources only)",
+   "kind": "structural",
+   "nodes": [
+    "F07",
+    "wpp_sex_ratio_jul",
+    "wpp_median_age_jul",
+    "m_pop",
+    "v2strenadm",
+    "wpp_live_births_surviving_age1",
+    "wb_urban_pop_share",
+    "v2xeg_eqdr",
+    "wb_pop_density",
+    "wpp_infant_deaths",
+    "wb_agri_land_share",
+    "wb_land_area",
+    "v2elsnlsff",
+    "v2stfisccap",
+    "v2psplats",
+    "F08"
+   ]
+  }
+ ],
+ "block_matrix": [
+  {
+   "source_block": 1,
+   "target_block": 1,
+   "possible": 110,
+   "edges": 47,
+   "density": 0.4273,
+   "mean_score": 0.012901,
+   "share_positive": 0.532
+  },
+  {
+   "source_block": 1,
+   "target_block": 2,
+   "possible": 121,
+   "edges": 33,
+   "density": 0.2727,
+   "mean_score": 0.003905,
+   "share_positive": 0.333
+  },
+  {
+   "source_block": 1,
+   "target_block": 3,
+   "possible": 110,
+   "edges": 25,
+   "density": 0.2273,
+   "mean_score": 0.003618,
+   "share_positive": 0.44
+  },
+  {
+   "source_block": 1,
+   "target_block": 4,
+   "possible": 187,
+   "edges": 49,
+   "density": 0.262,
+   "mean_score": 0.003737,
+   "share_positive": 0.449
+  },
+  {
+   "source_block": 1,
+   "target_block": 5,
+   "possible": 176,
+   "edges": 36,
+   "density": 0.2045,
+   "mean_score": 0.002776,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 2,
+   "target_block": 1,
+   "possible": 121,
+   "edges": 31,
+   "density": 0.2562,
+   "mean_score": 0.005925,
+   "share_positive": 0.516
+  },
+  {
+   "source_block": 2,
+   "target_block": 2,
+   "possible": 110,
+   "edges": 47,
+   "density": 0.4273,
+   "mean_score": 0.018113,
+   "share_positive": 0.681
+  },
+  {
+   "source_block": 2,
+   "target_block": 3,
+   "possible": 110,
+   "edges": 34,
+   "density": 0.3091,
+   "mean_score": 0.005041,
+   "share_positive": 0.353
+  },
+  {
+   "source_block": 2,
+   "target_block": 4,
+   "possible": 187,
+   "edges": 44,
+   "density": 0.2353,
+   "mean_score": 0.004431,
+   "share_positive": 0.455
+  },
+  {
+   "source_block": 2,
+   "target_block": 5,
+   "possible": 176,
+   "edges": 41,
+   "density": 0.233,
+   "mean_score": 0.004091,
+   "share_positive": 0.683
+  },
+  {
+   "source_block": 3,
+   "target_block": 1,
+   "possible": 110,
+   "edges": 38,
+   "density": 0.3455,
+   "mean_score": 0.00597,
+   "share_positive": 0.368
+  },
+  {
+   "source_block": 3,
+   "target_block": 2,
+   "possible": 110,
+   "edges": 43,
+   "density": 0.3909,
+   "mean_score": 0.00475,
+   "share_positive": 0.558
+  },
+  {
+   "source_block": 3,
+   "target_block": 3,
+   "possible": 90,
+   "edges": 47,
+   "density": 0.5222,
+   "mean_score": 0.014299,
+   "share_positive": 0.489
+  },
+  {
+   "source_block": 3,
+   "target_block": 4,
+   "possible": 170,
+   "edges": 53,
+   "density": 0.3118,
+   "mean_score": 0.006886,
+   "share_positive": 0.717
+  },
+  {
+   "source_block": 3,
+   "target_block": 5,
+   "possible": 160,
+   "edges": 34,
+   "density": 0.2125,
+   "mean_score": 0.0037,
+   "share_positive": 0.706
+  },
+  {
+   "source_block": 4,
+   "target_block": 1,
+   "possible": 187,
+   "edges": 58,
+   "density": 0.3102,
+   "mean_score": 0.004603,
+   "share_positive": 0.414
+  },
+  {
+   "source_block": 4,
+   "target_block": 2,
+   "possible": 187,
+   "edges": 61,
+   "density": 0.3262,
+   "mean_score": 0.004758,
+   "share_positive": 0.426
+  },
+  {
+   "source_block": 4,
+   "target_block": 3,
+   "possible": 170,
+   "edges": 37,
+   "density": 0.2176,
+   "mean_score": 0.004376,
+   "share_positive": 0.622
+  },
+  {
+   "source_block": 4,
+   "target_block": 4,
+   "possible": 272,
+   "edges": 118,
+   "density": 0.4338,
+   "mean_score": 0.014395,
+   "share_positive": 0.847
+  },
+  {
+   "source_block": 4,
+   "target_block": 5,
+   "possible": 272,
+   "edges": 72,
+   "density": 0.2647,
+   "mean_score": 0.004615,
+   "share_positive": 0.681
+  },
+  {
+   "source_block": 5,
+   "target_block": 1,
+   "possible": 176,
+   "edges": 57,
+   "density": 0.3239,
+   "mean_score": 0.005089,
+   "share_positive": 0.439
+  },
+  {
+   "source_block": 5,
+   "target_block": 2,
+   "possible": 176,
+   "edges": 56,
+   "density": 0.3182,
+   "mean_score": 0.004475,
+   "share_positive": 0.571
+  },
+  {
+   "source_block": 5,
+   "target_block": 3,
+   "possible": 160,
+   "edges": 47,
+   "density": 0.2938,
+   "mean_score": 0.005095,
+   "share_positive": 0.596
+  },
+  {
+   "source_block": 5,
+   "target_block": 4,
+   "possible": 272,
+   "edges": 75,
+   "density": 0.2757,
+   "mean_score": 0.005228,
+   "share_positive": 0.627
+  },
+  {
+   "source_block": 5,
+   "target_block": 5,
+   "possible": 240,
+   "edges": 91,
+   "density": 0.3792,
+   "mean_score": 0.008061,
+   "share_positive": 0.538
+  },
+  {
+   "source_block": 0,
+   "target_block": 1,
+   "possible": 176,
+   "edges": 40,
+   "density": 0.2273,
+   "mean_score": 0.003715,
+   "share_positive": 0.45
+  },
+  {
+   "source_block": 0,
+   "target_block": 2,
+   "possible": 176,
+   "edges": 63,
+   "density": 0.358,
+   "mean_score": 0.005986,
+   "share_positive": 0.476
+  },
+  {
+   "source_block": 0,
+   "target_block": 3,
+   "possible": 160,
+   "edges": 31,
+   "density": 0.1938,
+   "mean_score": 0.002561,
+   "share_positive": 0.581
+  },
+  {
+   "source_block": 0,
+   "target_block": 4,
+   "possible": 272,
+   "edges": 60,
+   "density": 0.2206,
+   "mean_score": 0.003028,
+   "share_positive": 0.567
+  },
+  {
+   "source_block": 0,
+   "target_block": 5,
+   "possible": 256,
+   "edges": 50,
+   "density": 0.1953,
+   "mean_score": 0.002024,
+   "share_positive": 0.54
+  }
+ ],
+ "display": "rows: row_order (all nodes; structural sources form the last band). columns: column_order (the same order without the structural nodes, which receive nothing and would be empty columns). Draw faint lines at block boundaries; keep the sign coloring; use caption as the caption"
+}

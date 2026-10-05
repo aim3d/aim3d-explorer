@@ -17,16 +17,16 @@
     <div class="brand">
       <span class="brand-eyebrow">AIM-3D Lab · University of Notre Dame</span>
       <h1 class="brand-title">Causal Structure of Democratic Development</h1>
-      <p class="brand-sub">Neural additive causal discovery on V-Dem panel data — consensus graphs, function-valued effects, and dynamic stability, served from committed pipeline artifacts.</p>
+      <p class="brand-sub">Neural additive causal discovery on V-Dem panel data — signed consensus graphs, function-valued effects, forecasts shown beside what happened, and what-if responses — served from committed pipeline artifacts.</p>
     </div>
     <div class="panel-switch" role="group" aria-label="Panel selection">
       <button class="panel-tag" id="tag-century" data-panel="century_factors">
         <span class="tag-name">Century view</span>
-        <span class="tag-meta">1900–2023 · 29 nodes · V-Dem</span>
+        <span class="tag-meta">1900–2023 · 59 nodes · V-Dem</span>
       </button>
       <button class="panel-tag" id="tag-modern" data-panel="modern_factors">
         <span class="tag-name">Modern view</span>
-        <span class="tag-meta">1970–2021 · 47 nodes · V-Dem + covariates</span>
+        <span class="tag-meta">1970–2021 · 81 nodes · V-Dem + covariates</span>
       </button>
     </div>
   </div>
@@ -34,7 +34,7 @@
 
 <div class="notice" id="notice" role="status" hidden>
   <div class="notice-inner">
-    <span class="notice-text"><strong>Results updated (October 2026).</strong> All results on this portal were recomputed under a revised measurement model. Findings and numbers differ from versions shown before October 2026. See Methods for details.</span>
+    <span class="notice-text"><strong>This site has been rebuilt.</strong> Nothing shown here now includes an aggregate democracy index: every result is for a component of democracy or a related condition. The causal structure was re-estimated and each relationship is shown with its direction of effect; forecasts come from a new model and are shown beside what actually happened; a "what if" view replaces the earlier dynamics. Earlier forecasts, risk maps and impulse responses have been withdrawn. See Methods.</span>
     <button class="notice-close" id="notice-close" aria-label="Dismiss notice">Dismiss</button>
   </div>
 </div>
@@ -44,8 +44,8 @@
     <a href="#structure" class="rail-link" data-view="structure">Structure</a>
     <a href="#edges" class="rail-link" data-view="edges">Edges</a>
     <a href="#ice" class="rail-link" data-view="ice">Effect curves</a>
-    <a href="#dynamics" class="rail-link" data-view="dynamics">Dynamics</a>
-    <a href="#trajectories" class="rail-link" data-view="trajectories">Trajectories</a>
+    <a href="#forecasts" class="rail-link" data-view="forecasts">Forecasts</a>
+    <a href="#whatif" class="rail-link" data-view="whatif">What if</a>
     <a href="#guide" class="rail-link" data-view="guide">Reader&rsquo;s guide</a>
     <a href="#methods" class="rail-link" data-view="methods">Methods &amp; data</a>
   </nav>
@@ -57,13 +57,14 @@
       <div class="view-head">
         <span class="eyebrow">Consensus causal graph</span>
         <h2>Adjacency matrix</h2>
-        <p class="view-lede">Rows are sources, columns are targets. Cell depth encodes the median NAVAR causal score across the three-seed ensemble. The default set is the <strong>consensus graph</strong> — edges retained in all three seeds. Select any node label to inspect its neighborhood.</p>
+        <p class="view-lede">Rows are sources, columns are receivers. Each cell is a signed edge: blue positive, red negative, shade by the median NAVAR causal score across the three-seed ensemble. The default set is the <strong>consensus graph</strong> — edges retained in all three seeds. Select any node label to inspect its neighborhood.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-toggle"><input type="checkbox" id="matrix-majority"> Show majority edges (2/3 seeds, faded)</label>
         <span class="legend-inline" id="matrix-legend"></span>
       </div>
       <div class="matrix-wrap" id="matrix-wrap"></div>
+      <p class="footnote" id="matrix-order-note"></p>
       <aside class="ego" id="ego-panel" hidden></aside>
     </section>
 
@@ -71,11 +72,19 @@
       <div class="view-head">
         <span class="eyebrow">Edge inventory</span>
         <h2>Retained edges</h2>
-        <p class="view-lede">Every edge in the majority-retained set, with seed retention, ensemble score statistics, and consensus status. Scores are median [min – max] across seeds.</p>
+        <p class="view-lede">Every retained edge with its sign, ensemble score statistics, sign strength, and seed retention. Scores are median [min – max] across seeds; sign strength is how clear the direction is (0 to 1), and edges below 0.60 are marked weak.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-toggle"><input type="checkbox" id="edges-consensus-only" checked> Consensus only (all 3 seeds)</label>
+        <label class="ctl-label" for="edges-sign">Sign</label>
+        <select id="edges-sign" class="ctl-select" aria-label="Filter by sign">
+          <option value="all">All</option>
+          <option value="pos">Positive</option>
+          <option value="neg">Negative</option>
+          <option value="weak">Weak sign</option>
+        </select>
         <input type="search" id="edges-search" class="ctl-search" placeholder="Filter by node id or label…" aria-label="Filter edges">
+        <span class="legend-inline" id="edges-count"></span>
       </div>
       <div class="table-wrap"><table class="data-table" id="edges-table"></table></div>
     </section>
@@ -84,7 +93,7 @@
       <div class="view-head">
         <span class="eyebrow">Function-valued causal influence</span>
         <h2>Effect curves</h2>
-        <p class="view-lede">For each consensus edge: the estimated effect of moving the source across its observed range, evaluated in three democracy regimes (terciles of the outcome). Both axes are in standardized units.</p>
+        <p class="view-lede">For each consensus edge: the estimated effect of moving the source across its observed range, evaluated in three regimes — terciles of the clean elections index. Both axes are in standardized units.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-label" for="ice-edge">Edge</label>
@@ -96,78 +105,88 @@
       <p class="footnote" id="ice-note"></p>
     </section>
 
-    <section class="view" id="view-dynamics" hidden>
+    <section class="view" id="view-forecasts" hidden>
       <div class="view-head">
-        <span class="eyebrow">DCNAR dynamic inference</span>
-        <h2>Stability and impulse responses</h2>
-        <p class="view-lede" id="dynamics-lede"></p>
+        <span class="eyebrow">Forecasts</span>
+        <h2>Forecasts against what happened</h2>
+        <p class="view-lede">Forecasts made along the way from one neural forecaster, drawn over what was then observed, and the forecast issued from the last observed year. The band is a nominal 90% band: in the evaluation period it held the outcome 80 to 87% of the time at 1, 3 and 5 years. It is not calibrated. The ten-year horizon is published without validation.</p>
       </div>
-
-      <h3 class="block-title">Nodal influence trajectories (λ paths)</h3>
       <div class="controls-row">
-        <span class="ctl-label">Series shown in this chart</span>
-        <div class="chip-row" id="lambda-chips"></div>
-      </div>
-      <div class="chart-card"><svg id="lambda-chart" class="chart" role="img" aria-label="Lambda paths"></svg></div>
-
-      <h3 class="block-title">Spectral radius ρ(τ)</h3>
-      <div class="chart-card"><svg id="rho-chart" class="chart" role="img" aria-label="Spectral radius over tau"></svg>
-        <div class="chart-legend" id="rho-legend"></div>
-      </div>
-      <p class="footnote" id="rho-note"></p>
-
-      <h3 class="block-title" id="irf-title">Impulse responses</h3>
-      <div class="controls-row">
-        <label class="ctl-label" for="irf-shock">Shock</label>
-        <select id="irf-shock" class="ctl-select" aria-label="Variable to shock"></select>
-        <label class="ctl-label" for="irf-scope">Scope</label>
-        <select id="irf-scope" class="ctl-select" aria-label="Scope">
-          <option value="aggregate">System response (all countries)</option>
-          <option value="country">Country trajectory</option>
+        <label class="ctl-label" for="fc-country">Country</label>
+        <select id="fc-country" class="ctl-select" aria-label="Country"></select>
+        <label class="ctl-label" for="fc-node">Variable</label>
+        <select id="fc-node" class="ctl-select" aria-label="Variable"></select>
+        <label class="ctl-label" for="fc-h">Horizon</label>
+        <select id="fc-h" class="ctl-select" aria-label="Horizon">
+          <option value="1">1 year</option>
+          <option value="3">3 years</option>
+          <option value="5">5 years</option>
+          <option value="10">10 years (not validated)</option>
         </select>
-        <span id="irf-country-wrap" hidden>
-          <label class="ctl-label" for="irf-country">Country</label>
-          <select id="irf-country" class="ctl-select" aria-label="Country"></select>
-        </span>
+        <button class="btn-quiet" id="fc-btn-accuracy" aria-expanded="false">Accuracy</button>
       </div>
-      <div id="irf-aggregate-view">
-        <div class="irf-wrap" id="irf-wrap"></div>
+      <div id="fc-notforecast" class="validation-block" hidden></div>
+      <div id="fc-charts">
+        <h3 class="block-title" id="fc-title-walk">Forecasts made along the way</h3>
+        <div class="chart-card"><svg id="fc-walk-chart" class="chart chart-tall" role="img" aria-label="Actual against forecast"></svg>
+          <div class="chart-legend" id="fc-walk-legend"></div>
+        </div>
+        <p class="footnote" id="fc-walk-note"></p>
+        <h3 class="block-title" id="fc-title-fwd">Forecast from the last observed year</h3>
+        <div class="chart-card"><svg id="fc-fwd-chart" class="chart" role="img" aria-label="Forward forecast"></svg>
+          <div class="chart-legend" id="fc-fwd-legend"></div>
+        </div>
+        <div class="table-wrap" id="fc-largemove"></div>
+        <p class="footnote" id="fc-fwd-note"></p>
       </div>
-      <div id="irf-country-view" hidden>
-        <div class="chart-card"><svg id="cfact-norm-chart" class="chart" role="img" aria-label="System displacement"></svg>
-          <div class="chart-legend" id="cfact-norm-legend"></div>
-        </div>
-        <div class="controls-row">
-          <label class="ctl-label" for="cfact-node">Node path</label>
-          <select id="cfact-node" class="ctl-select" aria-label="Node"></select>
-          <span class="legend-inline" id="cfact-rank"></span>
-        </div>
-        <div class="chart-card"><svg id="cfact-node-chart" class="chart" role="img" aria-label="Baseline vs shocked path"></svg>
-          <div class="chart-legend" id="cfact-node-legend"></div>
-        </div>
-      </div>
-      <p class="footnote" id="irf-note"></p>
-      <p class="footnote" id="irf-def"></p>
+      <div class="validation-block" id="fc-accuracy" hidden></div>
     </section>
 
-    <section class="view" id="view-trajectories" hidden>
+    <section class="view" id="view-whatif" hidden>
       <div class="view-head">
-        <span class="eyebrow">Model-implied trajectories</span>
-        <h2>Country trajectories</h2>
-        <p class="view-lede">These are <strong>model-implied trajectories</strong>, not predictions. The band is the ensemble min–max across three seeds; the grey dashed line is a persistence reference (last observed value carried forward). Horizons beyond 5 years are unvalidated and drawn faded.</p>
+        <span class="eyebrow">What if</span>
+        <h2>How the forecast changes after a large move</h2>
+        <p class="view-lede">The forecaster is asked again with one variable different today — moved by half a standard deviation of its level, up or down — and the change in every forecast is recorded. A response is a statement about prediction, not an estimate of a causal effect. Countries differ a great deal, so the view opens on a single country.</p>
       </div>
       <div class="controls-row">
-        <label class="ctl-label" for="traj-country">Country</label>
-        <select id="traj-country" class="ctl-select" aria-label="Select country"></select>
-        <label class="ctl-label" for="traj-node">Node</label>
-        <select id="traj-node" class="ctl-select" aria-label="Select node"></select>
-        <button class="btn-quiet" id="btn-validation" aria-expanded="false">Validation table</button>
+        <label class="ctl-label" for="wi-scope">Scope</label>
+        <select id="wi-scope" class="ctl-select" aria-label="Scope">
+          <option value="country">One country</option>
+          <option value="aggregate">Average across countries</option>
+        </select>
+        <span id="wi-country-wrap">
+          <label class="ctl-label" for="wi-country">Country</label>
+          <select id="wi-country" class="ctl-select" aria-label="Country"></select>
+        </span>
+        <label class="ctl-label" for="wi-shock">Variable moved</label>
+        <select id="wi-shock" class="ctl-select" aria-label="Variable moved"></select>
+        <label class="ctl-label" for="wi-dir">Direction</label>
+        <select id="wi-dir" class="ctl-select" aria-label="Direction">
+          <option value="rise">Rise (+0.5 SD)</option>
+          <option value="fall">Fall (−0.5 SD)</option>
+        </select>
+        <label class="ctl-label" for="wi-h">Responses at</label>
+        <select id="wi-h" class="ctl-select" aria-label="Horizon">
+          <option value="1">1 year</option>
+          <option value="3">3 years</option>
+          <option value="5" selected>5 years</option>
+          <option value="10">10 years (not validated)</option>
+        </select>
       </div>
-      <div class="chart-card"><svg id="traj-chart" class="chart chart-tall" role="img" aria-label="Model-implied trajectory"></svg>
-        <div class="chart-legend" id="traj-legend"></div>
+      <div id="wi-status" class="validation-block" hidden></div>
+      <div id="wi-charts">
+        <h3 class="block-title" id="wi-title-own">The moved variable's own forecast</h3>
+        <div class="chart-card"><svg id="wi-own-chart" class="chart" role="img" aria-label="Own forecast, baseline and after the move"></svg>
+          <div class="chart-legend" id="wi-own-legend"></div>
+        </div>
+        <p class="footnote" id="wi-own-note"></p>
+        <h3 class="block-title" id="wi-title-resp">How other forecasts change</h3>
+        <div class="chart-card"><svg id="wi-resp-chart" class="chart chart-tall" role="img" aria-label="Responses of other variables"></svg>
+          <div class="chart-legend" id="wi-resp-legend"></div>
+        </div>
+        <p class="footnote" id="wi-resp-note"></p>
       </div>
-      <p class="footnote" id="traj-note"></p>
-      <div class="validation-block" id="validation-block" hidden></div>
+      <p class="footnote" id="wi-def"></p>
     </section>
 
     <section class="view" id="view-guide" hidden>

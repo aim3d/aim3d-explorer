@@ -1,0 +1,1337 @@
+{
+ "panel": "century_factors",
+ "method": "consensus of Louvain modularity partitions on symmetrized |score| of majority edges: 100 starts, nodes grouped when they share a block in more than 50% of runs, repeated until every start agrees; average-linkage optimal leaf ordering within and between blocks; structural nodes as a separate first band",
+ "meaning": "an ordering that places strongly linked nodes next to each other; the groupings are an aid to reading, not statistically distinct clusters",
+ "modularity": 0.2086,
+ "stability_ari": 0.633,
+ "single_run_agreement_ari": 0.529,
+ "consensus_converged": true,
+ "modularity_best_single_run": 0.2152,
+ "modularity_rewired_mean": 0.2379,
+ "modularity_rewired_sd": 0.0096,
+ "modularity_z": -2.4,
+ "membership": {
+  "F01": {
+   "block": 4,
+   "strength": 0.679,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.11
+  },
+  "F02": {
+   "block": 4,
+   "strength": 0.68,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.473
+  },
+  "F03": {
+   "block": 7,
+   "strength": 0.804,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.33
+  },
+  "F04": {
+   "block": 3,
+   "strength": 0.965,
+   "borderline": false,
+   "next_block": 8,
+   "next_strength": 0.385
+  },
+  "F05": {
+   "block": 4,
+   "strength": 0.643,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.14
+  },
+  "F06": {
+   "block": 4,
+   "strength": 0.679,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.11
+  },
+  "F07": {
+   "block": 5,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.47
+  },
+  "F08": {
+   "block": 6,
+   "strength": 0.907,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.23
+  },
+  "C_v2casoe": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "C_v2csstruc": {
+   "block": 1,
+   "strength": 0.505,
+   "borderline": true,
+   "next_block": 7,
+   "next_strength": 0.163
+  },
+  "v2cacamps": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2caconmob": {
+   "block": 1,
+   "strength": 0.627,
+   "borderline": false,
+   "next_block": 6,
+   "next_strength": 0.169
+  },
+  "v2cademmob": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2cagenmob": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2caviol": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2clstown": {
+   "block": 6,
+   "strength": 0.739,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.12
+  },
+  "v2csantimv": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2ddyrall": {
+   "block": 6,
+   "strength": 0.751,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.13
+  },
+  "v2eldonate": {
+   "block": 8,
+   "strength": 0.88,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.367
+  },
+  "v2elffelrbin": {
+   "block": 1,
+   "strength": 0.543,
+   "borderline": true,
+   "next_block": 6,
+   "next_strength": 0.23
+  },
+  "v2elpubfin": {
+   "block": 8,
+   "strength": 0.88,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.367
+  },
+  "v2elsnlsff": {
+   "block": 6,
+   "strength": 0.851,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.19
+  },
+  "v2exagehos": {
+   "block": 2,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.47
+  },
+  "v2exl_legitperf": {
+   "block": 8,
+   "strength": 0.88,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.387
+  },
+  "v2exl_legitratio": {
+   "block": 8,
+   "strength": 0.88,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.387
+  },
+  "v2juaccnt": {
+   "block": 5,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.47
+  },
+  "v2jupoatck": {
+   "block": 3,
+   "strength": 0.965,
+   "borderline": false,
+   "next_block": 8,
+   "next_strength": 0.385
+  },
+  "v2jureform": {
+   "block": 3,
+   "strength": 0.93,
+   "borderline": false,
+   "next_block": 8,
+   "next_strength": 0.36
+  },
+  "v2jureview": {
+   "block": 6,
+   "strength": 0.867,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.28
+  },
+  "v2mecorrpt": {
+   "block": 4,
+   "strength": 0.694,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.116
+  },
+  "v2mefemjrn": {
+   "block": 2,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.47
+  },
+  "v2pscohesv": {
+   "block": 7,
+   "strength": 0.804,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.33
+  },
+  "v2pscomprg": {
+   "block": 1,
+   "strength": 0.609,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.224
+  },
+  "v2psnatpar": {
+   "block": 7,
+   "strength": 0.699,
+   "borderline": false,
+   "next_block": 8,
+   "next_strength": 0.375
+  },
+  "v2psplats": {
+   "block": 7,
+   "strength": 0.804,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.33
+  },
+  "v2psprlnks": {
+   "block": 5,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.47
+  },
+  "v2pssunpar": {
+   "block": 7,
+   "strength": 0.699,
+   "borderline": false,
+   "next_block": 8,
+   "next_strength": 0.375
+  },
+  "v2stfisccap": {
+   "block": 1,
+   "strength": 0.617,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.32
+  },
+  "v2strenadm": {
+   "block": 1,
+   "strength": 0.761,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.123
+  },
+  "v2strenarm": {
+   "block": 7,
+   "strength": 0.804,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.33
+  },
+  "v2svdomaut": {
+   "block": 1,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.22
+  },
+  "v2svinlaut": {
+   "block": 1,
+   "strength": 0.668,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.22
+  },
+  "v2svstterr": {
+   "block": 1,
+   "strength": 0.767,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.12
+  },
+  "v2x_cspart": {
+   "block": 4,
+   "strength": 0.697,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.463
+  },
+  "v2x_elecoff": {
+   "block": 4,
+   "strength": 0.667,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.453
+  },
+  "v2x_frassoc_thick": {
+   "block": 4,
+   "strength": 0.69,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.111
+  },
+  "v2x_freexp_altinf": {
+   "block": 4,
+   "strength": 0.694,
+   "borderline": false,
+   "next_block": 7,
+   "next_strength": 0.116
+  },
+  "v2x_jucon": {
+   "block": 4,
+   "strength": 0.596,
+   "borderline": true,
+   "next_block": 3,
+   "next_strength": 0.493
+  },
+  "v2x_suffr": {
+   "block": 2,
+   "strength": 1.0,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.47
+  },
+  "v2xcl_rol": {
+   "block": 6,
+   "strength": 0.876,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.22
+  },
+  "v2xdd_dd": {
+   "block": 6,
+   "strength": 0.854,
+   "borderline": false,
+   "next_block": 2,
+   "next_strength": 0.19
+  },
+  "v2xdl_delib": {
+   "block": 4,
+   "strength": 0.688,
+   "borderline": false,
+   "next_block": 3,
+   "next_strength": 0.483
+  },
+  "v2xeg_eqaccess": {
+   "block": 6,
+   "strength": 0.907,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.23
+  },
+  "v2xeg_eqdr": {
+   "block": 6,
+   "strength": 0.907,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.23
+  },
+  "v2xeg_eqprotec": {
+   "block": 6,
+   "strength": 0.907,
+   "borderline": false,
+   "next_block": 5,
+   "next_strength": 0.23
+  },
+  "v2xel_frefair": {
+   "block": 7,
+   "strength": 0.504,
+   "borderline": true,
+   "next_block": 5,
+   "next_strength": 0.38
+  },
+  "v2xel_locelec": {
+   "block": 7,
+   "strength": 0.53,
+   "borderline": true,
+   "next_block": 5,
+   "next_strength": 0.36
+  },
+  "v2xel_regelec": {
+   "block": 1,
+   "strength": 0.588,
+   "borderline": true,
+   "next_block": 7,
+   "next_strength": 0.356
+  },
+  "v2xlg_legcon": {
+   "block": 4,
+   "strength": 0.596,
+   "borderline": true,
+   "next_block": 3,
+   "next_strength": 0.493
+  }
+ },
+ "borderline_threshold": 0.6,
+ "n_borderline": 7,
+ "share_of_strength_within_blocks": 0.406,
+ "share_expected_if_unrelated": 0.16,
+ "n_blocks": 8,
+ "chance_comparison": {
+  "observed": 0.2152,
+  "rewired_mean": 0.2379,
+  "rewired_sd": 0.0096,
+  "note": "like for like: the best single-run modularity of the real graph against the best single-run modularity of randomly rewired graphs. Quote these two numbers together; do not pair the stabilized modularity with the rewired figure"
+ },
+ "caption": "Variables are ordered so that strongly linked ones sit together. The groupings are an aid to reading and are not statistically distinct clusters: modularity 0.215, against 0.238 in randomly rewired graphs of the same density.",
+ "order": [
+  "v2pscomprg",
+  "C_v2csstruc",
+  "v2elffelrbin",
+  "v2xel_regelec",
+  "v2cacamps",
+  "v2caviol",
+  "v2csantimv",
+  "v2cademmob",
+  "v2cagenmob",
+  "v2svinlaut",
+  "v2svdomaut",
+  "v2stfisccap",
+  "v2strenadm",
+  "v2svstterr",
+  "v2caconmob",
+  "C_v2casoe",
+  "v2mefemjrn",
+  "v2exagehos",
+  "v2x_suffr",
+  "v2jureform",
+  "F04",
+  "v2jupoatck",
+  "v2x_elecoff",
+  "v2mecorrpt",
+  "v2x_freexp_altinf",
+  "v2x_frassoc_thick",
+  "F01",
+  "F06",
+  "F05",
+  "F02",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2juaccnt",
+  "F07",
+  "v2psprlnks",
+  "v2elsnlsff",
+  "v2jureview",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqdr",
+  "F08",
+  "v2xeg_eqaccess",
+  "v2clstown",
+  "v2ddyrall",
+  "v2xdd_dd",
+  "v2strenarm",
+  "v2xel_frefair",
+  "v2xel_locelec",
+  "v2pscohesv",
+  "F03",
+  "v2psplats",
+  "v2pssunpar",
+  "v2psnatpar",
+  "v2elpubfin",
+  "v2eldonate",
+  "v2exl_legitratio",
+  "v2exl_legitperf"
+ ],
+ "row_order": [
+  "v2pscomprg",
+  "C_v2csstruc",
+  "v2elffelrbin",
+  "v2xel_regelec",
+  "v2cacamps",
+  "v2caviol",
+  "v2csantimv",
+  "v2cademmob",
+  "v2cagenmob",
+  "v2svinlaut",
+  "v2svdomaut",
+  "v2stfisccap",
+  "v2strenadm",
+  "v2svstterr",
+  "v2caconmob",
+  "C_v2casoe",
+  "v2mefemjrn",
+  "v2exagehos",
+  "v2x_suffr",
+  "v2jureform",
+  "F04",
+  "v2jupoatck",
+  "v2x_elecoff",
+  "v2mecorrpt",
+  "v2x_freexp_altinf",
+  "v2x_frassoc_thick",
+  "F01",
+  "F06",
+  "F05",
+  "F02",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2juaccnt",
+  "F07",
+  "v2psprlnks",
+  "v2elsnlsff",
+  "v2jureview",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqdr",
+  "F08",
+  "v2xeg_eqaccess",
+  "v2clstown",
+  "v2ddyrall",
+  "v2xdd_dd",
+  "v2strenarm",
+  "v2xel_frefair",
+  "v2xel_locelec",
+  "v2pscohesv",
+  "F03",
+  "v2psplats",
+  "v2pssunpar",
+  "v2psnatpar",
+  "v2elpubfin",
+  "v2eldonate",
+  "v2exl_legitratio",
+  "v2exl_legitperf"
+ ],
+ "column_order": [
+  "v2pscomprg",
+  "C_v2csstruc",
+  "v2elffelrbin",
+  "v2xel_regelec",
+  "v2cacamps",
+  "v2caviol",
+  "v2csantimv",
+  "v2cademmob",
+  "v2cagenmob",
+  "v2svinlaut",
+  "v2svdomaut",
+  "v2stfisccap",
+  "v2strenadm",
+  "v2svstterr",
+  "v2caconmob",
+  "C_v2casoe",
+  "v2mefemjrn",
+  "v2exagehos",
+  "v2x_suffr",
+  "v2jureform",
+  "F04",
+  "v2jupoatck",
+  "v2x_elecoff",
+  "v2mecorrpt",
+  "v2x_freexp_altinf",
+  "v2x_frassoc_thick",
+  "F01",
+  "F06",
+  "F05",
+  "F02",
+  "v2x_cspart",
+  "v2xdl_delib",
+  "v2xlg_legcon",
+  "v2x_jucon",
+  "v2juaccnt",
+  "F07",
+  "v2psprlnks",
+  "v2elsnlsff",
+  "v2jureview",
+  "v2xcl_rol",
+  "v2xeg_eqprotec",
+  "v2xeg_eqdr",
+  "F08",
+  "v2xeg_eqaccess",
+  "v2clstown",
+  "v2ddyrall",
+  "v2xdd_dd",
+  "v2strenarm",
+  "v2xel_frefair",
+  "v2xel_locelec",
+  "v2pscohesv",
+  "F03",
+  "v2psplats",
+  "v2pssunpar",
+  "v2psnatpar",
+  "v2elpubfin",
+  "v2eldonate",
+  "v2exl_legitratio",
+  "v2exl_legitperf"
+ ],
+ "blocks": [
+  {
+   "id": 1,
+   "name": "Block 1",
+   "kind": "cohesive",
+   "nodes": [
+    "v2pscomprg",
+    "C_v2csstruc",
+    "v2elffelrbin",
+    "v2xel_regelec",
+    "v2cacamps",
+    "v2caviol",
+    "v2csantimv",
+    "v2cademmob",
+    "v2cagenmob",
+    "v2svinlaut",
+    "v2svdomaut",
+    "v2stfisccap",
+    "v2strenadm",
+    "v2svstterr",
+    "v2caconmob",
+    "C_v2casoe"
+   ],
+   "borderline": [
+    "C_v2csstruc",
+    "v2elffelrbin",
+    "v2xel_regelec"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "Block 2",
+   "kind": "cohesive",
+   "nodes": [
+    "v2mefemjrn",
+    "v2exagehos",
+    "v2x_suffr"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 3,
+   "name": "Block 3",
+   "kind": "cohesive",
+   "nodes": [
+    "v2jureform",
+    "F04",
+    "v2jupoatck"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 4,
+   "name": "Block 4",
+   "kind": "cohesive",
+   "nodes": [
+    "v2x_elecoff",
+    "v2mecorrpt",
+    "v2x_freexp_altinf",
+    "v2x_frassoc_thick",
+    "F01",
+    "F06",
+    "F05",
+    "F02",
+    "v2x_cspart",
+    "v2xdl_delib",
+    "v2xlg_legcon",
+    "v2x_jucon"
+   ],
+   "borderline": [
+    "v2xlg_legcon",
+    "v2x_jucon"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "Block 5",
+   "kind": "cohesive",
+   "nodes": [
+    "v2juaccnt",
+    "F07",
+    "v2psprlnks"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 6,
+   "name": "Block 6",
+   "kind": "cohesive",
+   "nodes": [
+    "v2elsnlsff",
+    "v2jureview",
+    "v2xcl_rol",
+    "v2xeg_eqprotec",
+    "v2xeg_eqdr",
+    "F08",
+    "v2xeg_eqaccess",
+    "v2clstown",
+    "v2ddyrall",
+    "v2xdd_dd"
+   ],
+   "borderline": []
+  },
+  {
+   "id": 7,
+   "name": "Block 7",
+   "kind": "cohesive",
+   "nodes": [
+    "v2strenarm",
+    "v2xel_frefair",
+    "v2xel_locelec",
+    "v2pscohesv",
+    "F03",
+    "v2psplats",
+    "v2pssunpar",
+    "v2psnatpar"
+   ],
+   "borderline": [
+    "v2xel_frefair",
+    "v2xel_locelec"
+   ]
+  },
+  {
+   "id": 8,
+   "name": "Block 8",
+   "kind": "cohesive",
+   "nodes": [
+    "v2elpubfin",
+    "v2eldonate",
+    "v2exl_legitratio",
+    "v2exl_legitperf"
+   ],
+   "borderline": []
+  }
+ ],
+ "block_matrix": [
+  {
+   "source_block": 1,
+   "target_block": 1,
+   "possible": 240,
+   "edges": 64,
+   "density": 0.2667,
+   "mean_score": 0.004971,
+   "share_positive": 0.766
+  },
+  {
+   "source_block": 1,
+   "target_block": 2,
+   "possible": 48,
+   "edges": 1,
+   "density": 0.0208,
+   "mean_score": 0.000229,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 1,
+   "target_block": 3,
+   "possible": 48,
+   "edges": 5,
+   "density": 0.1042,
+   "mean_score": 0.001572,
+   "share_positive": 0.2
+  },
+  {
+   "source_block": 1,
+   "target_block": 4,
+   "possible": 192,
+   "edges": 30,
+   "density": 0.1562,
+   "mean_score": 0.002888,
+   "share_positive": 0.533
+  },
+  {
+   "source_block": 1,
+   "target_block": 5,
+   "possible": 48,
+   "edges": 6,
+   "density": 0.125,
+   "mean_score": 0.001929,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 1,
+   "target_block": 6,
+   "possible": 160,
+   "edges": 27,
+   "density": 0.1688,
+   "mean_score": 0.00262,
+   "share_positive": 0.481
+  },
+  {
+   "source_block": 1,
+   "target_block": 7,
+   "possible": 128,
+   "edges": 16,
+   "density": 0.125,
+   "mean_score": 0.002142,
+   "share_positive": 0.75
+  },
+  {
+   "source_block": 1,
+   "target_block": 8,
+   "possible": 64,
+   "edges": 3,
+   "density": 0.0469,
+   "mean_score": 0.000538,
+   "share_positive": 0.667
+  },
+  {
+   "source_block": 2,
+   "target_block": 1,
+   "possible": 48,
+   "edges": 9,
+   "density": 0.1875,
+   "mean_score": 0.00266,
+   "share_positive": 0.111
+  },
+  {
+   "source_block": 2,
+   "target_block": 2,
+   "possible": 6,
+   "edges": 4,
+   "density": 0.6667,
+   "mean_score": 0.038834,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 2,
+   "target_block": 3,
+   "possible": 9,
+   "edges": 1,
+   "density": 0.1111,
+   "mean_score": 0.000787,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 2,
+   "target_block": 4,
+   "possible": 36,
+   "edges": 8,
+   "density": 0.2222,
+   "mean_score": 0.004679,
+   "share_positive": 0.75
+  },
+  {
+   "source_block": 2,
+   "target_block": 5,
+   "possible": 9,
+   "edges": 2,
+   "density": 0.2222,
+   "mean_score": 0.007542,
+   "share_positive": 0.0
+  },
+  {
+   "source_block": 2,
+   "target_block": 6,
+   "possible": 30,
+   "edges": 5,
+   "density": 0.1667,
+   "mean_score": 0.003228,
+   "share_positive": 0.8
+  },
+  {
+   "source_block": 2,
+   "target_block": 7,
+   "possible": 24,
+   "edges": 2,
+   "density": 0.0833,
+   "mean_score": 0.000845,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 2,
+   "target_block": 8,
+   "possible": 12,
+   "edges": 2,
+   "density": 0.1667,
+   "mean_score": 0.003513,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 3,
+   "target_block": 1,
+   "possible": 48,
+   "edges": 15,
+   "density": 0.3125,
+   "mean_score": 0.004117,
+   "share_positive": 0.467
+  },
+  {
+   "source_block": 3,
+   "target_block": 2,
+   "possible": 9,
+   "edges": 0,
+   "density": 0.0,
+   "mean_score": 0.0,
+   "share_positive": null
+  },
+  {
+   "source_block": 3,
+   "target_block": 3,
+   "possible": 6,
+   "edges": 6,
+   "density": 1.0,
+   "mean_score": 0.027662,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 3,
+   "target_block": 4,
+   "possible": 36,
+   "edges": 9,
+   "density": 0.25,
+   "mean_score": 0.005766,
+   "share_positive": 0.778
+  },
+  {
+   "source_block": 3,
+   "target_block": 5,
+   "possible": 9,
+   "edges": 2,
+   "density": 0.2222,
+   "mean_score": 0.005174,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 3,
+   "target_block": 6,
+   "possible": 30,
+   "edges": 14,
+   "density": 0.4667,
+   "mean_score": 0.006232,
+   "share_positive": 0.714
+  },
+  {
+   "source_block": 3,
+   "target_block": 7,
+   "possible": 24,
+   "edges": 5,
+   "density": 0.2083,
+   "mean_score": 0.002971,
+   "share_positive": 0.8
+  },
+  {
+   "source_block": 3,
+   "target_block": 8,
+   "possible": 12,
+   "edges": 2,
+   "density": 0.1667,
+   "mean_score": 0.00219,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 4,
+   "target_block": 1,
+   "possible": 192,
+   "edges": 41,
+   "density": 0.2135,
+   "mean_score": 0.003041,
+   "share_positive": 0.463
+  },
+  {
+   "source_block": 4,
+   "target_block": 2,
+   "possible": 36,
+   "edges": 4,
+   "density": 0.1111,
+   "mean_score": 0.001582,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 4,
+   "target_block": 3,
+   "possible": 36,
+   "edges": 13,
+   "density": 0.3611,
+   "mean_score": 0.007211,
+   "share_positive": 0.923
+  },
+  {
+   "source_block": 4,
+   "target_block": 4,
+   "possible": 132,
+   "edges": 72,
+   "density": 0.5455,
+   "mean_score": 0.022644,
+   "share_positive": 0.861
+  },
+  {
+   "source_block": 4,
+   "target_block": 5,
+   "possible": 36,
+   "edges": 9,
+   "density": 0.25,
+   "mean_score": 0.004392,
+   "share_positive": 0.889
+  },
+  {
+   "source_block": 4,
+   "target_block": 6,
+   "possible": 120,
+   "edges": 37,
+   "density": 0.3083,
+   "mean_score": 0.007333,
+   "share_positive": 0.622
+  },
+  {
+   "source_block": 4,
+   "target_block": 7,
+   "possible": 96,
+   "edges": 26,
+   "density": 0.2708,
+   "mean_score": 0.005703,
+   "share_positive": 0.923
+  },
+  {
+   "source_block": 4,
+   "target_block": 8,
+   "possible": 48,
+   "edges": 5,
+   "density": 0.1042,
+   "mean_score": 0.001233,
+   "share_positive": 0.6
+  },
+  {
+   "source_block": 5,
+   "target_block": 1,
+   "possible": 48,
+   "edges": 15,
+   "density": 0.3125,
+   "mean_score": 0.003954,
+   "share_positive": 0.533
+  },
+  {
+   "source_block": 5,
+   "target_block": 2,
+   "possible": 9,
+   "edges": 1,
+   "density": 0.1111,
+   "mean_score": 0.004055,
+   "share_positive": 0.0
+  },
+  {
+   "source_block": 5,
+   "target_block": 3,
+   "possible": 9,
+   "edges": 4,
+   "density": 0.4444,
+   "mean_score": 0.004581,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 5,
+   "target_block": 4,
+   "possible": 36,
+   "edges": 16,
+   "density": 0.4444,
+   "mean_score": 0.012854,
+   "share_positive": 0.75
+  },
+  {
+   "source_block": 5,
+   "target_block": 5,
+   "possible": 6,
+   "edges": 6,
+   "density": 1.0,
+   "mean_score": 0.036555,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 5,
+   "target_block": 6,
+   "possible": 30,
+   "edges": 11,
+   "density": 0.3667,
+   "mean_score": 0.010698,
+   "share_positive": 0.818
+  },
+  {
+   "source_block": 5,
+   "target_block": 7,
+   "possible": 24,
+   "edges": 11,
+   "density": 0.4583,
+   "mean_score": 0.007882,
+   "share_positive": 0.727
+  },
+  {
+   "source_block": 5,
+   "target_block": 8,
+   "possible": 12,
+   "edges": 4,
+   "density": 0.3333,
+   "mean_score": 0.004599,
+   "share_positive": 0.75
+  },
+  {
+   "source_block": 6,
+   "target_block": 1,
+   "possible": 160,
+   "edges": 30,
+   "density": 0.1875,
+   "mean_score": 0.002633,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 6,
+   "target_block": 2,
+   "possible": 30,
+   "edges": 5,
+   "density": 0.1667,
+   "mean_score": 0.003544,
+   "share_positive": 0.8
+  },
+  {
+   "source_block": 6,
+   "target_block": 3,
+   "possible": 30,
+   "edges": 4,
+   "density": 0.1333,
+   "mean_score": 0.002699,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 6,
+   "target_block": 4,
+   "possible": 120,
+   "edges": 25,
+   "density": 0.2083,
+   "mean_score": 0.004781,
+   "share_positive": 0.84
+  },
+  {
+   "source_block": 6,
+   "target_block": 5,
+   "possible": 30,
+   "edges": 7,
+   "density": 0.2333,
+   "mean_score": 0.005038,
+   "share_positive": 0.714
+  },
+  {
+   "source_block": 6,
+   "target_block": 6,
+   "possible": 90,
+   "edges": 43,
+   "density": 0.4778,
+   "mean_score": 0.015053,
+   "share_positive": 0.837
+  },
+  {
+   "source_block": 6,
+   "target_block": 7,
+   "possible": 80,
+   "edges": 19,
+   "density": 0.2375,
+   "mean_score": 0.003314,
+   "share_positive": 0.789
+  },
+  {
+   "source_block": 6,
+   "target_block": 8,
+   "possible": 40,
+   "edges": 2,
+   "density": 0.05,
+   "mean_score": 0.00079,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 7,
+   "target_block": 1,
+   "possible": 128,
+   "edges": 23,
+   "density": 0.1797,
+   "mean_score": 0.002159,
+   "share_positive": 0.652
+  },
+  {
+   "source_block": 7,
+   "target_block": 2,
+   "possible": 24,
+   "edges": 2,
+   "density": 0.0833,
+   "mean_score": 0.001014,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 7,
+   "target_block": 3,
+   "possible": 24,
+   "edges": 4,
+   "density": 0.1667,
+   "mean_score": 0.00169,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 7,
+   "target_block": 4,
+   "possible": 96,
+   "edges": 27,
+   "density": 0.2812,
+   "mean_score": 0.005928,
+   "share_positive": 0.815
+  },
+  {
+   "source_block": 7,
+   "target_block": 5,
+   "possible": 24,
+   "edges": 7,
+   "density": 0.2917,
+   "mean_score": 0.005123,
+   "share_positive": 0.571
+  },
+  {
+   "source_block": 7,
+   "target_block": 6,
+   "possible": 80,
+   "edges": 18,
+   "density": 0.225,
+   "mean_score": 0.003148,
+   "share_positive": 0.667
+  },
+  {
+   "source_block": 7,
+   "target_block": 7,
+   "possible": 56,
+   "edges": 24,
+   "density": 0.4286,
+   "mean_score": 0.011754,
+   "share_positive": 0.792
+  },
+  {
+   "source_block": 7,
+   "target_block": 8,
+   "possible": 32,
+   "edges": 4,
+   "density": 0.125,
+   "mean_score": 0.002625,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 8,
+   "target_block": 1,
+   "possible": 64,
+   "edges": 13,
+   "density": 0.2031,
+   "mean_score": 0.001987,
+   "share_positive": 0.692
+  },
+  {
+   "source_block": 8,
+   "target_block": 2,
+   "possible": 12,
+   "edges": 0,
+   "density": 0.0,
+   "mean_score": 0.0,
+   "share_positive": null
+  },
+  {
+   "source_block": 8,
+   "target_block": 3,
+   "possible": 12,
+   "edges": 3,
+   "density": 0.25,
+   "mean_score": 0.004877,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 8,
+   "target_block": 4,
+   "possible": 48,
+   "edges": 10,
+   "density": 0.2083,
+   "mean_score": 0.00376,
+   "share_positive": 0.5
+  },
+  {
+   "source_block": 8,
+   "target_block": 5,
+   "possible": 12,
+   "edges": 1,
+   "density": 0.0833,
+   "mean_score": 0.001527,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 8,
+   "target_block": 6,
+   "possible": 40,
+   "edges": 10,
+   "density": 0.25,
+   "mean_score": 0.00394,
+   "share_positive": 0.8
+  },
+  {
+   "source_block": 8,
+   "target_block": 7,
+   "possible": 32,
+   "edges": 3,
+   "density": 0.0938,
+   "mean_score": 0.001721,
+   "share_positive": 1.0
+  },
+  {
+   "source_block": 8,
+   "target_block": 8,
+   "possible": 12,
+   "edges": 6,
+   "density": 0.5,
+   "mean_score": 0.01237,
+   "share_positive": 0.833
+  }
+ ],
+ "display": "rows: row_order (all nodes; structural sources form the last band). columns: column_order (the same order without the structural nodes, which receive nothing and would be empty columns). Draw faint lines at block boundaries; keep the sign coloring; use caption as the caption"
+}

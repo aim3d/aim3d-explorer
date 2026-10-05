@@ -1,0 +1,61 @@
+{
+ "panel": "modern_factors",
+ "generated": "2026-10-05",
+ "built": "V3-S7",
+ "n_nodes": 81,
+ "n_nodes_forecast": 65,
+ "n_nodes_structural": 16,
+ "n_edges_majority": 1518,
+ "n_edges_consensus": 1200,
+ "n_edges_positive": 848,
+ "n_edges_negative": 670,
+ "n_edges_weak_sign": 207,
+ "matrix_blocks": {
+  "n_blocks": 5,
+  "modularity": 0.1902,
+  "stability_ari": 0.65,
+  "share_of_strength_within_blocks": 0.405
+ },
+ "panel_meta": {
+  "n_rows": 5654,
+  "n_countries": 150,
+  "maxlags": 3,
+  "usable_windows": 4305,
+  "years": [
+   1970,
+   2021
+  ]
+ },
+ "provenance": {
+  "measurement": "Indicators that measure one concept are combined into a factor by a confirmatory factor model specified in advance: sixteen constructs on this panel, eight political and eight economic, demographic and globalization constructs, with an adjustment for demographic variables linked by accounting identities. Factor scores are best linear unbiased predictions from that model. Sets of categories that sum to a whole enter as log-ratio composites, and all other indicators enter as they are.",
+  "index": "The aggregate democracy index is not a node, is not forecast, and is not derived from its components anywhere in this analysis.",
+  "edge_selection": "A neural additive vector autoregression (NAVAR) is trained three times. An edge is kept in a fit if removing the source's contribution reliably worsens the target's prediction (false discovery rate 5%) and the loss falls in the group of large effects. Edges kept in at least two fits are shown; those kept in all three form the consensus graph.",
+  "edge_sign": "The sign of an edge is the direction in which its contribution moves with the source's most recent value, by majority over the three fits. Edges whose sign strength is below 0.60 are marked weak: their effect rises over part of the source's range and falls over another.",
+  "matrix_order": "Variables are ordered so that strongly linked ones sit together. The groupings are an aid to reading and are not statistically distinct clusters: modularity 0.193, against 0.180 in randomly rewired graphs of the same density.",
+  "effect_curves": "Effect curves are shown for three groups of country-years: the lower, middle and upper thirds of the clean elections index. The model is additive, so the three curves of an edge have the same shape and differ by a constant: the grouping shows where each group's typical values sit, not different effects in different groups.",
+  "forecasts": "Forecasts come from a separate neural forecasting model and are shown in the Forecasts view with their error against actual outcomes.",
+  "dynamics": "The earlier dynamics view (impulse responses from a second model built on these scores) is withdrawn. What-if responses from the forecaster replace it."
+ },
+ "records": {
+  "effect_curves": {
+   "panel": "modern_factors",
+   "edge_set": "consensus",
+   "regime_variable": "v2xel_frefair",
+   "regime_label": "Clean elections index",
+   "regime_definition": "terciles of the regime variable at lag 1, standardized, over the training windows",
+   "tercile_cuts": [
+    -0.6554252459804485,
+    0.8421276346095893
+   ],
+   "note": "NAVAR is additive: the three regime curves of an edge share one shape and differ by a constant"
+  },
+  "note": "machine-readable records for developers; not text for display"
+ },
+ "files": [
+  "nodes.json",
+  "edges.json",
+  "matrix_order.json",
+  "ice.json",
+  "history.json"
+ ]
+}

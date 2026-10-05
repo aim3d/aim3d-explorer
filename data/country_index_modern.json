@@ -1,0 +1,1356 @@
+{
+ "panel": "modern",
+ "how_to_join": "forecast files are fcst/{panel}/{country_id}.json; what-if files are dyn/{panel}/cfact/{whatif_file}. Use whatif_file exactly as given: it is the name as Drive stores it. A null whatif_file means the country was not observed in the panel's last year and has no what-if responses.",
+ "countries": [
+  {
+   "country_id": 12,
+   "name": "Albania",
+   "name_nfc": "Albania",
+   "forecast_file": "12.json",
+   "whatif_file": "Albania.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 103,
+   "name": "Algeria",
+   "name_nfc": "Algeria",
+   "forecast_file": "103.json",
+   "whatif_file": "Algeria.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 104,
+   "name": "Angola",
+   "name_nfc": "Angola",
+   "forecast_file": "104.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 37,
+   "name": "Argentina",
+   "name_nfc": "Argentina",
+   "forecast_file": "37.json",
+   "whatif_file": "Argentina.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 105,
+   "name": "Armenia",
+   "name_nfc": "Armenia",
+   "forecast_file": "105.json",
+   "whatif_file": "Armenia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 67,
+   "name": "Australia",
+   "name_nfc": "Australia",
+   "forecast_file": "67.json",
+   "whatif_file": "Australia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 144,
+   "name": "Austria",
+   "name_nfc": "Austria",
+   "forecast_file": "144.json",
+   "whatif_file": "Austria.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 106,
+   "name": "Azerbaijan",
+   "name_nfc": "Azerbaijan",
+   "forecast_file": "106.json",
+   "whatif_file": "Azerbaijan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 146,
+   "name": "Bahrain",
+   "name_nfc": "Bahrain",
+   "forecast_file": "146.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 24,
+   "name": "Bangladesh",
+   "name_nfc": "Bangladesh",
+   "forecast_file": "24.json",
+   "whatif_file": "Bangladesh.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 147,
+   "name": "Barbados",
+   "name_nfc": "Barbados",
+   "forecast_file": "147.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 107,
+   "name": "Belarus",
+   "name_nfc": "Belarus",
+   "forecast_file": "107.json",
+   "whatif_file": "Belarus.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 148,
+   "name": "Belgium",
+   "name_nfc": "Belgium",
+   "forecast_file": "148.json",
+   "whatif_file": "Belgium.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 52,
+   "name": "Benin",
+   "name_nfc": "Benin",
+   "forecast_file": "52.json",
+   "whatif_file": "Benin.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 25,
+   "name": "Bolivia",
+   "name_nfc": "Bolivia",
+   "forecast_file": "25.json",
+   "whatif_file": "Bolivia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 68,
+   "name": "Botswana",
+   "name_nfc": "Botswana",
+   "forecast_file": "68.json",
+   "whatif_file": "Botswana.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 19,
+   "name": "Brazil",
+   "name_nfc": "Brazil",
+   "forecast_file": "19.json",
+   "whatif_file": "Brazil.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 152,
+   "name": "Bulgaria",
+   "name_nfc": "Bulgaria",
+   "forecast_file": "152.json",
+   "whatif_file": "Bulgaria.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 54,
+   "name": "Burkina Faso",
+   "name_nfc": "Burkina Faso",
+   "forecast_file": "54.json",
+   "whatif_file": "Burkina Faso.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 10,
+   "name": "Burma/Myanmar",
+   "name_nfc": "Burma/Myanmar",
+   "forecast_file": "10.json",
+   "whatif_file": "Burma_Myanmar.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 69,
+   "name": "Burundi",
+   "name_nfc": "Burundi",
+   "forecast_file": "69.json",
+   "whatif_file": "Burundi.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 55,
+   "name": "Cambodia",
+   "name_nfc": "Cambodia",
+   "forecast_file": "55.json",
+   "whatif_file": "Cambodia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 108,
+   "name": "Cameroon",
+   "name_nfc": "Cameroon",
+   "forecast_file": "108.json",
+   "whatif_file": "Cameroon.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 66,
+   "name": "Canada",
+   "name_nfc": "Canada",
+   "forecast_file": "66.json",
+   "whatif_file": "Canada.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 70,
+   "name": "Cape Verde",
+   "name_nfc": "Cape Verde",
+   "forecast_file": "70.json",
+   "whatif_file": "Cape Verde.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 71,
+   "name": "Central African Republic",
+   "name_nfc": "Central African Republic",
+   "forecast_file": null,
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 72,
+   "name": "Chile",
+   "name_nfc": "Chile",
+   "forecast_file": "72.json",
+   "whatif_file": "Chile.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 110,
+   "name": "China",
+   "name_nfc": "China",
+   "forecast_file": "110.json",
+   "whatif_file": "China.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 15,
+   "name": "Colombia",
+   "name_nfc": "Colombia",
+   "forecast_file": "15.json",
+   "whatif_file": "Colombia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 153,
+   "name": "Comoros",
+   "name_nfc": "Comoros",
+   "forecast_file": "153.json",
+   "whatif_file": "Comoros.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 73,
+   "name": "Costa Rica",
+   "name_nfc": "Costa Rica",
+   "forecast_file": "73.json",
+   "whatif_file": "Costa Rica.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 154,
+   "name": "Croatia",
+   "name_nfc": "Croatia",
+   "forecast_file": "154.json",
+   "whatif_file": "Croatia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 156,
+   "name": "Cyprus",
+   "name_nfc": "Cyprus",
+   "forecast_file": "156.json",
+   "whatif_file": "Cyprus.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 157,
+   "name": "Czechia",
+   "name_nfc": "Czechia",
+   "forecast_file": "157.json",
+   "whatif_file": "Czechia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 111,
+   "name": "Democratic Republic of the Congo",
+   "name_nfc": "Democratic Republic of the Congo",
+   "forecast_file": "111.json",
+   "whatif_file": "Democratic Republic of the Congo.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 158,
+   "name": "Denmark",
+   "name_nfc": "Denmark",
+   "forecast_file": "158.json",
+   "whatif_file": "Denmark.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 113,
+   "name": "Djibouti",
+   "name_nfc": "Djibouti",
+   "forecast_file": "113.json",
+   "whatif_file": "Djibouti.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 114,
+   "name": "Dominican Republic",
+   "name_nfc": "Dominican Republic",
+   "forecast_file": "114.json",
+   "whatif_file": "Dominican Republic.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 75,
+   "name": "Ecuador",
+   "name_nfc": "Ecuador",
+   "forecast_file": "75.json",
+   "whatif_file": "Ecuador.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 13,
+   "name": "Egypt",
+   "name_nfc": "Egypt",
+   "forecast_file": "13.json",
+   "whatif_file": "Egypt.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 22,
+   "name": "El Salvador",
+   "name_nfc": "El Salvador",
+   "forecast_file": "22.json",
+   "whatif_file": "El Salvador.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 161,
+   "name": "Estonia",
+   "name_nfc": "Estonia",
+   "forecast_file": "161.json",
+   "whatif_file": "Estonia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 132,
+   "name": "Eswatini",
+   "name_nfc": "Eswatini",
+   "forecast_file": "132.json",
+   "whatif_file": "Eswatini.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 38,
+   "name": "Ethiopia",
+   "name_nfc": "Ethiopia",
+   "forecast_file": "38.json",
+   "whatif_file": "Ethiopia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 163,
+   "name": "Finland",
+   "name_nfc": "Finland",
+   "forecast_file": "163.json",
+   "whatif_file": "Finland.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 76,
+   "name": "France",
+   "name_nfc": "France",
+   "forecast_file": "76.json",
+   "whatif_file": "France.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 116,
+   "name": "Gabon",
+   "name_nfc": "Gabon",
+   "forecast_file": "116.json",
+   "whatif_file": "Gabon.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 118,
+   "name": "Georgia",
+   "name_nfc": "Georgia",
+   "forecast_file": "118.json",
+   "whatif_file": "Georgia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 77,
+   "name": "Germany",
+   "name_nfc": "Germany",
+   "forecast_file": "77.json",
+   "whatif_file": "Germany.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 7,
+   "name": "Ghana",
+   "name_nfc": "Ghana",
+   "forecast_file": "7.json",
+   "whatif_file": "Ghana.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 164,
+   "name": "Greece",
+   "name_nfc": "Greece",
+   "forecast_file": "164.json",
+   "whatif_file": "Greece.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 78,
+   "name": "Guatemala",
+   "name_nfc": "Guatemala",
+   "forecast_file": "78.json",
+   "whatif_file": "Guatemala.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 63,
+   "name": "Guinea",
+   "name_nfc": "Guinea",
+   "forecast_file": "63.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 119,
+   "name": "Guinea-Bissau",
+   "name_nfc": "Guinea-Bissau",
+   "forecast_file": "119.json",
+   "whatif_file": "Guinea-Bissau.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 26,
+   "name": "Haiti",
+   "name_nfc": "Haiti",
+   "forecast_file": "26.json",
+   "whatif_file": "Haiti.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 27,
+   "name": "Honduras",
+   "name_nfc": "Honduras",
+   "forecast_file": "27.json",
+   "whatif_file": "Honduras.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 210,
+   "name": "Hungary",
+   "name_nfc": "Hungary",
+   "forecast_file": "210.json",
+   "whatif_file": "Hungary.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 168,
+   "name": "Iceland",
+   "name_nfc": "Iceland",
+   "forecast_file": "168.json",
+   "whatif_file": "Iceland.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 39,
+   "name": "India",
+   "name_nfc": "India",
+   "forecast_file": "39.json",
+   "whatif_file": "India.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 56,
+   "name": "Indonesia",
+   "name_nfc": "Indonesia",
+   "forecast_file": "56.json",
+   "whatif_file": "Indonesia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 79,
+   "name": "Iran",
+   "name_nfc": "Iran",
+   "forecast_file": "79.json",
+   "whatif_file": "Iran.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 80,
+   "name": "Iraq",
+   "name_nfc": "Iraq",
+   "forecast_file": "80.json",
+   "whatif_file": "Iraq.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 81,
+   "name": "Ireland",
+   "name_nfc": "Ireland",
+   "forecast_file": "81.json",
+   "whatif_file": "Ireland.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 169,
+   "name": "Israel",
+   "name_nfc": "Israel",
+   "forecast_file": "169.json",
+   "whatif_file": "Israel.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 82,
+   "name": "Italy",
+   "name_nfc": "Italy",
+   "forecast_file": "82.json",
+   "whatif_file": "Italy.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 64,
+   "name": "Ivory Coast",
+   "name_nfc": "Ivory Coast",
+   "forecast_file": "64.json",
+   "whatif_file": "Ivory Coast.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 120,
+   "name": "Jamaica",
+   "name_nfc": "Jamaica",
+   "forecast_file": "120.json",
+   "whatif_file": "Jamaica.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 9,
+   "name": "Japan",
+   "name_nfc": "Japan",
+   "forecast_file": "9.json",
+   "whatif_file": "Japan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 83,
+   "name": "Jordan",
+   "name_nfc": "Jordan",
+   "forecast_file": "83.json",
+   "whatif_file": "Jordan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 121,
+   "name": "Kazakhstan",
+   "name_nfc": "Kazakhstan",
+   "forecast_file": "121.json",
+   "whatif_file": "Kazakhstan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 40,
+   "name": "Kenya",
+   "name_nfc": "Kenya",
+   "forecast_file": "40.json",
+   "whatif_file": "Kenya.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 171,
+   "name": "Kuwait",
+   "name_nfc": "Kuwait",
+   "forecast_file": "171.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 122,
+   "name": "Kyrgyzstan",
+   "name_nfc": "Kyrgyzstan",
+   "forecast_file": "122.json",
+   "whatif_file": "Kyrgyzstan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 123,
+   "name": "Laos",
+   "name_nfc": "Laos",
+   "forecast_file": "123.json",
+   "whatif_file": "Laos.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 84,
+   "name": "Latvia",
+   "name_nfc": "Latvia",
+   "forecast_file": "84.json",
+   "whatif_file": "Latvia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 44,
+   "name": "Lebanon",
+   "name_nfc": "Lebanon",
+   "forecast_file": "44.json",
+   "whatif_file": "Lebanon.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 85,
+   "name": "Lesotho",
+   "name_nfc": "Lesotho",
+   "forecast_file": "85.json",
+   "whatif_file": "Lesotho.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 86,
+   "name": "Liberia",
+   "name_nfc": "Liberia",
+   "forecast_file": "86.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 124,
+   "name": "Libya",
+   "name_nfc": "Libya",
+   "forecast_file": null,
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 173,
+   "name": "Lithuania",
+   "name_nfc": "Lithuania",
+   "forecast_file": "173.json",
+   "whatif_file": "Lithuania.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 174,
+   "name": "Luxembourg",
+   "name_nfc": "Luxembourg",
+   "forecast_file": "174.json",
+   "whatif_file": "Luxembourg.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 125,
+   "name": "Madagascar",
+   "name_nfc": "Madagascar",
+   "forecast_file": "125.json",
+   "whatif_file": "Madagascar.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 87,
+   "name": "Malawi",
+   "name_nfc": "Malawi",
+   "forecast_file": "87.json",
+   "whatif_file": "Malawi.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 177,
+   "name": "Malaysia",
+   "name_nfc": "Malaysia",
+   "forecast_file": "177.json",
+   "whatif_file": "Malaysia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 28,
+   "name": "Mali",
+   "name_nfc": "Mali",
+   "forecast_file": "28.json",
+   "whatif_file": "Mali.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 178,
+   "name": "Malta",
+   "name_nfc": "Malta",
+   "forecast_file": "178.json",
+   "whatif_file": "Malta.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 65,
+   "name": "Mauritania",
+   "name_nfc": "Mauritania",
+   "forecast_file": "65.json",
+   "whatif_file": "Mauritania.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 180,
+   "name": "Mauritius",
+   "name_nfc": "Mauritius",
+   "forecast_file": "180.json",
+   "whatif_file": "Mauritius.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 3,
+   "name": "Mexico",
+   "name_nfc": "Mexico",
+   "forecast_file": "3.json",
+   "whatif_file": "Mexico.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 126,
+   "name": "Moldova",
+   "name_nfc": "Moldova",
+   "forecast_file": "126.json",
+   "whatif_file": "Moldova.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 89,
+   "name": "Mongolia",
+   "name_nfc": "Mongolia",
+   "forecast_file": "89.json",
+   "whatif_file": "Mongolia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 183,
+   "name": "Montenegro",
+   "name_nfc": "Montenegro",
+   "forecast_file": "183.json",
+   "whatif_file": "Montenegro.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 90,
+   "name": "Morocco",
+   "name_nfc": "Morocco",
+   "forecast_file": "90.json",
+   "whatif_file": "Morocco.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 57,
+   "name": "Mozambique",
+   "name_nfc": "Mozambique",
+   "forecast_file": "57.json",
+   "whatif_file": "Mozambique.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 127,
+   "name": "Namibia",
+   "name_nfc": "Namibia",
+   "forecast_file": "127.json",
+   "whatif_file": "Namibia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 58,
+   "name": "Nepal",
+   "name_nfc": "Nepal",
+   "forecast_file": "58.json",
+   "whatif_file": "Nepal.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 91,
+   "name": "Netherlands",
+   "name_nfc": "Netherlands",
+   "forecast_file": "91.json",
+   "whatif_file": "Netherlands.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 185,
+   "name": "New Zealand",
+   "name_nfc": "New Zealand",
+   "forecast_file": "185.json",
+   "whatif_file": "New Zealand.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 59,
+   "name": "Nicaragua",
+   "name_nfc": "Nicaragua",
+   "forecast_file": "59.json",
+   "whatif_file": "Nicaragua.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 60,
+   "name": "Niger",
+   "name_nfc": "Niger",
+   "forecast_file": "60.json",
+   "whatif_file": "Niger.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 45,
+   "name": "Nigeria",
+   "name_nfc": "Nigeria",
+   "forecast_file": "45.json",
+   "whatif_file": "Nigeria.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 176,
+   "name": "North Macedonia",
+   "name_nfc": "North Macedonia",
+   "forecast_file": "176.json",
+   "whatif_file": "North Macedonia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 186,
+   "name": "Norway",
+   "name_nfc": "Norway",
+   "forecast_file": "186.json",
+   "whatif_file": "Norway.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 187,
+   "name": "Oman",
+   "name_nfc": "Oman",
+   "forecast_file": "187.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 29,
+   "name": "Pakistan",
+   "name_nfc": "Pakistan",
+   "forecast_file": "29.json",
+   "whatif_file": "Pakistan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 92,
+   "name": "Panama",
+   "name_nfc": "Panama",
+   "forecast_file": "92.json",
+   "whatif_file": "Panama.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 189,
+   "name": "Paraguay",
+   "name_nfc": "Paraguay",
+   "forecast_file": "189.json",
+   "whatif_file": "Paraguay.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 30,
+   "name": "Peru",
+   "name_nfc": "Peru",
+   "forecast_file": "30.json",
+   "whatif_file": "Peru.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 46,
+   "name": "Philippines",
+   "name_nfc": "Philippines",
+   "forecast_file": "46.json",
+   "whatif_file": "Philippines.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 17,
+   "name": "Poland",
+   "name_nfc": "Poland",
+   "forecast_file": "17.json",
+   "whatif_file": "Poland.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 21,
+   "name": "Portugal",
+   "name_nfc": "Portugal",
+   "forecast_file": "21.json",
+   "whatif_file": "Portugal.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 94,
+   "name": "Qatar",
+   "name_nfc": "Qatar",
+   "forecast_file": "94.json",
+   "whatif_file": "Qatar.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 112,
+   "name": "Republic of the Congo",
+   "name_nfc": "Republic of the Congo",
+   "forecast_file": "112.json",
+   "whatif_file": "Republic of the Congo.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 190,
+   "name": "Romania",
+   "name_nfc": "Romania",
+   "forecast_file": "190.json",
+   "whatif_file": "Romania.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 11,
+   "name": "Russia",
+   "name_nfc": "Russia",
+   "forecast_file": "11.json",
+   "whatif_file": "Russia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 129,
+   "name": "Rwanda",
+   "name_nfc": "Rwanda",
+   "forecast_file": "129.json",
+   "whatif_file": "Rwanda.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 197,
+   "name": "Saudi Arabia",
+   "name_nfc": "Saudi Arabia",
+   "forecast_file": "197.json",
+   "whatif_file": "Saudi Arabia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 31,
+   "name": "Senegal",
+   "name_nfc": "Senegal",
+   "forecast_file": "31.json",
+   "whatif_file": "Senegal.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 198,
+   "name": "Serbia",
+   "name_nfc": "Serbia",
+   "forecast_file": "198.json",
+   "whatif_file": "Serbia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 199,
+   "name": "Seychelles",
+   "name_nfc": "Seychelles",
+   "forecast_file": "199.json",
+   "whatif_file": "Seychelles.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 95,
+   "name": "Sierra Leone",
+   "name_nfc": "Sierra Leone",
+   "forecast_file": "95.json",
+   "whatif_file": "Sierra Leone.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 201,
+   "name": "Slovakia",
+   "name_nfc": "Slovakia",
+   "forecast_file": "201.json",
+   "whatif_file": "Slovakia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 202,
+   "name": "Slovenia",
+   "name_nfc": "Slovenia",
+   "forecast_file": "202.json",
+   "whatif_file": "Slovenia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 8,
+   "name": "South Africa",
+   "name_nfc": "South Africa",
+   "forecast_file": "8.json",
+   "whatif_file": "South Africa.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 42,
+   "name": "South Korea",
+   "name_nfc": "South Korea",
+   "forecast_file": "42.json",
+   "whatif_file": "South Korea.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 96,
+   "name": "Spain",
+   "name_nfc": "Spain",
+   "forecast_file": "96.json",
+   "whatif_file": "Spain.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 131,
+   "name": "Sri Lanka",
+   "name_nfc": "Sri Lanka",
+   "forecast_file": "131.json",
+   "whatif_file": "Sri Lanka.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 33,
+   "name": "Sudan",
+   "name_nfc": "Sudan",
+   "forecast_file": "33.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 5,
+   "name": "Sweden",
+   "name_nfc": "Sweden",
+   "forecast_file": "5.json",
+   "whatif_file": "Sweden.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 97,
+   "name": "Syria",
+   "name_nfc": "Syria",
+   "forecast_file": "97.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 133,
+   "name": "Tajikistan",
+   "name_nfc": "Tajikistan",
+   "forecast_file": "133.json",
+   "whatif_file": "Tajikistan.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 47,
+   "name": "Tanzania",
+   "name_nfc": "Tanzania",
+   "forecast_file": "47.json",
+   "whatif_file": "Tanzania.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 49,
+   "name": "Thailand",
+   "name_nfc": "Thailand",
+   "forecast_file": "49.json",
+   "whatif_file": "Thailand.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 117,
+   "name": "The Gambia",
+   "name_nfc": "The Gambia",
+   "forecast_file": "117.json",
+   "whatif_file": "The Gambia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 134,
+   "name": "Togo",
+   "name_nfc": "Togo",
+   "forecast_file": "134.json",
+   "whatif_file": "Togo.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 135,
+   "name": "Trinidad and Tobago",
+   "name_nfc": "Trinidad and Tobago",
+   "forecast_file": "135.json",
+   "whatif_file": "Trinidad and Tobago.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 98,
+   "name": "Tunisia",
+   "name_nfc": "Tunisia",
+   "forecast_file": "98.json",
+   "whatif_file": "Tunisia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 99,
+   "name": "Türkiye",
+   "name_nfc": "Türkiye",
+   "forecast_file": "99.json",
+   "whatif_file": "Türkiye.json",
+   "whatif_file_unicode_form": "NFD",
+   "has_non_ascii": true
+  },
+  {
+   "country_id": 50,
+   "name": "Uganda",
+   "name_nfc": "Uganda",
+   "forecast_file": "50.json",
+   "whatif_file": "Uganda.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 100,
+   "name": "Ukraine",
+   "name_nfc": "Ukraine",
+   "forecast_file": "100.json",
+   "whatif_file": "Ukraine.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 207,
+   "name": "United Arab Emirates",
+   "name_nfc": "United Arab Emirates",
+   "forecast_file": "207.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 101,
+   "name": "United Kingdom",
+   "name_nfc": "United Kingdom",
+   "forecast_file": "101.json",
+   "whatif_file": "United Kingdom.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 20,
+   "name": "United States of America",
+   "name_nfc": "United States of America",
+   "forecast_file": "20.json",
+   "whatif_file": "United States of America.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 102,
+   "name": "Uruguay",
+   "name_nfc": "Uruguay",
+   "forecast_file": "102.json",
+   "whatif_file": "Uruguay.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 140,
+   "name": "Uzbekistan",
+   "name_nfc": "Uzbekistan",
+   "forecast_file": "140.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 51,
+   "name": "Venezuela",
+   "name_nfc": "Venezuela",
+   "forecast_file": "51.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 34,
+   "name": "Vietnam",
+   "name_nfc": "Vietnam",
+   "forecast_file": "34.json",
+   "whatif_file": "Vietnam.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 14,
+   "name": "Yemen",
+   "name_nfc": "Yemen",
+   "forecast_file": "14.json",
+   "whatif_file": null,
+   "whatif_file_unicode_form": null,
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 61,
+   "name": "Zambia",
+   "name_nfc": "Zambia",
+   "forecast_file": "61.json",
+   "whatif_file": "Zambia.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  },
+  {
+   "country_id": 62,
+   "name": "Zimbabwe",
+   "name_nfc": "Zimbabwe",
+   "forecast_file": "62.json",
+   "whatif_file": "Zimbabwe.json",
+   "whatif_file_unicode_form": "ASCII",
+   "has_non_ascii": false
+  }
+ ]
+}

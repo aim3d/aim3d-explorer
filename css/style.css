@@ -214,8 +214,10 @@ select:focus-visible, input:focus-visible, a:focus-visible {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   text-align: left;
-  height: 96px;
+  height: 200px;
   vertical-align: bottom;
+  overflow: visible;
+  white-space: nowrap;
 }
 .matrix tbody th { text-align: right; padding-right: 8px; white-space: nowrap; }
 .matrix th button {
@@ -597,3 +599,13 @@ select:focus-visible, input:focus-visible, a:focus-visible {
 }
 .notice-close:hover { background: #ecdcb0; }
 @media (max-width: 880px) { .notice-inner { padding: 10px 18px; } }
+
+/* ── v3: sign badges, block lines ─────────────────────── */
+.badge-pos { background: var(--blue-soft); color: var(--blue-deep); }
+.badge-neg { background: var(--red-soft); color: var(--red); }
+.badge-weak { background: var(--line-soft); color: var(--muted); }
+.matrix td.blk-r, .matrix th.blk-r { border-right: 1px solid #c3c8d2; }
+.matrix tr.blk-b td, .matrix tr.blk-b th { border-bottom: 1px solid #c3c8d2; }
+
+.refs { font-size: 12.5px; padding-left: 22px; max-width: 760px; }
+.refs li { margin-bottom: 5px; }

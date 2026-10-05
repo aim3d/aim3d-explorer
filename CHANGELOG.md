@@ -12,6 +12,70 @@ say when that needs re-pasting.
 
 ---
 
+## v25 — 2026-10-05 · October 2026 rebuild (v3 release)
+One whole replacement: nothing on the portal now includes an aggregate
+democracy index; the causal structure is re-estimated with signed edges and
+an exported ordering; forecasts come from one spatio-temporal graph neural
+network and are shown beside what happened; the dynamics view is replaced by
+what-if responses; earlier forecasts, risk maps and impulse responses are
+withdrawn. Built in four stages, released as one.
+
+**Deployment.** The repo's old `data/century_factors/` and
+`data/modern_factors/` directories (including `cfact/`, `hzfan/`) are
+discontinued: delete them. New layout: `data/struct/`, `data/fcst/`,
+`data/dyn/`, `data/labels/`, `data/digest/`, `data/methods.json`,
+`data/glossary.json`, `data/country_index_*.json`. Upload the package, then
+drag `fcst/{panel}/` country files and `dyn/{panel}/cfact/` from Drive.
+**Re-paste `tier3/worker.js` into Cloudflare**: the system prompt, digest
+path and a methods context block all changed.
+
+**Stage 1 — Structure, Edges, Effect curves.** `app.js` rebuilt from the
+carried-over machinery. Matrix rows follow `row_order` (structural band
+last), columns follow `column_order` (structural variables are rows only;
+modern 81 → 65 columns); cells blue/red by sign, shaded by score, weak-sign
+muted; group lines per axis; the export's own caption with the like-for-like
+modularity pair. Neighbourhood network with sign-coloured arrowheads,
+majority edges dashed. Edges table with sign, sign strength, agreement and a
+sign filter. Effect curves on clean-elections terciles in a neutral palette,
+with the additive-reading note. Every node labelled: 51 codebook, 8/16
+constructs (F16 = Child mortality), 14 source names.
+
+**Stage 2 — Forecasts (new).** Country (via `country_index`), variable and
+horizon selectors; forecasts made along the way over observed history with
+hollow points where the outcome is not yet observed and the in-band count
+computed from the file; the forecast from the last observed year with
+middle-half and 90% bands and the not-validated region; large-move
+probabilities with the fall/rise caveat; "Not forecast: structural"; an
+accuracy block leading with MAE beside no change and never showing MAPE.
+
+**Stage 3 — What-if (replaces Dynamics).** Opens on one country; rise and
+fall by ±0.5 SD; own-path chart with the evidence count; ranked signed
+responses with a ±0.05 SD reference and a count of how many exceed it;
+aggregate scope with 10th–90th percentile whiskers; explicit states for
+structural variables and for directions with too few observed moves; the
+file's definition visible; responses described as prediction, not cause,
+and as not confirming the edge signs. NFD-named files (Türkiye) load.
+
+**Stage 4 — Methods, glossary, assistant, notice.** Methods is rendered from
+`data/methods.json`, adapted from the lab's write-up (no methods, numbers or
+claims added), with the evaluation table drawn from `accuracy.json` and the
+references shown as provisional until confirmed. The glossary is rewritten
+for the v3 objects (23 terms; the nine entries on withdrawn objects are
+gone). The assistant digest is regenerated for the v3 layout with new
+framing rules; the Worker now also sends the methods text, so the Methods
+page and the assistant read one source. Behavior tests rewritten. Notice
+updated to the rebuild wording. README updated.
+
+Tests: 156 checks across both panels, with temporary fixtures for the
+Forecasts and What-if views and lints that fail if any withdrawn object
+(polyarchy, aggregation-adjacent, λ/ρ/IRF code, old forecast or validation
+files) reappears in code, glossary or digests.
+
+Changed vs v24: everything under `data/`, `js/app.js`, `index.html`,
+`css/style.css`, `tier3/worker.js`, `tier3/SYSTEM_PROMPT.md`,
+`tier3/make_digests.py`, `tier3/behavior_tests.md`, `smoke_test.js`,
+`README.md`, `portal_labels.csv`. `test_history.js` removed.
+
 ## v24 — 2026-10-03 · factor construct names
 The lab supplied construct names for the theoretical factors (8 century,
 16 modern), replacing the member-list fallback. Applied to 23 of 24; one typo

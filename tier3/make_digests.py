@@ -1,163 +1,126 @@
-"""AIM-3D Tier-3: generate per-panel results digests for the portal assistant.
+"""AIM-3D Tier-3: per-panel results digests for the portal assistant, v3 layout.
 
-Reads the portal export bundles and emits data/{panel}/digest.json.
-Everything in the digest is read verbatim or subsampled from the bundles;
-no new statistics are computed. Downsampling (ICE curves to 9 grid points,
-lambda paths to 5 tau points) selects stored values, it does not derive
-new ones.
-
-Colab use: set BASE to the Drive folder holding the two bundle directories,
-e.g. '/content/drive/MyDrive/Democratization/outputs/portal_export',
-after mounting Drive. Locally: point BASE at the portal's data/ directory.
+Reads data/struct/{panel}/, data/fcst/{panel}/{manifest,accuracy}.json and
+data/dyn/{panel}/irf_aggregate.json, and writes data/digest/{panel}.json.
+Everything in a digest is read or subsampled from the export files; no new
+statistics are computed. Run after any export or label change.
 """
-import json
-import os
+import json, os, re
 
 BASE = os.environ.get("DIGEST_BASE", "data")
 PANELS = {
-    "century_factors": {"name": "Century view", "span": "1900-2023"},
-    "modern_factors": {"name": "Modern view", "span": "1970-2021"},
+    "century": {"name": "Century view", "span": "1900-2023"},
+    "modern":  {"name": "Modern view",  "span": "1970-2021"},
 }
 
-# Framing rules the assistant must follow; mirrors the build brief (S3-S4).
 FRAMING_RULES = [
-    "Forecast series are 'model-implied trajectories', never 'predictions' or 'forecasts of what will happen'.",
-    "At validated horizons (h <= 5) the model does NOT beat a persistence baseline for level forecasts (MAE ratios > 1). The model's value is conditional structure, not point prediction. State this whenever trajectories are discussed.",
-    "Horizons 6-10 are unvalidated. Never characterize them as reliable.",
-    "Edges flagged aggregation_adjacent have a source containing a polyarchy aggregation component. They are correct model structure but must NOT be described as discovered causal drivers of democracy.",
-    "Structural (source-only) nodes are never modeled as targets: between-country variance dominates their within-country signal (low ICC), so effects onto them are not identified. Never claim the model found 'no effect' on them; the model does not estimate effects on them at all.",
-    "Factor numbering is panel-specific: an F-id in the Century view and the same F-id in the Modern view are different constructs. Never cross-reference factors by number across panels. Factors are theoretical constructs from a confirmatory measurement model; where no construct name is available, describe a factor by its member indicators, never by a guessed name.",
-    "All ICE, IRF, and lambda values are in standardized units. Polyarchy displays in native 0-1 units only in the Trajectories view.",
-    "Scores are NAVAR causal scores (median across a 3-seed ensemble); 'consensus' means retained in all 3 seeds, 'majority' means 2 of 3. The consensus graph is the canonical object.",
-    "Latent factor display names are interpretive labels assigned by the AIM-3D Lab; the constituent V-Dem indicators define each factor.",
+    "No result on this portal includes an aggregate democracy index. Every result is for a component of democracy or a related condition. If asked about 'democracy' as a single score, say the index is not modeled and point to its components.",
+    "An edge is causal in Granger's sense: the source's recent past improves the prediction of the receiver's next value given everything else. It is not a claim about what an intervention would do.",
+    "Edge signs come from the direction the source's contribution moves with the source's latest value, by majority across three fits. A weak sign (sign_strength < 0.60) means the contribution rises over part of the source's range and falls over another; describe such edges as weakly signed, not as positive or negative.",
+    "The matrix ordering is an aid to reading: groups are not statistically distinct clusters. Quote modularity only as the chance_comparison pair (observed vs rewired_mean).",
+    "Effect curves are evaluated in terciles of the clean elections index, and because NAVAR is additive the three curves of an edge share one shape and differ by a constant: do not describe them as different effects in different regimes.",
+    "Forecasts come from one spatio-temporal graph neural network. Horizons are 1, 3, 5 and 10 years; the ten-year horizon is published without validation and must be labelled so.",
+    "The 90% band is nominal: in the evaluation period it held the outcome 80 to 87% of the time at 1, 3 and 5 years. Never call it calibrated.",
+    "Accuracy is read beside a no-change forecast. MAE is the headline measure; never lead with MAPE. These variables change slowly, so any forecast scores well; the forecast's margin over no change is small and narrows with horizon, and for some variables the point forecast is behind no change.",
+    "Structural (source-only) variables are not forecast and are not moved in the what-if view. Say 'not forecast: structural', never that they were forecast as flat.",
+    "A what-if response is the change in a forecast when one variable is different today. It is a statement about prediction, not an estimate of a causal effect, and it does not confirm or test the edge signs in the Structure view. A variable missing from the what-if set has 'not enough observed moves of this size', not a zero response.",
+    "Per-country forecasts and per-country what-if responses are not in this digest; direct users to the Forecasts and What-if views for any country-specific figure.",
+    "Factor numbering is panel-specific. Factors are theoretical constructs; use their display names and, if asked what one measures, its member indicators.",
 ]
 
-def downsample(values, n):
-    """Pick n evenly spaced stored values (indices), always including endpoints."""
-    if len(values) <= n:
-        return values
-    idx = [round(i * (len(values) - 1) / (n - 1)) for i in range(n)]
-    return [values[i] for i in idx]
-
 def rnd(x, d=4):
-    """Round stored values for digest compactness (presentation only)."""
-    if isinstance(x, list):
-        return [rnd(v, d) for v in x]
-    if isinstance(x, float):
-        return round(x, d)
+    if isinstance(x, list): return [rnd(v, d) for v in x]
+    if isinstance(x, float): return round(x, d)
     return x
 
-def build_digest(panel):
-    b = os.path.join(BASE, panel)
-    load = lambda f: json.load(open(os.path.join(b, f)))
-    manifest = load("manifest.json")
-    nodes = load("nodes.json")
-    edges_file = load("edges.json")
-    edges = edges_file["edges"] if isinstance(edges_file, dict) else edges_file
-    ice = load("ice.json")
-    dcnar = load("dcnar.json")
-    validation = load("validation.json")
-    labels_path = os.path.join(b, "labels.json")
-    labels = json.load(open(labels_path)) if os.path.exists(labels_path) else {}
+def build(panel):
+    sd = os.path.join(BASE, "struct", panel)
+    L = lambda p: json.load(open(p))
+    man = L(f"{sd}/manifest.json"); nodes = L(f"{sd}/nodes.json")
+    ef = L(f"{sd}/edges.json"); edges = ef["edges"] if isinstance(ef, dict) else ef
+    order = L(f"{sd}/matrix_order.json")
+    labels_p = os.path.join(BASE, "labels", f"{panel}.json")
+    labels = L(labels_p) if os.path.exists(labels_p) else {}
+    fman = L(os.path.join(BASE, "fcst", panel, "manifest.json"))
+    acc = L(os.path.join(BASE, "fcst", panel, "accuracy.json"))
+    agg_p = os.path.join(BASE, "dyn", panel, "irf_aggregate.json")
+    agg = L(agg_p) if os.path.exists(agg_p) else None
 
     node_out = {}
     for n in nodes:
         node_out[n["id"]] = {
             "label": labels.get(n["id"], n["label"]),
-            "kind": n["kind"],
-            "role": n["role"],
-            "icc": n["icc"],
+            "kind": n["kind"], "role": n["role"],
             **({"members": n["members"]} if n.get("members") else {}),
+            **({"forecast": False} if n.get("forecast") is False else {}),
         }
 
-    # Compact positional schema; see "edges_schema" in the digest.
-    # v2 panels are large (up to 1,600 retained edges); the digest carries
-    # the consensus set only, which is the canonical graph.
-    edge_out = []
-    for e in edges:
-        if not e["consensus"]:
-            continue
-        edge_out.append([
-            e["source"], e["target"], e["retention"],
-            1 if e["consensus"] else 0,
-            rnd(e["score_median"], 5), rnd(e["score_min"], 5), rnd(e["score_max"], 5),
-            1 if e.get("aggregation_adjacent") else 0,
-        ])
+    # Consensus edges only (the canonical graph), compact positional rows.
+    edge_out = [[e["source"], e["target"], 1 if e["sign"] > 0 else -1,
+                 rnd(e["score_median"], 5), rnd(e["sign_strength"], 2),
+                 1 if e.get("weak_sign") else 0, e["retention"]]
+                for e in edges if e["consensus"]]
 
-    # Grid is identical across regimes; stored once per edge. 5 stored points.
-    # Size control for v2: only effect curves INTO the outcome node travel with
-    # the digest; every other curve is viewable in the Effect curves view.
-    ice_out = {}
-    for key, regimes in ice.items():
-        if not key.endswith("->v2x_polyarchy"):
-            continue
-        ice_out[key] = {
-            "grid": rnd(downsample(regimes["low"]["grid"], 5), 3),
-            **{r: rnd(downsample(regimes[r]["delta"], 5), 4)
-               for r in ("low", "mid", "high")},
+    blocks = [{"name": b.get("name", f"Block {b['id']}"), "nodes": b["nodes"]} for b in order.get("blocks", [])]
+
+    acc_overall = [{k: rnd(v) for k, v in r.items()} for r in acc["overall"]]
+    acc_nodes = {}
+    for nid, rec in acc["nodes"].items():
+        acc_nodes[nid] = {h: {"n": v.get("n"), "mae": rnd(v.get("mae")), "mae_persistence": rnd(v.get("mae_persistence")),
+                              "error_pct_of_range": rnd(v.get("error_pct_of_range")),
+                              "error_pct_of_range_persistence": rnd(v.get("error_pct_of_range_persistence"))}
+                         for h, v in rec["by_h"].items()}
+
+    whatif = None
+    if agg:
+        whatif = {
+            "definition": agg.get("definition"), "n_countries": agg.get("n_countries"),
+            "state_year": agg.get("state_year"), "min_support": agg.get("min_support"),
+            "horizons": agg.get("horizons"), "validated_horizons": agg.get("validated_horizons"),
+            "not_shocked": agg.get("not_shocked", []),
+            "not_supported": {k: v for k, v in (agg.get("not_supported") or {}).items()},
+            "observed_moves": agg.get("observed_moves", {}),
+            # Mean own-response (how much of the move remains) per shocked node, both directions.
+            "own_response_mean": {
+                "rise": {k: rnd(v.get(k)) for k, v in agg["shocks"].items() if k in v},
+                "fall": {k: rnd(v.get(k)) for k, v in agg["shocks_fall"].items() if k in v},
+            },
+            "note": "Cross-node responses are small (few exceed 0.05 SD) and vary several-fold across countries; per-node and per-country responses are in the What-if view.",
         }
 
-    lam = dcnar["lambda_paths"]
-    lambda_out = {
-        "tau": rnd(downsample(lam["tau"], 5), 3),
-        "series": {k: rnd(downsample(v, 5)) for k, v in lam["series"].items()},
-    }
-
-    digest = {
-        "panel": panel,
-        "panel_name": PANELS[panel]["name"],
-        "panel_span": PANELS[panel]["span"],
-        "generated_from": manifest["generated"],
-        "provenance": manifest["provenance"],
-        "counts": {
-            "n_nodes": manifest["n_nodes"],
-            "n_edges_majority": manifest["n_edges_majority"],
-            "n_edges_consensus": manifest["n_edges_consensus"],
-            "n_edges_aggregation_adjacent": manifest["n_edges_aggregation_adjacent"],
-            "n_countries": manifest["panel_meta"]["n_countries"],
-            "years": manifest["panel_meta"]["years"],
-        },
+    return {
+        "panel": panel, "panel_name": PANELS[panel]["name"], "panel_span": PANELS[panel]["span"],
+        "generated_from": man.get("generated") or man.get("built"),
+        "provenance": {k: v for k, v in (man.get("provenance") or {}).items() if isinstance(v, str)},
+        "counts": {"n_nodes": man["n_nodes"], "n_edges_majority": man["n_edges_majority"],
+                   "n_edges_consensus": man["n_edges_consensus"], "n_edges_positive": man.get("n_edges_positive"),
+                   "n_edges_negative": man.get("n_edges_negative"), "n_edges_weak_sign": man.get("n_edges_weak_sign"),
+                   "n_countries": man["panel_meta"]["n_countries"], "years": man["panel_meta"]["years"]},
         "framing_rules": FRAMING_RULES,
-        "edges_schema": "[source, target, retention, consensus(1/0), score_median, score_min, score_max, aggregation_adjacent(1/0)]",
-        "ice_schema": "per 'source->target' key: shared 'grid' (5 standardized source values, 2nd-98th pct range) and per-regime delta arrays 'low'/'mid'/'high' (effect on target, standardized), each aligned to grid.",
+        "edges_schema": "[source, target, sign(+1/-1), score_median, sign_strength, weak_sign(1/0), retention]; consensus edges only",
         "nodes": node_out,
         "edges": edge_out,
-        "ice_downsampled_5pt": ice_out,
-        "dcnar": {
-            "meta": dcnar["meta"],
-            "lambda_paths_5pt": lambda_out,
-            "rho_summary": {
-                "constrained_tau1": dcnar["meta"]["stability"]["rho_tau1"],
-                "constrained_max": dcnar["meta"]["stability"]["rho_max"],
-                "unconstrained_tau1": dcnar["meta"]["stability"]["rho_tau1_unconstrained"],
-                "unconstrained_max": dcnar["meta"]["stability"]["rho_max_unconstrained"],
-            },
-            "irf": {
-                "shock_var": dcnar["irf"]["shock_var"],
-                "horizons": dcnar["irf"]["horizons"],
-                "response": {k: rnd(v) for k, v in dcnar["irf"]["response"].items()},
-            },
+        "matrix_order": {"caption": order.get("caption"), "meaning": order.get("meaning"),
+                         "chance_comparison": order.get("chance_comparison"), "blocks": blocks},
+        "forecasts": {
+            "model": fman.get("model"), "horizons": fman.get("horizons"), "validated_horizons": fman.get("validated_horizons"),
+            "last_observed_year": fman.get("last_observed_year"), "n_countries": fman.get("n_countries"),
+            "evaluation_origins": fman.get("evaluation_origins"), "definitions": fman.get("definitions"),
+            "not_forecast": fman.get("not_forecast"),
+            "band_coverage_note": "nominal 90% band; realized coverage 80-87% at 1, 3 and 5 years in the evaluation period",
         },
-        "validation": validation,
-        "not_in_digest": (
-            "Per-country history and per-country model-implied trajectories are not included. "
-            "Direct users to the Trajectories view for any country-specific series. "
-            "Edges: only the consensus set (retained in all seeds) is listed; majority-only edges "
-            "are viewable in the Edges view. Effect curves: only curves into the electoral democracy "
-            "index are included; curves for every other consensus edge are in the Effect curves view. "
-            "Impulse responses and counterfactual trajectories for selectable shocks are in the "
-            "Dynamics view and are not in this digest beyond the single exported shock."
-        ),
+        "accuracy": {"headline_measure": acc.get("headline_measure"), "definitions": acc.get("definitions"),
+                     "overall": acc_overall, "nodes": acc_nodes,
+                     "min_forecasts_per_country_figure": acc.get("min_forecasts_per_country_figure")},
+        "whatif": whatif,
+        "not_in_digest": "Per-country forecasts, per-country what-if responses, effect-curve values, and majority-only edges are not included; they are in the Forecasts, What-if, Effect curves and Edges views.",
     }
-    return digest
 
 if __name__ == "__main__":
+    os.makedirs(os.path.join(BASE, "digest"), exist_ok=True)
     for panel in PANELS:
-        d = build_digest(panel)
-        out = os.path.join(BASE, panel, "digest.json")
+        d = build(panel)
+        out = os.path.join(BASE, "digest", f"{panel}.json")
         with open(out, "w") as f:
             json.dump(d, f, separators=(",", ":"), ensure_ascii=False)
-        size = os.path.getsize(out)
-        print(f"{panel}: digest.json {size/1024:.1f} KB "
-              f"({len(d['edges'])} edges, {len(d['nodes'])} nodes, "
-              f"{len(d['ice_downsampled_5pt'])} ICE curves)")
+        print(f"{panel}: {os.path.getsize(out)/1024:.1f} KB ({len(d['edges'])} consensus edges, {len(d['nodes'])} nodes)")
