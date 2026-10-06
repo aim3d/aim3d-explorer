@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=v31">
+<link rel="stylesheet" href="css/style.css?v=v33">
 </head>
 <body>
 
@@ -111,36 +111,25 @@
     <section class="view" id="view-forecasts" hidden>
       <div class="view-head">
         <span class="eyebrow">Forecasts</span>
-        <h2>Forecasts against what happened</h2>
-        <p class="view-lede">This view puts the forecasts next to what actually happened. For any country and variable, you can see each forecast the model made along the way, placed at the year it was for, over the values that were later observed — and then the forecast running forward from the last year of data. The shaded band is where the model expected 90% of outcomes to fall; in practice it caught them 80 to 87% of the time at one, three and five years, so treat it as somewhat too narrow. The ten-year forecasts have not yet been checked against outcomes.</p>
+        <h2>Forecast from the last observed year</h2>
+        <p class="view-lede">For any country and variable: the observed series, and the forecast made from the last year of data for one, three, five and ten years ahead. The shaded bands show where the model expected the middle half and 90% of outcomes to fall; in testing the wider band caught the outcome 80 to 87% of the time, so treat it as somewhat too narrow. The ten-year point has not been checked against outcomes. The table below gives the chance of a large fall or rise at each horizon.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-label" for="fc-country">Country</label>
         <select id="fc-country" class="ctl-select" aria-label="Country"></select>
         <label class="ctl-label" for="fc-node">Variable</label>
         <select id="fc-node" class="ctl-select" aria-label="Variable"></select>
-        <label class="ctl-label" for="fc-h">Horizon</label>
-        <select id="fc-h" class="ctl-select" aria-label="Horizon">
-          <option value="1">1 year</option>
-          <option value="3">3 years</option>
-          <option value="5">5 years</option>
-          <option value="10">10 years (not validated)</option>
-        </select>
         <button class="btn-quiet" id="fc-btn-accuracy" aria-expanded="false">Accuracy</button>
       </div>
       <div id="fc-notforecast" class="validation-block" hidden></div>
       <div id="fc-charts">
-        <h3 class="block-title" id="fc-title-walk">Forecasts made along the way</h3>
-        <div class="chart-card"><svg id="fc-walk-chart" class="chart chart-tall" role="img" aria-label="Actual against forecast"></svg>
-          <div class="chart-legend" id="fc-walk-legend"></div>
-        </div>
-        <p class="footnote" id="fc-walk-note"></p>
-        <h3 class="block-title" id="fc-title-fwd">Forecast from the last observed year</h3>
-        <div class="chart-card"><svg id="fc-fwd-chart" class="chart" role="img" aria-label="Forward forecast"></svg>
+        <h3 class="block-title" id="fc-title-fwd"></h3>
+        <div class="chart-card"><svg id="fc-fwd-chart" class="chart chart-tall" role="img" aria-label="Observed series and forecast"></svg>
           <div class="chart-legend" id="fc-fwd-legend"></div>
         </div>
-        <div class="table-wrap" id="fc-largemove"></div>
         <p class="footnote" id="fc-fwd-note"></p>
+        <div class="table-wrap" id="fc-largemove"></div>
+        <p class="footnote" id="fc-lm-note"></p>
       </div>
       <div class="validation-block" id="fc-accuracy" hidden></div>
     </section>
@@ -216,7 +205,7 @@
   <span id="build-stamp" class="build-stamp"></span></p>
 </footer>
 
-<script src="js/app.js?v=v31"></script>
-<script src="js/assistant.js?v=v31"></script>
+<script src="js/app.js?v=v33"></script>
+<script src="js/assistant.js?v=v33"></script>
 </body>
 </html>

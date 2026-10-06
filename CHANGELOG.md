@@ -12,6 +12,31 @@ say when that needs re-pasting.
 
 ---
 
+## v33 — 2026-10-06 · Forecasts view shows one forecast
+Per the pipeline note of 6 October (replacing the handoff's spec): the
+"Forecasts made along the way" chart is removed, with its legend, caption,
+in-band count and the horizon selector. It had placed each past forecast at
+the year it was for, so the line was the observed series shifted right by
+the horizon — the one-year lag noticed on 4 October — and to the right of
+the last observed year it replayed history as if it were the outlook.
+
+The view now shows one chart: the observed series (last 30 years) and the
+forecast made from the last observed year at +1, +3, +5 and +10, joined from
+the last observed value, with the middle-half and nominal 90% bands and the
+ten-year point marked not validated. The large-move table follows, with a
+sentence beside the chart whenever the table gives better than even odds of
+a large fall or rise at a validated horizon. A country whose record ends
+before the origin shows its observed series and "This country's record ends
+in [year]; no forecast is issued." Nothing is drawn from `fans` or
+`fans_full`; a lint fails if the app references them. The accuracy block is
+unchanged. Changed files: `index.html`, `js/app.js`, `smoke_test.js`,
+`CHANGELOG.md`.
+
+## v32 — 2026-10-06 · matrix caption carries the key
+The caption under the matrix spells out the six shape codes in the sentence
+itself (from `form_legend`) instead of pointing to the legend above the
+matrix. Changed files: `index.html`, `js/app.js`, `CHANGELOG.md`.
+
 ## v31 — 2026-10-06 · relationship shapes in the matrix; text changes
 Structure export rerun with functional-form fields (`form`, `form_code`,
 `form_agreement`, `curve_direction` per edge; `form_legend`, `form_rule`

@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v31";
+const BUILD = "v33";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -34,7 +34,6 @@ const S = {
   fcFiles: {},       // "panel/country_id" -> file
   fcCountry: null,   // country_id (number)
   fcNode: null,
-  fcH: "1",
   // what-if
   wiAgg: {},         // per-panel aggregate, lazy
   wiFiles: {},       // "panel/whatif_file" -> file
@@ -900,10 +899,14 @@ function renderStructure() {
 
   const o = d.order || {};
   const cc = o.chance_comparison || {};
+  const keyText = fl.length
+    ? fl.map((x) => `${x.code} ${(x.label || x.form).toLowerCase()}`).join(", ")
+    : "L linear, ST saturating, T threshold, N nonlinear, SC sign-changing, M mixed";
   $("matrix-order-note").textContent =
     "Rows are sources, columns are targets. Blue is a positive effect, red a negative one; darker means stronger. " +
-    "The letter in each cell is the shape of the relationship (see the key); grey cells marked SC change direction across the source's range — see the effect curve for those. " +
-    "Variables are arranged so that ones with strong links sit next to each other — the blocks make the matrix easier to read, but they are not real clusters: " +
+    `The letter in each cell is the shape of the relationship: ${keyText}. ` +
+    "Grey cells (SC) change direction across the source's range — look at the effect curve for those. " +
+    "Variables are arranged so that ones with strong links sit next to each other; the blocks make the matrix easier to read, but they are not real clusters — " +
     `the network is about as modular as a random one of the same density (${fmt(cc.observed, 3)} vs ${fmt(cc.rewired_mean, 3)}).`;
 
   renderEgo();
@@ -1192,7 +1195,6 @@ function init() {
   $("ice-edge").addEventListener("change", renderICE);
   $("fc-country").addEventListener("change", (e) => { S.fcCountry = +e.target.value; renderForecasts(); });
   $("fc-node").addEventListener("change", (e) => { S.fcNode = e.target.value; renderForecasts(); });
-  $("fc-h").addEventListener("change", (e) => { S.fcH = e.target.value; renderForecasts(); });
   $("wi-scope").addEventListener("change", (e) => { S.wiScope = e.target.value; renderWhatIf(); });
   $("wi-country").addEventListener("change", (e) => { S.wiCountry = +e.target.value; renderWhatIf(); });
   $("wi-shock").addEventListener("change", (e) => { S.wiShock = e.target.value; renderWhatIf(); });
@@ -1249,7 +1251,6 @@ async function renderForecasts() {
     if (!ids.includes(S.fcNode) || nf.has(S.fcNode)) S.fcNode = ids.find((id) => !nf.has(id));
   }
   nSel.value = S.fcNode;
-  $("fc-h").value = S.fcH;
 
   const node = byId[S.fcNode];
   const label = node ? node.label : S.fcNode;
@@ -1267,137 +1268,94 @@ async function renderForecasts() {
   $("fc-charts").hidden = false;
 
   const C = await loadForecastFile(S.panel, entry);
-  if (!C || !C.fans || !C.fans[S.fcNode]) {
+  if (!C || !C.observed || !C.observed[S.fcNode]) {
     $("fc-charts").hidden = true;
     $("fc-notforecast").hidden = false;
     $("fc-notforecast").innerHTML = `<h3>No forecast file</h3><p class="validation-note">No forecast file is available for ${esc(entry.name)}.</p>`;
     return;
   }
-  drawWalkForward(C, label);
   drawForward(C, label);
   await renderAccuracyBlock(entry, C);
 }
 
-/* Chart 1 — forecasts made along the way, for one horizon, over observed. */
-function drawWalkForward(C, label) {
-  const node = S.fcNode, h = S.fcH, hi = +h;
-  const obs = C.observed[node] || [];
-  const obsMap = {}; obs.forEach(([y, v]) => (obsMap[y] = v));
-  const rows = (C.fans[node] && C.fans[node][h]) || [];
-  const pts = rows.map(([origin, q05, q50, q95]) => ({ t: origin + hi, origin, q05, q50, q95, actual: obsMap[origin + hi] }))
-    .sort((a, b) => a.t - b.t);
-  const withOutcome = pts.filter((p) => p.actual !== undefined);
-  const pending = pts.filter((p) => p.actual === undefined);
-
-  $("fc-title-walk").textContent = `Forecasts made along the way — ${label}, ${H_LABEL[h]}`;
-  const ys = obs.map((o) => o[1]).concat(pts.flatMap((p) => [p.q05, p.q95]));
-  const ymin = Math.min(...ys), ymax = Math.max(...ys);
-  const pad = (ymax - ymin) * 0.1 || 0.1;
-  const xs = obs.map((o) => o[0]).concat(pts.map((p) => p.t));
-  const f = chartFrame($("fc-walk-chart"), {
-    xmin: Math.min(...xs), xmax: Math.max(...xs), ymin: ymin - pad, ymax: ymax + pad,
-    xlabel: "Year the forecast was for", ylabel: `${label} (panel units)`,
-    xticks: (() => { const t = []; for (let y = Math.ceil(Math.min(...xs) / 5) * 5; y <= Math.max(...xs); y += 5) t.push(y); return t; })(),
-  });
-  // last observed year marker
-  f.svg.appendChild(el("line", { x1: f.x(C.last_observed_year), x2: f.x(C.last_observed_year), y1: f.m.top, y2: f.H - f.m.bottom, stroke: "#b8bdc7", "stroke-dasharray": "3 3" }));
-  // 90% band: scored part solid, pending part faded
-  if (withOutcome.length > 1) addBand(f, withOutcome.map((p) => p.t), withOutcome.map((p) => p.q05), withOutcome.map((p) => p.q95), "#2456c4", 0.16);
-  if (pending.length) {
-    const seg = (withOutcome.length ? [withOutcome[withOutcome.length - 1]] : []).concat(pending);
-    if (seg.length > 1) addBand(f, seg.map((p) => p.t), seg.map((p) => p.q05), seg.map((p) => p.q95), "#2456c4", 0.07);
-  }
-  // forecast medians
-  if (withOutcome.length) addLine(f, withOutcome.map((p) => [p.t, p.q50]), "#2456c4", { width: 2 });
-  if (pending.length) {
-    const seg = (withOutcome.length ? [withOutcome[withOutcome.length - 1]] : []).concat(pending);
-    addLine(f, seg.map((p) => [p.t, p.q50]), "#2456c4", { width: 2, dash: "5 4", opacity: 0.6 });
-  }
-  pts.forEach((p) => f.svg.appendChild(el("circle", {
-    cx: f.x(p.t), cy: f.y(p.q50), r: 2.6,
-    fill: p.actual === undefined ? "#ffffff" : "#2456c4", stroke: "#2456c4", "stroke-width": 1.4,
-    "data-tip": `${label}, forecast for ${p.t} made in ${p.origin}\u0001median ${fmt(p.q50, 3)} · band ${fmt(p.q05, 3)} to ${fmt(p.q95, 3)}` +
-      (p.actual === undefined ? "\nOutcome not yet observed" : `\nObserved ${fmt(p.actual, 3)} · ${p.actual >= p.q05 && p.actual <= p.q95 ? "inside" : "outside"} the band`),
-  })));
-  // observed
-  if (obs.length) addLine(f, obs.map(([y, v]) => [y, v]), "#16233b", { width: 2.2 });
-  attachMatrixTooltip($("fc-walk-chart").parentElement);
-
-  const inside = withOutcome.filter((p) => p.actual >= p.q05 && p.actual <= p.q95).length;
-  $("fc-walk-legend").innerHTML =
-    `<span class="key"><span class="key-line" style="border-color:#16233b"></span>observed</span>` +
-    `<span class="key"><span class="key-line" style="border-color:#2456c4"></span>forecast median (${H_LABEL[h]} ahead)</span>` +
-    `<span class="key"><span class="key-band" style="background:#2456c4;opacity:.18"></span>nominal 90% band</span>` +
-    `<span class="key"><span class="key-line dashed" style="border-color:#2456c4;opacity:.6"></span>outcome not yet observed</span>` +
-    (withOutcome.length ? `<span class="key">${inside} of ${withOutcome.length} scored forecasts fell inside the band</span>` : "");
-  $("fc-walk-note").textContent =
-    `Each point is the forecast of ${label} ${H_LABEL[h]} ahead, made in the year the information was available (origins ${C.scope || ""}), placed at the year it was for. ` +
-    BAND_NOTE + (h === "10" ? " Ten-year forecasts are published without validation." : "") +
-    ` Hover any point for the forecast and the outcome.`;
-}
-
-/* Chart 2 — the production forecast issued from the last observed year. */
+/* The one chart: observed series, then the forecast made from the last
+   observed year at +1, +3, +5 and +10, joined from the last observed value. */
 function drawForward(C, label) {
   const node = S.fcNode;
-  const obs = (C.observed[node] || []).slice(-15);
-  const fc = C.forecast[node] || {};
-  const hs = ["1", "3", "5", "10"].filter((h) => fc[h]);
+  const obsAll = C.observed[node] || [];
+  const obs = obsAll.slice(-30);
+  const fcAll = C.forecast || {};
+  const fc = fcAll[node] || null;
+  const origin = C.forecast_origin || C.last_observed_year;
+  const last = obsAll.length ? obsAll[obsAll.length - 1] : null;
+  const hs = fc ? ["1", "3", "5", "10"].filter((h) => fc[h]) : [];
   const rows = hs.map((h) => ({ h, year: fc[h][0], q05: fc[h][1], q25: fc[h][2], q50: fc[h][3], q75: fc[h][4], q95: fc[h][5] }));
-  const last = C.observed[node] ? C.observed[node][C.observed[node].length - 1] : null;
-  $("fc-title-fwd").textContent = `Forecast from ${C.last_observed_year} — ${label}`;
+  const noForecast = !rows.length || !last || last[0] < origin;
+
+  $("fc-title-fwd").textContent = noForecast ? `${label} — observed` : `${label} — forecast made from ${origin}`;
 
   const ys = obs.map((o) => o[1]).concat(rows.flatMap((r) => [r.q05, r.q95]));
   const ymin = Math.min(...ys), ymax = Math.max(...ys);
   const pad = (ymax - ymin) * 0.12 || 0.1;
-  const xmin = obs.length ? obs[0][0] : C.last_observed_year - 5;
-  const xmax = rows.length ? rows[rows.length - 1].year : C.last_observed_year + 10;
+  const xmin = obs.length ? obs[0][0] : origin - 5;
+  const xmax = rows.length ? rows[rows.length - 1].year : (last ? last[0] : origin);
   const f = chartFrame($("fc-fwd-chart"), {
     xmin, xmax, ymin: ymin - pad, ymax: ymax + pad,
     xlabel: "Year", ylabel: `${label} (panel units)`,
     xticks: (() => { const t = []; for (let y = Math.ceil(xmin / 5) * 5; y <= xmax; y += 5) t.push(y); return t; })(),
   });
-  // unvalidated region (beyond the last validated horizon target)
+  if (obs.length) addLine(f, obs.map(([y, v]) => [y, v]), "#16233b", { width: 2.2 });
+
+  if (noForecast) {
+    $("fc-fwd-legend").innerHTML = `<span class="key"><span class="key-line" style="border-color:#16233b"></span>observed</span>`;
+    $("fc-fwd-note").textContent = last
+      ? `This country's record ends in ${last[0]}; no forecast is issued.`
+      : "No observed values for this variable.";
+    $("fc-largemove").innerHTML = "";
+    $("fc-lm-note").textContent = "";
+    return;
+  }
+
   const vmax = Math.max(...(C.validated_horizons || [5]));
-  const vEnd = C.last_observed_year + vmax;
+  const vEnd = origin + vmax;
   f.svg.appendChild(el("rect", { x: f.x(vEnd), y: f.m.top, width: Math.max(0, f.x(xmax) - f.x(vEnd)), height: f.H - f.m.top - f.m.bottom, fill: "#f6f0ee" }));
   f.svg.appendChild(el("text", { x: f.x(vEnd) + 6, y: f.m.top + 14, "font-size": 10.5, fill: "#b3372e", "font-family": "IBM Plex Mono, monospace" }, "not validated"));
-  f.svg.appendChild(el("line", { x1: f.x(C.last_observed_year), x2: f.x(C.last_observed_year), y1: f.m.top, y2: f.H - f.m.bottom, stroke: "#b8bdc7", "stroke-dasharray": "3 3" }));
-  // bands anchored at the last observed value
-  const anchor = last ? [{ year: last[0], q05: last[1], q25: last[1], q50: last[1], q75: last[1], q95: last[1] }] : [];
+  f.svg.appendChild(el("line", { x1: f.x(origin), x2: f.x(origin), y1: f.m.top, y2: f.H - f.m.bottom, stroke: "#b8bdc7", "stroke-dasharray": "3 3" }));
+  const anchor = [{ year: last[0], q05: last[1], q25: last[1], q50: last[1], q75: last[1], q95: last[1] }];
   const seq = anchor.concat(rows);
-  if (seq.length > 1) {
-    addBand(f, seq.map((r) => r.year), seq.map((r) => r.q05), seq.map((r) => r.q95), "#2456c4", 0.12);
-    addBand(f, seq.map((r) => r.year), seq.map((r) => r.q25), seq.map((r) => r.q75), "#2456c4", 0.2);
-    addLine(f, seq.map((r) => [r.year, r.q50]), "#2456c4", { width: 2.2 });
-  }
-  if (obs.length) addLine(f, obs.map(([y, v]) => [y, v]), "#16233b", { width: 2.2 });
+  addBand(f, seq.map((r) => r.year), seq.map((r) => r.q05), seq.map((r) => r.q95), "#2456c4", 0.12);
+  addBand(f, seq.map((r) => r.year), seq.map((r) => r.q25), seq.map((r) => r.q75), "#2456c4", 0.2);
+  addLine(f, seq.map((r) => [r.year, r.q50]), "#2456c4", { width: 2.2 });
   rows.forEach((r) => f.svg.appendChild(el("circle", {
     cx: f.x(r.year), cy: f.y(r.q50), r: 3, fill: "#2456c4",
-    "data-tip": `${label}, ${H_LABEL[r.h]} ahead (${r.year})\u0001median ${fmt(r.q50, 3)} · middle half ${fmt(r.q25, 3)} to ${fmt(r.q75, 3)} · band ${fmt(r.q05, 3)} to ${fmt(r.q95, 3)}` + (r.h === "10" ? "\nPublished without validation" : ""),
+    "data-tip": `${label}, ${H_LABEL[r.h]} ahead (${r.year})\u0001median ${fmt(r.q50, 3)} · middle half ${fmt(r.q25, 3)} to ${fmt(r.q75, 3)} · 90% band ${fmt(r.q05, 3)} to ${fmt(r.q95, 3)}` + (r.h === "10" ? "\nNot validated" : ""),
   })));
   attachMatrixTooltip($("fc-fwd-chart").parentElement);
 
   $("fc-fwd-legend").innerHTML =
     `<span class="key"><span class="key-line" style="border-color:#16233b"></span>observed</span>` +
     `<span class="key"><span class="key-line" style="border-color:#2456c4"></span>forecast median</span>` +
-    `<span class="key"><span class="key-band" style="background:#2456c4;opacity:.22"></span>middle half (q25–q75)</span>` +
+    `<span class="key"><span class="key-band" style="background:#2456c4;opacity:.22"></span>middle half</span>` +
     `<span class="key"><span class="key-band" style="background:#2456c4;opacity:.12"></span>nominal 90% band</span>`;
 
-  // Large-move probabilities for the forward forecast
+  // Large-move probabilities
   const lm = (C.large_move_forecast && C.large_move_forecast[node]) || {};
   const thr = C.large_move_threshold ? C.large_move_threshold[node] : null;
-  let html = `<table class="data-table"><thead><tr><th>Horizon</th><th>Year</th><th>P(large fall)</th><th>P(large rise)</th></tr></thead><tbody>`;
+  let html = `<table class="data-table"><thead><tr><th>Horizon</th><th>Year</th><th>Chance of a large fall</th><th>Chance of a large rise</th></tr></thead><tbody>`;
+  const high = [];
   hs.forEach((h) => {
     const r = lm[h]; if (!r) return;
-    html += `<tr><td>${esc(H_LABEL[h])}</td><td class="mono">${r[0]}</td><td class="mono">${fmt(r[1], 3)}</td><td class="mono">${fmt(r[2], 3)}</td></tr>`;
+    html += `<tr><td>${esc(H_LABEL[h])}</td><td class="mono">${r[0]}</td><td class="mono">${fmt(r[1], 2)}</td><td class="mono">${fmt(r[2], 2)}</td></tr>`;
+    if (h !== "10") { if (r[1] >= 0.5) high.push(`a large fall by ${r[0]} (${fmt(r[1], 2)})`); if (r[2] >= 0.5) high.push(`a large rise by ${r[0]} (${fmt(r[2], 2)})`); }
   });
   $("fc-largemove").innerHTML = html + "</tbody></table>";
-  const modernPast = C.last_observed_year < new Date().getFullYear() - 1 && rows.some((r) => r.year <= new Date().getFullYear());
+
   $("fc-fwd-note").textContent =
+    `Forecast made from ${origin} with the information available then. The band is a nominal 90% band; in testing it held the outcome 80 to 87% of the time. ` +
+    (high.length ? `The table below gives better than even odds of ${high.join(" and ")}.` : "");
+  $("fc-lm-note").textContent =
     `A large move is a change of more than half a standard deviation of this variable's level` + (thr !== null ? ` (${fmt(thr, 3)} here)` : "") +
-    ". Fall probabilities are informative at every validated horizon; rise probabilities at one year and only weakly beyond. " +
-    BAND_NOTE +
-    (modernPast ? ` Issued from ${C.last_observed_year}: targets already past are shown as issued.` : "");
+    ". Chances of a fall are informative at every validated horizon; chances of a rise at one year and only weakly beyond. The ten-year row is not validated.";
 }
 
 /* Accuracy: node by horizon, the country's own row, and the panel overall. */
