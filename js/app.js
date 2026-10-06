@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v27";
+const BUILD = "v29";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -57,6 +57,13 @@ const KIND_LABEL = {
   indicator: "Indicator",
 };
 const KIND_ORDER = { protected_observed: 0, reflective_factor: 1, formative_composite: 2, singleton: 3, indicator: 4 };
+
+/* Axis labels on the matrix: display names, shortened; full name and code on hover. */
+const MATRIX_LABEL_MAX = 32;
+const axisLabel = (n, id) => {
+  const l = (n && n.label) || id;
+  return l.length > MATRIX_LABEL_MAX ? l.slice(0, MATRIX_LABEL_MAX - 1) + "…" : l;
+};
 
 const STRUCTURAL_TIP =
   "Structural (source-only): this node is never modeled as a target. " +
@@ -844,7 +851,7 @@ function renderStructure() {
     const n = byId[id];
     const cls = (S.egoNode === id ? "is-selected " : "") + (colB.has(j) ? "blk-r" : "");
     const tip = `${n.label}\u0001${id}${isStructural(n) ? "\n" + STRUCTURAL_TIP : ""}`;
-    hr += `<th class="${cls}"><button data-node="${esc(id)}" data-tip="${esc(tip)}">${esc(id)}</button></th>`;
+    hr += `<th class="${cls}"><button data-node="${esc(id)}" data-tip="${esc(tip)}">${esc(axisLabel(n, id))}</button></th>`;
   });
   thead.innerHTML = hr + "</tr>";
   tbl.appendChild(thead);
@@ -856,7 +863,7 @@ function renderStructure() {
     const sn = byId[src];
     const selCls = S.egoNode === src ? ' class="is-selected"' : "";
     const structRow = isStructural(sn) ? " (source only)" : "";
-    let row = `<th${selCls}><button data-node="${esc(src)}" data-tip="${esc(sn.label + structRow + "\u0001" + src + (isStructural(sn) ? "\n" + STRUCTURAL_TIP : ""))}">${esc(src)}</button></th>`;
+    let row = `<th${selCls}><button data-node="${esc(src)}" data-tip="${esc(sn.label + structRow + "\u0001" + src + (isStructural(sn) ? "\n" + STRUCTURAL_TIP : ""))}">${esc(axisLabel(sn, src))}</button></th>`;
     cols.forEach((tgt, j) => {
       const bcls = colB.has(j) ? " blk-r" : "";
       if (src === tgt) { row += `<td class="diag${bcls}"></td>`; return; }

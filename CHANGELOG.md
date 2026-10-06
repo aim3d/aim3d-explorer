@@ -12,6 +12,24 @@ say when that needs re-pasting.
 
 ---
 
+## v29 — 2026-10-06 · matrix axes show names
+The adjacency matrix's row and column headers show display names instead of
+variable codes. Names longer than 32 characters are shortened with an
+ellipsis on the axis (12 of 59 on century, 13 of 81 on modern); hovering any
+header shows the full name and the code, as before. Header font switched to
+the sans face for readability; column header height raised to fit. Changed
+files: `index.html`, `js/app.js`, `css/style.css`, `smoke_test.js`,
+`CHANGELOG.md`.
+
+## v28 — 2026-10-06 · cache-busting asset URLs
+`index.html` now references `js/app.js`, `js/assistant.js` and
+`css/style.css` with `?v=<BUILD>`. Each build is therefore a new URL that
+no browser or CDN cache has seen, ending the "uploaded but still showing the
+old version" problem for these files. The suite fails if the query strings
+and BUILD disagree. The process from here: a package's `index.html` always
+goes up with its `app.js`. Changed files: `index.html`, `js/app.js`,
+`smoke_test.js`, `CHANGELOG.md`.
+
 ## v27 — 2026-10-06 · notice removed
 The "This site has been rebuilt" banner is removed entirely (markup, styles,
 behaviour, tests). The Methods page still carries the rebuild paragraph.
