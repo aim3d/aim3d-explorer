@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v25";
+const BUILD = "v26";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -190,6 +190,12 @@ function orderedNodeIds(d) {
   return [...d.nodes]
     .sort((a, b) => (KIND_ORDER[a.kind] - KIND_ORDER[b.kind]) || a.id.localeCompare(b.id))
     .map((n) => n.id);
+}
+/* Node ids by display label, for selectors; the matrix keeps the export order. */
+function alphaNodeIds(d) {
+  const byId = nodeById(d);
+  return d.nodes.map((n) => n.id).sort((a, b) =>
+    (byId[a].label || a).localeCompare(byId[b].label || b, undefined, { sensitivity: "base" }));
 }
 function orderedColumnIds(d) {
   // Columns omit structural nodes: nothing is estimated into them.
@@ -1224,7 +1230,7 @@ async function renderForecasts() {
   const nf = new Set((man.not_forecast && man.not_forecast.nodes) || []);
   const nSel = $("fc-node");
   if (nSel.dataset.panel !== S.panel) {
-    const ids = orderedNodeIds(d);
+    const ids = alphaNodeIds(d);
     nSel.innerHTML = ids.map((id) => {
       const n = byId[id];
       return `<option value="${esc(id)}">${esc(n ? n.label : id)}${nf.has(id) ? " (not forecast)" : ""}</option>`;
@@ -1458,7 +1464,7 @@ async function renderWhatIf() {
   const supported = (id) => !!(src[dirKey] && src[dirKey][id]);
 
   const sSel = $("wi-shock");
-  const ids = orderedNodeIds(d);
+  const ids = alphaNodeIds(d);
   const sKey = `${S.panel}/${S.wiScope}/${S.wiDir}`;
   if (sSel.dataset.key !== sKey) {
     sSel.innerHTML = ids.map((id) => {

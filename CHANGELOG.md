@@ -12,6 +12,16 @@ say when that needs re-pasting.
 
 ---
 
+## v26 — 2026-10-06 · alphabetical variable selectors
+The Forecasts and What-if variable selectors are sorted alphabetically by
+display name (case-insensitive) instead of following the matrix's export
+order, which made variables hard to find in a list of 59 or 81. The matrix,
+and the edge selector (already sorted by name), are unchanged. Status
+suffixes ("(not forecast)", "(structural: not moved)", "(not enough observed
+moves)") stay attached. Dates removed from the notice, the footer stamp and
+the Methods heading (v25 repackage). Changed files: `js/app.js`,
+`smoke_test.js`, `index.html`, `CHANGELOG.md`.
+
 ## v25 — 2026-10-05 · October 2026 rebuild (v3 release)
 One whole replacement: nothing on the portal now includes an aggregate
 democracy index; the causal structure is re-estimated with signed edges and
