@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v29";
+const BUILD = "v31";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -65,6 +65,16 @@ const axisLabel = (n, id) => {
   return l.length > MATRIX_LABEL_MAX ? l.slice(0, MATRIX_LABEL_MAX - 1) + "…" : l;
 };
 
+/* Text colour for a form code printed on a coloured cell. */
+function cellTextColor(e, maxScore) {
+  const t = Math.max(0.12, Math.min(1, e.score_median / maxScore));
+  const a = isSignChanging(e) ? 0.25 + 0.45 * t : 0.15 + 0.85 * t;
+  return a > 0.55 ? "#ffffff" : "#16233b";
+}
+const FORM_LABEL = { linear: "Linear", saturating: "Saturating", threshold: "Threshold", nonlinear: "Nonlinear", "sign-changing": "Sign-changing", mixed: "Mixed" };
+const formName = (e) => FORM_LABEL[e.form] || e.form || "";
+const formAgreementText = (e) => e.form_agreement ? ` (${String(e.form_agreement).replace("/", " of ")} models)` : "";
+
 const STRUCTURAL_TIP =
   "Structural (source-only): this node is never modeled as a target. " +
   "Between-country variance dominates its within-country signal (low ICC), " +
@@ -77,13 +87,14 @@ const WEAK_SIGN_TIP =
 /* Sign colours [decided by Professor Kuskova]: blue positive, red negative,
    shade by score; weak-sign edges in a muted neutral. */
 const SIGN = { pos: "#2456c4", neg: "#b3372e", weak: "#8a93a5" };
+const isSignChanging = (e) => e.form === "sign-changing" || (!e.form && e.weak_sign);
 function signColor(e) {
-  if (e.weak_sign) return SIGN.weak;
+  if (isSignChanging(e)) return SIGN.weak;
   return e.sign > 0 ? SIGN.pos : SIGN.neg;
 }
 function signCellColor(e, maxScore) {
   const t = Math.max(0.12, Math.min(1, e.score_median / maxScore));
-  if (e.weak_sign) {
+  if (isSignChanging(e)) {
     const a = 0.25 + 0.45 * t;
     return `rgba(138,147,165,${a.toFixed(3)})`;
   }
@@ -815,12 +826,12 @@ function renderEgo() {
 
 function edgeTip(e, byId) {
   const s = byId[e.source], t = byId[e.target];
+  const dir = isSignChanging(e) ? "changes direction across the source's range" : (e.sign > 0 ? "positive" : "negative");
   return `${s ? s.label : e.source} → ${t ? t.label : e.target}\u0001` +
     `${e.source} → ${e.target}\n` +
-    `${e.sign > 0 ? "positive" : "negative"} · score ${fmt(e.score_median, 4)} [${fmt(e.score_min, 4)}–${fmt(e.score_max, 4)}]\n` +
-    `sign agreement ${fmt(e.sign_agreement, 2)} · sign strength ${fmt(e.sign_strength, 2)}` +
-    (e.weak_sign ? "\n" + WEAK_SIGN_TIP : "") +
-    `\nretained ${e.retention}${e.consensus ? " (consensus)" : ""}`;
+    (e.form ? `${formName(e)}${formAgreementText(e)} · ` : "") + `${dir}\n` +
+    `causal score ${fmt(e.score_median, 4)} [${fmt(e.score_min, 4)}–${fmt(e.score_max, 4)}] · sign strength ${fmt(e.sign_strength, 2)}` +
+    `\nkept in ${e.retention} fits${e.consensus ? " (consensus)" : ""}`;
 }
 
 function renderStructure() {
@@ -836,12 +847,13 @@ function renderStructure() {
   const rowB = blockBoundaries(d, ids);
   const colB = blockBoundaries(d, cols);
 
+  const fl = (d.edgeMeta && d.edgeMeta.form_legend) || [];
   $("matrix-legend").innerHTML =
     `<span><span class="swatch" style="background:${SIGN.pos}"></span>positive</span>` +
     `<span><span class="swatch" style="background:${SIGN.neg}"></span>negative</span>` +
-    `<span><span class="swatch" style="background:${SIGN.weak}"></span>weak sign</span>` +
-    `<span><span class="swatch" style="background:var(--grey-cell)"></span>structural target (not modeled)</span>` +
-    `<span>shade = causal score</span>`;
+    `<span><span class="swatch" style="background:${SIGN.weak}"></span>changes direction</span>` +
+    `<span>darker = stronger</span>` +
+    (fl.length ? `<span class="legend-sep"></span>` + fl.map((x) => `<span><span class="fcode-key">${esc(x.code)}</span>${esc(x.label || x.form)}</span>`).join("") : "");
 
   const tbl = document.createElement("table");
   tbl.className = "matrix";
@@ -871,7 +883,8 @@ function renderStructure() {
       if (!e) { row += `<td class="${bcls.trim()}"></td>`; return; }
       const col = signCellColor(e, maxScore);
       const op = e.consensus ? 1 : 0.45;
-      row += `<td class="${bcls.trim()}" style="background:${col};opacity:${op}" data-tip="${esc(edgeTip(e, byId))}"></td>`;
+      const code = e.form_code ? `<span class="fcode" style="color:${cellTextColor(e, maxScore)}">${esc(e.form_code)}</span>` : "";
+      row += `<td class="${bcls.trim()}" style="background:${col};opacity:${op}" data-tip="${esc(edgeTip(e, byId))}">${code}</td>`;
     });
     tr.innerHTML = row;
     tbody.appendChild(tr);
@@ -886,14 +899,12 @@ function renderStructure() {
   attachMatrixTooltip(wrap);
 
   const o = d.order || {};
-  const cc = o.chance_comparison;
+  const cc = o.chance_comparison || {};
   $("matrix-order-note").textContent =
-    (o.caption
-      ? o.caption
-      : "Variables are ordered so that strongly linked ones sit together. The groupings are an aid to reading and are not statistically distinct clusters" +
-        (cc ? ` (modularity ${fmt(cc.observed, 3)} against ${fmt(cc.rewired_mean, 3)} in randomly rewired graphs of the same density).` : ".")) +
-    " Rows are sources, columns are receivers; structural (source-only) variables appear as rows only, since nothing is estimated into them. " +
-    "Weak-sign edges are muted: for those the effect rises over part of the source's range and falls over another; the effect curve is the full picture.";
+    "Rows are sources, columns are targets. Blue is a positive effect, red a negative one; darker means stronger. " +
+    "The letter in each cell is the shape of the relationship (see the key); grey cells marked SC change direction across the source's range — see the effect curve for those. " +
+    "Variables are arranged so that ones with strong links sit next to each other — the blocks make the matrix easier to read, but they are not real clusters: " +
+    `the network is about as modular as a random one of the same density (${fmt(cc.observed, 3)} vs ${fmt(cc.rewired_mean, 3)}).`;
 
   renderEgo();
 }
@@ -917,10 +928,10 @@ const EDGE_COLS = [
   { key: "source", label: "Source" },
   { key: "target", label: "Target" },
   { key: "sign", label: "Sign" },
-  { key: "score_median", label: "Score (median)" },
-  { key: "range", label: "[min – max]", sortKey: "score_max" },
+  { key: "form_code", label: "Form" },
+  { key: "score_median", label: "Causal score" },
   { key: "sign_strength", label: "Sign strength" },
-  { key: "retention", label: "Seeds" },
+  { key: "retention", label: "Fits" },
 ];
 
 function renderEdges() {
@@ -928,12 +939,14 @@ function renderEdges() {
   const byId = nodeById(d);
   const consOnly = $("edges-consensus-only").checked;
   const signFilter = $("edges-sign").value;
+  const formFilter = $("edges-form").value;
   const q = $("edges-search").value.trim().toLowerCase();
 
   let rows = d.edges.filter((e) => !consOnly || e.consensus);
-  if (signFilter === "pos") rows = rows.filter((e) => e.sign > 0 && !e.weak_sign);
-  else if (signFilter === "neg") rows = rows.filter((e) => e.sign < 0 && !e.weak_sign);
-  else if (signFilter === "weak") rows = rows.filter((e) => e.weak_sign);
+  if (signFilter === "pos") rows = rows.filter((e) => e.sign > 0 && !isSignChanging(e));
+  else if (signFilter === "neg") rows = rows.filter((e) => e.sign < 0 && !isSignChanging(e));
+  else if (signFilter === "weak") rows = rows.filter((e) => isSignChanging(e));
+  if (formFilter !== "all") rows = rows.filter((e) => e.form === formFilter);
   if (q) {
     rows = rows.filter((e) => {
       const s = byId[e.source], t = byId[e.target];
@@ -958,16 +971,16 @@ function renderEdges() {
   html += "</tr></thead><tbody>";
   rows.forEach((e) => {
     const s = byId[e.source], t = byId[e.target];
-    const signBadge = e.weak_sign
-      ? `<span class="badge badge-weak" title="${esc(WEAK_SIGN_TIP)}">weak</span>`
+    const signBadge = isSignChanging(e)
+      ? `<span class="badge badge-weak" title="changes direction across the source's range">±</span>`
       : (e.sign > 0 ? '<span class="badge badge-pos">+</span>' : '<span class="badge badge-neg">−</span>');
     html += `<tr>
-      <td class="mono">${esc(e.source)}<span class="cell-label">${esc(s ? s.label : "")}</span></td>
-      <td class="mono">${esc(e.target)}<span class="cell-label">${esc(t ? t.label : "")}</span></td>
+      <td title="${esc(e.source)}">${esc(s ? s.label : e.source)}</td>
+      <td title="${esc(e.target)}">${esc(t ? t.label : e.target)}</td>
       <td>${signBadge}</td>
-      <td class="mono">${fmt(e.score_median, 4)}</td>
-      <td class="mono">[${fmt(e.score_min, 4)} – ${fmt(e.score_max, 4)}]</td>
-      <td class="mono">${fmt(e.sign_strength, 2)} <span class="cell-label">agreement ${fmt(e.sign_agreement, 2)}</span></td>
+      <td class="mono" title="${esc(formName(e))}${esc(formAgreementText(e))}">${esc(e.form_code || "")}</td>
+      <td class="mono" title="range across fits ${fmt(e.score_min, 4)} – ${fmt(e.score_max, 4)}">${fmt(e.score_median, 3)}</td>
+      <td class="mono">${fmt(e.sign_strength, 2)}</td>
       <td class="mono">${esc(e.retention)}${e.consensus ? "" : ' <span class="badge badge-majority">majority</span>'}</td></tr>`;
   });
   tbl.innerHTML = html + "</tbody>";
@@ -1044,8 +1057,12 @@ function renderICE() {
 
   const e = d.edges.find((x) => `${x.source}->${x.target}` === key);
   $("ice-note").innerHTML =
-    (e ? `Edge sign: <strong>${e.sign > 0 ? "positive" : "negative"}</strong>` +
-      (e.weak_sign ? ` <span class="badge badge-weak">weak</span> — ${esc(WEAK_SIGN_TIP)}` : "") + ". " : "") +
+    (e ? `Shape: <strong>${esc(formName(e))}</strong>${esc(formAgreementText(e))}` +
+      (isSignChanging(e) ? " — the effect reverses direction across the source's range" :
+        (e.form === "saturating" ? " — the effect levels off at high values of the source" :
+         e.form === "threshold" ? " — the effect switches on at high values of the source" :
+         e.form === "mixed" ? " — the three fitted models disagree on the shape" : "")) +
+      `; direction ${isSignChanging(e) ? "none" : (e.sign > 0 ? "positive" : "negative")}. ` : "") +
     "Regimes are terciles of the clean elections index. " +
     "NAVAR is additive, so the three curves of an edge have the same shape and differ by a constant: " +
     "the split shows where each regime's typical values sit, not different effects in different regimes. " +
@@ -1102,19 +1119,17 @@ async function renderMethods() {
 
   $("methods-body").innerHTML = `
     <div class="methods-card">
-      <h3>What changed in this rebuild</h3>
-      <p>${esc(M.rebuild || "")}</p>
-    </div>
-    <div class="methods-card">
       <h3>This panel</h3>
       <dl class="methods-kv">
         <dt>panel</dt><dd>${esc(PANELS[S.panel].name)}, ${esc(PANELS[S.panel].span)}</dd>
         <dt>nodes</dt><dd>${m.n_nodes} — ${esc(kindLine)}${nStructural ? ` · ${nStructural} structural (source-only)` : ""}</dd>
-        <dt>edges</dt><dd>${m.n_edges_majority} retained in at least two of three fits · ${m.n_edges_consensus} in all three · ${m.n_edges_positive} positive · ${m.n_edges_negative} negative · ${m.n_edges_weak_sign} weakly signed</dd>
+        <dt>edges</dt><dd>${m.n_edges_majority} retained in at least two of three fits · ${m.n_edges_consensus} in all three</dd>
+        <dt>direction</dt><dd>${d.edges.filter((e) => !isSignChanging(e) && (e.curve_direction ?? e.sign) > 0).length} rise · ${d.edges.filter((e) => !isSignChanging(e) && (e.curve_direction ?? e.sign) < 0).length} fall · ${d.edges.filter(isSignChanging).length} change sign</dd>
+        ${m.n_edges_by_form ? `<dt>shape</dt><dd>${["linear", "saturating", "threshold", "nonlinear", "sign-changing", "mixed"].filter((k) => k in m.n_edges_by_form).map((k) => `${m.n_edges_by_form[k]} ${k}`).join(" · ")}</dd>` : ""}
         <dt>matrix order</dt><dd>${o.n_blocks || (o.blocks || []).length} groups · modularity ${fmt(cc.observed, 3)} against ${fmt(cc.rewired_mean, 3)} in randomly rewired graphs of the same density</dd>
         ${fman ? `<dt>forecasts</dt><dd>${fman.n_countries || ""} countries · issued from ${fman.last_observed_year} · horizons ${(fman.horizons || []).join(", ")} years · validated ${(fman.validated_horizons || []).join(", ")}${fman.not_forecast && fman.not_forecast.nodes && fman.not_forecast.nodes.length ? ` · ${fman.not_forecast.nodes.length} structural nodes not forecast` : ""}</dd>` : ""}
       </dl>
-      ${["measurement", "index", "edge_selection", "edge_sign", "matrix_order", "effect_curves", "forecasts", "dynamics"].filter((k) => sentence(p[k])).map((k) => `<p class="footnote">${esc(sentence(p[k]))}</p>`).join("")}
+      ${["measurement", "index", "edge_selection", "edge_sign", "edge_form", "matrix_order", "effect_curves", "forecasts", "dynamics"].filter((k) => sentence(p[k])).map((k) => `<p class="footnote">${esc(sentence(p[k]))}</p>`).join("")}
     </div>
     ${sections}
     ${evalTable}
@@ -1172,6 +1187,7 @@ function init() {
   $("matrix-majority").addEventListener("change", renderStructure);
   $("edges-consensus-only").addEventListener("change", renderEdges);
   $("edges-sign").addEventListener("change", renderEdges);
+  $("edges-form").addEventListener("change", renderEdges);
   $("edges-search").addEventListener("input", renderEdges);
   $("ice-edge").addEventListener("change", renderICE);
   $("fc-country").addEventListener("change", (e) => { S.fcCountry = +e.target.value; renderForecasts(); });

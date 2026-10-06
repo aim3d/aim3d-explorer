@@ -1,6 +1,6 @@
 {
  "panel": "modern_factors",
- "generated": "2026-10-05",
+ "generated": "2026-10-06",
  "built": "V3-S7",
  "n_nodes": 81,
  "n_nodes_forecast": 65,
@@ -10,6 +10,14 @@
  "n_edges_positive": 848,
  "n_edges_negative": 670,
  "n_edges_weak_sign": 207,
+ "n_edges_by_form": {
+  "saturating": 367,
+  "threshold": 335,
+  "sign-changing": 312,
+  "linear": 309,
+  "nonlinear": 187,
+  "mixed": 8
+ },
  "matrix_blocks": {
   "n_blocks": 5,
   "modularity": 0.1902,
@@ -31,6 +39,7 @@
   "index": "The aggregate democracy index is not a node, is not forecast, and is not derived from its components anywhere in this analysis.",
   "edge_selection": "A neural additive vector autoregression (NAVAR) is trained three times. An edge is kept in a fit if removing the source's contribution reliably worsens the target's prediction (false discovery rate 5%) and the loss falls in the group of large effects. Edges kept in at least two fits are shown; those kept in all three form the consensus graph.",
   "edge_sign": "The sign of an edge is the direction in which its contribution moves with the source's most recent value, by majority over the three fits. Edges whose sign strength is below 0.60 are marked weak: their effect rises over part of the source's range and falls over another.",
+  "edge_form": "Each edge is classified by the shape of its effect curve. Sign-changing: the effect reverses direction over the source's range. Linear: the effect is about equally steep throughout. Saturating: the effect levels off as the source rises. Threshold: the effect is absent until the source passes some level. Nonlinear: one-directional and curved, but neither saturating nor threshold. The type is the one given by at least two of the three fitted models; where all three differ the edge is marked mixed.",
   "matrix_order": "Variables are ordered so that strongly linked ones sit together. The groupings are an aid to reading and are not statistically distinct clusters: modularity 0.193, against 0.180 in randomly rewired graphs of the same density.",
   "effect_curves": "Effect curves are shown for three groups of country-years: the lower, middle and upper thirds of the clean elections index. The model is additive, so the three curves of an edge have the same shape and differ by a constant: the grouping shows where each group's typical values sit, not different effects in different groups.",
   "forecasts": "Forecasts come from a separate neural forecasting model and are shown in the Forecasts view with their error against actual outcomes.",

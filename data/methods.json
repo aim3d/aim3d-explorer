@@ -1,6 +1,5 @@
 {
  "_note": "Source: AIM3D_methods.md from the pipeline session, 2026-10-05, adapted to the portal's voice without adding methods, numbers or claims. Rendered on the Methods page and sent to the assistant. References are provisional until confirmed.",
- "rebuild": "Nothing shown on this portal now includes an aggregate democracy index: every result is for a component of democracy or a related condition. The causal structure was re-estimated without the index, and each relationship is shown with its direction of effect. The forecasts come from a new model, extend to ten years (the ten-year horizon is marked as not validated), and are shown beside what actually happened, with their error. The earlier dynamics view has been replaced by a what-if view showing how the forecast changes after a large move in one variable. Earlier forecasts, risk maps and impulse responses have been withdrawn.",
  "sections": [
   {
    "title": "Overview",

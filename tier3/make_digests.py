@@ -16,7 +16,7 @@ PANELS = {
 FRAMING_RULES = [
     "No result on this portal includes an aggregate democracy index. Every result is for a component of democracy or a related condition. If asked about 'democracy' as a single score, say the index is not modeled and point to its components.",
     "An edge is causal in Granger's sense: the source's recent past improves the prediction of the receiver's next value given everything else. It is not a claim about what an intervention would do.",
-    "Edge signs come from the direction the source's contribution moves with the source's latest value, by majority across three fits. A weak sign (sign_strength < 0.60) means the contribution rises over part of the source's range and falls over another; describe such edges as weakly signed, not as positive or negative.",
+    "Edge direction comes from the effect curve, by majority across three fits. Edges whose curve reverses direction across the source's range are sign-changing (form code SC, direction 0): describe them as changing direction, never as positive or negative. Every edge also has a shape code (L linear, ST saturating, T threshold, N nonlinear, SC sign-changing, M mixed); quote the shape with its agreement across the three fits, and never guess a shape for an edge not in the digest.",
     "The matrix ordering is an aid to reading: groups are not statistically distinct clusters. Quote modularity only as the chance_comparison pair (observed vs rewired_mean).",
     "Effect curves are evaluated in terciles of the clean elections index, and because NAVAR is additive the three curves of an edge share one shape and differ by a constant: do not describe them as different effects in different regimes.",
     "Forecasts come from one spatio-temporal graph neural network. Horizons are 1, 3, 5 and 10 years; the ten-year horizon is published without validation and must be labelled so.",
@@ -56,9 +56,10 @@ def build(panel):
         }
 
     # Consensus edges only (the canonical graph), compact positional rows.
-    edge_out = [[e["source"], e["target"], 1 if e["sign"] > 0 else -1,
+    edge_out = [[e["source"], e["target"],
+                 0 if e.get("form") == "sign-changing" else (1 if e["sign"] > 0 else -1),
                  rnd(e["score_median"], 5), rnd(e["sign_strength"], 2),
-                 1 if e.get("weak_sign") else 0, e["retention"]]
+                 e.get("form_code", ""), e.get("form_agreement", ""), e["retention"]]
                 for e in edges if e["consensus"]]
 
     blocks = [{"name": b.get("name", f"Block {b['id']}"), "nodes": b["nodes"]} for b in order.get("blocks", [])]
@@ -95,9 +96,12 @@ def build(panel):
         "counts": {"n_nodes": man["n_nodes"], "n_edges_majority": man["n_edges_majority"],
                    "n_edges_consensus": man["n_edges_consensus"], "n_edges_positive": man.get("n_edges_positive"),
                    "n_edges_negative": man.get("n_edges_negative"), "n_edges_weak_sign": man.get("n_edges_weak_sign"),
+                   "n_edges_by_form": man.get("n_edges_by_form"),
                    "n_countries": man["panel_meta"]["n_countries"], "years": man["panel_meta"]["years"]},
         "framing_rules": FRAMING_RULES,
-        "edges_schema": "[source, target, sign(+1/-1), score_median, sign_strength, weak_sign(1/0), retention]; consensus edges only",
+        "edges_schema": "[source, target, direction(+1 rise / -1 fall / 0 sign-changing), score_median, sign_strength, form_code, form_agreement, retention]; consensus edges only",
+        "form_legend": ef.get("form_legend"),
+        "form_rule": ef.get("form_rule"),
         "nodes": node_out,
         "edges": edge_out,
         "matrix_order": {"caption": order.get("caption"), "meaning": order.get("meaning"),

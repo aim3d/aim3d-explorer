@@ -12,6 +12,58 @@ say when that needs re-pasting.
 
 ---
 
+## v31 — 2026-10-06 · relationship shapes in the matrix; text changes
+Structure export rerun with functional-form fields (`form`, `form_code`,
+`form_agreement`, `curve_direction` per edge; `form_legend`, `form_rule`
+at the top; `n_edges_by_form` and `provenance.edge_form` in the manifest).
+Verified: form counts equal the manifest and the pipeline note exactly
+(century 211 L / 152 ST / 175 T / 94 N / 168 SC / 3 M; modern 309 / 367 /
+335 / 187 / 312 / 8); every edge has a code consistent with its form; only
+`edges.json` and `manifest.json` changed.
+
+- **Matrix cells print the form code** (L, ST, T, N, SC, M), centred in a
+  small monospaced face; two-letter codes fit the 15 px cell. Colour is
+  unchanged except that **sign-changing edges are grey with SC** — the form
+  decides over `weak_sign`. 80 century and 126 modern edges that were firm
+  blue or red are now grey. Majority edges carry codes too. The legend adds
+  the six codes from `form_legend`; the hover gives the full form name and
+  agreement, e.g. "Saturating (3 of 3 models)".
+- **Edges table** gains a Form column and a shape filter; sign-changing
+  rows show ± instead of + / −. Columns renamed Source / Target.
+- **Effect curves** state the edge's shape and agreement under the chart,
+  with a one-line reading for saturating, threshold, sign-changing and
+  mixed.
+- **Methods** replaces the positive/negative share with the three-way
+  statement from `curve_direction` (century 465 rise · 170 fall · 168 change
+  sign; modern 695 · 511 · 312) and lists shape counts from the manifest;
+  `provenance.edge_form` is shown. The "What changed in this rebuild" card
+  is removed from the page and from `methods.json`.
+- **Text**: the matrix caption and the Structure and Edges introductions
+  rewritten in plain English as approved ("Rows are sources, columns are
+  targets…"). Glossary gains a shape entry; the sign entry now describes
+  sign-changing edges. Digests carry form code and agreement per edge and a
+  framing rule on shapes.
+- Note for the record: one modern edge has `sign` and `curve_direction`
+  disagreeing; the page uses `curve_direction` for the direction counts, so
+  they match the pipeline's figures.
+
+Changed files: `data/struct/{panel}/edges.json`, `data/struct/{panel}/manifest.json`,
+`data/digest/*.json`, `data/glossary.json`, `data/methods.json`, `index.html`,
+`js/app.js`, `css/style.css`, `smoke_test.js`, `tier3/make_digests.py`,
+`CHANGELOG.md`. No Worker paste.
+
+## v30 — 2026-10-06 · plainer view introductions; Edges table fits
+The introductions to Effect curves, Forecasts and What if are rewritten as
+prose for readers rather than restated rules; the required substance (band
+coverage 80–87%, not calibrated; ten years not validated; what-if is
+prediction not cause; one country first) is kept. The Edges table no longer
+overflows the page: columns are Source, Receiver, Sign, Causal score (range
+on hover), Sign strength, Fits; the "agreement" sub-line is dropped (it is
+1.00 for every non-weak edge); names show with codes on hover. Its
+introduction explains sign strength next to the column it describes, which
+had read as a claim about causal scores when that column sat off-screen.
+Changed files: `index.html`, `js/app.js`, `smoke_test.js`, `CHANGELOG.md`.
+
 ## v29 — 2026-10-06 · matrix axes show names
 The adjacency matrix's row and column headers show display names instead of
 variable codes. Names longer than 32 characters are shortened with an

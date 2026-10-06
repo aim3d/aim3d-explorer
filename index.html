@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=v29">
+<link rel="stylesheet" href="css/style.css?v=v31">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
       <div class="view-head">
         <span class="eyebrow">Consensus causal graph</span>
         <h2>Adjacency matrix</h2>
-        <p class="view-lede">Rows are sources, columns are receivers. Each cell is a signed edge: blue positive, red negative, shade by the median NAVAR causal score across the three-seed ensemble. The default set is the <strong>consensus graph</strong> — edges retained in all three seeds. Long names are shortened on the axes; hover for the full name and code, and select any name to inspect its neighborhood.</p>
+        <p class="view-lede">Each cell is one relationship: its color gives the direction, its shade the strength, and the letter its shape. The default set is the <strong>consensus graph</strong> — relationships found in all three fits. Hover a cell for details; select any name to see its neighborhood.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-toggle"><input type="checkbox" id="matrix-majority"> Show majority edges (2/3 seeds, faded)</label>
@@ -65,7 +65,7 @@
       <div class="view-head">
         <span class="eyebrow">Edge inventory</span>
         <h2>Retained edges</h2>
-        <p class="view-lede">Every retained edge with its sign, ensemble score statistics, sign strength, and seed retention. Scores are median [min – max] across seeds; sign strength is how clear the direction is (0 to 1), and edges below 0.60 are marked weak.</p>
+        <p class="view-lede">Every relationship the model retained, one per row: source, target, direction, shape, and causal score — the median across the three fits (hover for its range). Sign strength, from 0 to 1, says how consistently the effect runs in one direction. "Fits" is how many of the three fits kept the edge; those kept in all three form the consensus graph.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-toggle"><input type="checkbox" id="edges-consensus-only" checked> Consensus only (all 3 seeds)</label>
@@ -75,6 +75,16 @@
           <option value="pos">Positive</option>
           <option value="neg">Negative</option>
           <option value="weak">Weak sign</option>
+        </select>
+        <label class="ctl-label" for="edges-form">Shape</label>
+        <select id="edges-form" class="ctl-select" aria-label="Filter by shape">
+          <option value="all">All</option>
+          <option value="linear">L — linear</option>
+          <option value="saturating">ST — saturating</option>
+          <option value="threshold">T — threshold</option>
+          <option value="nonlinear">N — nonlinear</option>
+          <option value="sign-changing">SC — sign-changing</option>
+          <option value="mixed">M — mixed</option>
         </select>
         <input type="search" id="edges-search" class="ctl-search" placeholder="Filter by node id or label…" aria-label="Filter edges">
         <span class="legend-inline" id="edges-count"></span>
@@ -86,7 +96,7 @@
       <div class="view-head">
         <span class="eyebrow">Function-valued causal influence</span>
         <h2>Effect curves</h2>
-        <p class="view-lede">For each consensus edge: the estimated effect of moving the source across its observed range, evaluated in three regimes — terciles of the clean elections index. Both axes are in standardized units.</p>
+        <p class="view-lede">How does one variable act on another across its range? For each edge in the consensus graph, this view moves the source variable from its lowest observed values to its highest and traces how the receiver's prediction responds — revealing whether the relationship is steady, has a threshold, or levels off. The curve is drawn three times, for country-years in the bottom, middle and top third of the clean elections index. Both axes are in standardized units.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-label" for="ice-edge">Edge</label>
@@ -102,7 +112,7 @@
       <div class="view-head">
         <span class="eyebrow">Forecasts</span>
         <h2>Forecasts against what happened</h2>
-        <p class="view-lede">Forecasts made along the way from one neural forecaster, drawn over what was then observed, and the forecast issued from the last observed year. The band is a nominal 90% band: in the evaluation period it held the outcome 80 to 87% of the time at 1, 3 and 5 years. It is not calibrated. The ten-year horizon is published without validation.</p>
+        <p class="view-lede">This view puts the forecasts next to what actually happened. For any country and variable, you can see each forecast the model made along the way, placed at the year it was for, over the values that were later observed — and then the forecast running forward from the last year of data. The shaded band is where the model expected 90% of outcomes to fall; in practice it caught them 80 to 87% of the time at one, three and five years, so treat it as somewhat too narrow. The ten-year forecasts have not yet been checked against outcomes.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-label" for="fc-country">Country</label>
@@ -139,7 +149,7 @@
       <div class="view-head">
         <span class="eyebrow">What if</span>
         <h2>How the forecast changes after a large move</h2>
-        <p class="view-lede">The forecaster is asked again with one variable different today — moved by half a standard deviation of its level, up or down — and the change in every forecast is recorded. A response is a statement about prediction, not an estimate of a causal effect. Countries differ a great deal, so the view opens on a single country.</p>
+        <p class="view-lede">What would the forecast look like if one thing were different today? This view takes a country as it was last observed, raises or lowers one variable by a large amount — half a standard deviation — and shows how the forecasts for everything else change. The result says what the model would predict, not what causes what. Because the answer varies a great deal from country to country, start with a single country.</p>
       </div>
       <div class="controls-row">
         <label class="ctl-label" for="wi-scope">Scope</label>
@@ -206,7 +216,7 @@
   <span id="build-stamp" class="build-stamp"></span></p>
 </footer>
 
-<script src="js/app.js?v=v29"></script>
-<script src="js/assistant.js?v=v29"></script>
+<script src="js/app.js?v=v31"></script>
+<script src="js/assistant.js?v=v31"></script>
 </body>
 </html>

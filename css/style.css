@@ -595,3 +595,17 @@ select:focus-visible, input:focus-visible, a:focus-visible {
 
 .refs { font-size: 12.5px; padding-left: 22px; max-width: 760px; }
 .refs li { margin-bottom: 5px; }
+
+/* ── Functional-form codes in matrix cells ───────────── */
+.matrix td .fcode {
+  display: block; width: 100%; text-align: center;
+  font-family: var(--mono); font-size: 7.5px; line-height: 15px; font-weight: 600;
+  letter-spacing: -0.3px; pointer-events: none; user-select: none;
+}
+.fcode-key {
+  display: inline-block; min-width: 18px; text-align: center;
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  border: 1px solid var(--line); border-radius: 3px; padding: 0 3px; margin-right: 4px;
+  color: var(--ink); background: var(--card);
+}
+.legend-sep { display: inline-block; width: 1px; height: 14px; background: var(--line); }

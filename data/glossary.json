@@ -183,8 +183,8 @@
             "weakly signed",
             "sign strength"
           ],
-          "short": "Each edge is positive (blue) or negative (red) according to the direction its contribution moves with the source's most recent value, by majority across the three fits. Where the contribution rises over part of the range and falls over another, the edge is weakly signed and shown muted.",
-          "long": "A causal score says how large an influence is, not which way it goes. The sign is taken from the direction in which the source's contribution moves with the source's most recent value, decided by majority across the three fits. Sign strength, from 0 to 1, says how clear that direction is; edges below 0.60 are marked weak and drawn in muted grey, because for those the contribution rises over part of the source's range and falls over another, and a firm color would overstate it. The effect curve is the full picture for any edge. Signs describe the causal structure one year ahead; the what-if responses in the forecaster are a different object and do not confirm or test them."
+          "short": "Each edge is positive (blue) or negative (red) according to the direction of its effect curve, by majority across the three fits. Edges whose effect reverses direction across the source's range (shape SC) have no single direction and are drawn in grey.",
+          "long": "A causal score says how large an influence is, not which way it goes. The sign is taken from the direction in which the source's contribution moves with the source's latest value, decided by majority across the three fits. Sign strength, from 0 to 1, says how consistently the effect runs in one direction. Where the effect curve reverses direction across the source's range the edge is classified as sign-changing (code SC) and shown in grey rather than blue or red; the effect curve is the full picture for any edge. Signs describe the causal structure one year ahead; the what-if responses in the forecaster are a different object and do not confirm or test them."
         },
         {
           "id": "ice",
@@ -210,6 +210,23 @@
           ],
           "short": "Variables in the matrix are ordered so that strongly linked ones sit together, using community detection made stable across repeated runs. The groups are an aid to reading, not statistically distinct clusters.",
           "long": "The order of rows and columns in the adjacency matrix is chosen so that variables with strong links appear near one another, using modularity-based community detection made stable by consensus across repeated runs. The faint lines mark the resulting groups. They are an ordering, not a finding: the caption reports the modularity of the ordering beside the modularity of randomly rewired graphs with the same density, and on both panels the two are close."
+        },
+        {
+          "id": "form",
+          "term": "Shape of a relationship (form codes)",
+          "aliases": [
+            "shape",
+            "form",
+            "form code",
+            "functional form",
+            "linear",
+            "saturating",
+            "threshold",
+            "sign-changing",
+            "mixed"
+          ],
+          "short": "The letter in each matrix cell summarizes the effect curve: L linear, ST saturating (levels off at high values of the source), T threshold (switches on at high values), N nonlinear, SC sign-changing (reverses direction), M mixed (the three fits disagree).",
+          "long": "Each relationship's effect curve is classified by its shape. L, linear: about equally steep across the source's range. ST, saturating: the effect levels off as the source rises. T, threshold: the effect is absent until the source passes some level. N, nonlinear: one-directional and curved, but neither saturating nor threshold. SC, sign-changing: the effect reverses direction over the source's range, so the edge has no single direction and is drawn in grey. M, mixed: the three fitted models give three different shapes; it is a disagreement, not a seventh kind of relationship. The code is a summary of the fitted curve the Effect curves view draws; the hover shows how many of the three fits agree on it. 'Low' and 'high' refer to the source's value."
         }
       ]
     },
