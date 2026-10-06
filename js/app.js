@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v26";
+const BUILD = "v27";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -221,7 +221,6 @@ function blockBoundaries(d, axisIds) {
 
 /* Carried from the v2 build: tooltips, glossary, charts, neighbourhood network. */
 const NS = "http://www.w3.org/2000/svg";
-const NOTICE_KEY = "aim3d-notice-dismissed-2026-10-v3";
 async function fetchJSON(path) {
   const r = await fetch(path);
   if (!r.ok) throw new Error(`Failed to load ${path} (${r.status})`);
@@ -477,17 +476,6 @@ function renderGuide() {
   ).join("");
 }
 
-function initNotice() {
-  const n = $("notice");
-  if (!n) return;
-  let dismissed = false;
-  try { dismissed = sessionStorage.getItem(NOTICE_KEY) === "1"; } catch (e) { /* storage unavailable */ }
-  n.hidden = dismissed;
-  $("notice-close").addEventListener("click", () => {
-    n.hidden = true;
-    try { sessionStorage.setItem(NOTICE_KEY, "1"); } catch (e) { /* ignore */ }
-  });
-}
 
 function buildEgoGraph(d, focusId, includeMajority) {
   const edges = d.edges.filter((e) => e.consensus || includeMajority);
@@ -1171,7 +1159,6 @@ async function switchPanel(panel) {
 }
 
 function init() {
-  initNotice();
   document.querySelectorAll(".panel-tag").forEach((b) =>
     b.addEventListener("click", () => switchPanel(b.dataset.panel)));
   window.addEventListener("hashchange", () => showView(location.hash.slice(1)));

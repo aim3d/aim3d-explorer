@@ -12,6 +12,13 @@ say when that needs re-pasting.
 
 ---
 
+## v27 — 2026-10-06 · notice removed
+The "This site has been rebuilt" banner is removed entirely (markup, styles,
+behaviour, tests). The Methods page still carries the rebuild paragraph.
+The what-if selector's alphabetical order is now asserted by the suite as
+well as the forecasts selector's. Changed files: `index.html`, `js/app.js`,
+`css/style.css`, `smoke_test.js`, `CHANGELOG.md`.
+
 ## v26 — 2026-10-06 · alphabetical variable selectors
 The Forecasts and What-if variable selectors are sorted alphabetically by
 display name (case-insensitive) instead of following the matrix's export
