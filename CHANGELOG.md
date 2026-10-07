@@ -12,6 +12,13 @@ say when that needs re-pasting.
 
 ---
 
+## v36 — 2026-10-07 · page statistics
+Cloudflare Web Analytics beacon added to `index.html` (one script tag,
+loaded after the portal's own scripts). Cookie-free; reports page views,
+visits, the tab opened (from the address hash), country and referrer in
+the Cloudflare dashboard under Web Analytics. Nothing else changes.
+Changed files: `index.html`, `js/app.js`, `CHANGELOG.md`.
+
 ## v35 — 2026-10-07 · Country ties (new tab)
 A new tab after Forecasts shows the ties the forecaster passes information
 along: borders, trade, and ties it learned. Data: `data/ties/{panel}/ties.json`
