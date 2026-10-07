@@ -12,6 +12,39 @@ say when that needs re-pasting.
 
 ---
 
+## v35 — 2026-10-07 · Country ties (new tab)
+A new tab after Forecasts shows the ties the forecaster passes information
+along: borders, trade, and ties it learned. Data: `data/ties/{panel}/ties.json`
+(162 and 144 KB), one file per panel. Verified: channel shares sum to 1
+(century borders 28% / trade 24% / learned 48%; modern 24% / 18% / 58%),
+no country's trade shares exceed 100%, ids and names join the country index
+exactly, reference countries and flags as the note states.
+
+- Introduction from `definitions.what` and `definitions.importance`; a
+  three-way bar from `channel_shares` with its caption.
+- Country selector by name; neighbours as a plain list ("No neighbours within
+  100 km" where empty, 17 and 14 such countries); trading partners with share
+  and bar, captioned with the 2014 end of the trade data.
+- Learned ties: `definitions.learned`, the reference countries with "among
+  the five most influential for N of M countries; x times the average
+  country", then "Also, less consistently:" the others, and the caption that
+  they are not alliances and not similarity. The panel does not change with
+  the country. The per-country `learned` lists in the file are not rendered,
+  per the note.
+- Any country name in the lists selects that country.
+- Glossary: four entries (country ties, neighbours, trading partners, learned
+  ties and reference countries) from `definitions`, with the closed-autocracy
+  reading stated as a possibility and the small forecast improvement. Digest
+  carries the shares, reference countries and the same caveats, with a
+  framing rule.
+- Tests: shares sum to 1; shown trade shares ≤ 100%; the learned panel is
+  identical across countries; no learned-list name is rendered; the
+  no-neighbours sentence; click-to-select.
+
+Changed files: `index.html`, `js/app.js`, `css/style.css`, `smoke_test.js`,
+`data/glossary.json`, `data/digest/*.json`, `tier3/make_digests.py`,
+`CHANGELOG.md`, new `data/ties/{panel}/ties.json`. No Worker paste.
+
 ## v34 — 2026-10-07 · What-if rebuilt on the causal structure
 The forecaster-based what-if view is withdrawn: its responses could not
 isolate one variable and carried the edge's sign only about half the time

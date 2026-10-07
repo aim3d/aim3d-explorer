@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v34";
+const BUILD = "v35";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -34,6 +34,9 @@ const S = {
   fcFiles: {},       // "panel/country_id" -> file
   fcCountry: null,   // country_id (number)
   fcNode: null,
+  // country ties
+  ties: {},          // per-panel file, lazy
+  tiesCountry: null, // country id (string)
   // what-if
   whatif: {},        // per-panel file, lazy
   wiCountry: "all",  // country id (string) or "all"
@@ -166,6 +169,15 @@ async function loadForecastFile(panel, entry) {
     S.fcFiles[key] = r.ok ? await r.json() : null;
   } catch (e) { S.fcFiles[key] = null; }
   return S.fcFiles[key];
+}
+
+async function loadTies(panel) {
+  if (panel in S.ties) return S.ties[panel];
+  try {
+    const r = await fetch(`data/ties/${DIR(panel)}/ties.json`);
+    S.ties[panel] = r.ok ? await r.json() : null;
+  } catch (e) { S.ties[panel] = null; }
+  return S.ties[panel];
 }
 
 async function loadWhatIf(panel) {
@@ -1132,7 +1144,7 @@ async function renderMethods() {
 
 /* ─────────────────────── Router / init ──────────────────── */
 
-const VIEWS = ["structure", "edges", "ice", "forecasts", "whatif", "guide", "methods"];
+const VIEWS = ["structure", "edges", "ice", "forecasts", "ties", "whatif", "guide", "methods"];
 
 async function showView(view) {
   if (!VIEWS.includes(view)) view = "structure";
@@ -1146,6 +1158,7 @@ async function showView(view) {
   else if (view === "edges") renderEdges();
   else if (view === "ice") { populateIceSelect(); renderICE(); }
   else if (view === "forecasts") renderForecasts();
+  else if (view === "ties") await renderTies();
   else if (view === "whatif") renderWhatIf();
   else if (view === "guide") renderGuide();
   else if (view === "methods") renderMethods();
@@ -1173,6 +1186,7 @@ function init() {
   $("ice-edge").addEventListener("change", renderICE);
   $("fc-country").addEventListener("change", (e) => { S.fcCountry = +e.target.value; renderForecasts(); });
   $("fc-node").addEventListener("change", (e) => { S.fcNode = e.target.value; renderForecasts(); });
+  $("ties-country").addEventListener("change", (e) => { S.tiesCountry = e.target.value; renderTies(); });
   $("wi-country").addEventListener("change", (e) => { S.wiCountry = e.target.value; renderWhatIf(); });
   $("wi-source").addEventListener("change", (e) => { S.wiSource = e.target.value; renderWhatIf(); });
   $("wi-dir").addEventListener("change", (e) => { S.wiDir = e.target.value; renderWhatIf(); });
@@ -1366,6 +1380,77 @@ async function renderAccuracyBlock(entry, C) {
     `<div class="validation-tables">${nodeTbl}${countryTbl}</div>${overall}`;
 }
 
+
+
+/* ─────────────────────── View: Country ties ─────────────────────
+   The ties the forecaster passes information along: borders, trade, and a
+   set of reference countries it learned. The learned lists per country in
+   the file are not displayed (the note's instruction): they are the
+   reference countries in shifting orders. */
+
+const CHANNEL = [
+  { key: "border", label: "Borders", color: "#2456c4" },
+  { key: "trade", label: "Trade", color: "#6b7486" },
+  { key: "learned", label: "Learned", color: "#16233b" },
+];
+
+async function renderTies() {
+  const T = await loadTies(S.panel);
+  if (!T) {
+    $("ties-lede").textContent = "No ties file is available for this panel.";
+    return;
+  }
+  const D = T.definitions || {};
+  $("ties-lede").textContent = [D.what, D.importance].filter(Boolean).join(" ");
+
+  // Channel shares bar
+  const cs = T.channel_shares || {};
+  $("ties-shares").innerHTML = CHANNEL.map((c) => {
+    const pct = 100 * (cs[c.key] || 0);
+    return `<div class="seg" style="width:${pct.toFixed(2)}%;background:${c.color}" title="${esc(c.label)} ${pct.toFixed(0)}%">${pct >= 12 ? `${esc(c.label)} ${pct.toFixed(0)}%` : ""}</div>`;
+  }).join("");
+  $("ties-shares-legend").innerHTML = CHANNEL.map((c) =>
+    `<span class="key"><span class="key-band" style="background:${c.color}"></span>${esc(c.label)} ${(100 * (cs[c.key] || 0)).toFixed(0)}%</span>`).join("");
+  $("ties-shares-note").textContent = D.channel_shares || "";
+
+  // Country selector by name
+  const list = Object.entries(T.countries).sort((a, b) => a[1].name.localeCompare(b[1].name));
+  const cSel = $("ties-country");
+  if (cSel.dataset.panel !== S.panel) {
+    cSel.innerHTML = list.map(([id, c]) => `<option value="${esc(id)}">${esc(c.name)}</option>`).join("");
+    cSel.dataset.panel = S.panel;
+    if (!(S.tiesCountry in T.countries)) S.tiesCountry = list[0][0];
+  }
+  cSel.value = S.tiesCountry;
+  const C = T.countries[S.tiesCountry];
+  const link = (id, name) => (id in T.countries
+    ? `<button class="ties-link" data-country="${esc(id)}">${esc(name)}</button>`
+    : esc(name));
+
+  // Neighbours
+  $("ties-neighbours").innerHTML = C.neighbours.length
+    ? `<ul class="ties-list">${C.neighbours.map((n) => `<li>${link(String(n.id), n.name)}</li>`).join("")}</ul>`
+    : `<p class="footnote">No neighbours within 100 km.</p>`;
+
+  // Trading partners
+  const maxShare = Math.max(0.01, ...C.trade.map((t) => t.share));
+  $("ties-trade").innerHTML = C.trade.length
+    ? `<ul class="ties-list">${C.trade.map((t) =>
+        `<li>${link(String(t.id), t.name)}<span class="trade-bar"><span style="width:${(100 * t.share / maxShare).toFixed(1)}%"></span></span><span class="trade-pct">${(100 * t.share).toFixed(1)}%</span></li>`).join("")}</ul>`
+    : `<p class="footnote">No trade shares on record.</p>`;
+  $("ties-trade-note").textContent = `Shares of this country's trade. The trade data end in ${T.trade_source_ends}; the model holds the last shares after that.`;
+
+  // Learned ties: the same for every country
+  $("ties-learned-def").textContent = D.learned || "";
+  const nC = Object.keys(T.countries).length;
+  $("ties-reference").innerHTML = `<ul class="ties-list">${(T.reference_countries || []).map((r) =>
+    `<li>${link(String(r.id), r.name)}<span class="ref-stat">among the five most influential for ${r.in_top_five_of} of ${nC} countries; ${fmt(r.times_average, 1)} times the average country</span></li>`).join("")}</ul>`;
+  const other = (T.reference_countries_other || []).map((r) => link(String(r.id), r.name)).join(", ");
+  $("ties-reference-other").innerHTML = other ? `Also, less consistently: ${other}.` : "";
+
+  $("view-ties").querySelectorAll(".ties-link[data-country]").forEach((b) =>
+    b.addEventListener("click", () => { S.tiesCountry = b.dataset.country; renderTies(); }));
+}
 
 /* ─────────────────────── View: What if ───────────────────────
    Responses read from the fitted NAVAR contribution behind each edge, so the

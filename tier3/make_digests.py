@@ -26,6 +26,7 @@ FRAMING_RULES = [
     "A what-if response is the change in next year's predicted value of a target if the source stood 0.5 SD higher or lower, read from the fitted NAVAR contribution behind that edge at the country's own position (direct effect, one year ahead). It exists only where the matrix has an edge and has the edge's direction where the effect runs one way. A null response means the shift would take the source outside its observed range; say 'outside the observed range', not zero. Responses below 0.002 SD are no measurable response.",
     "Per-country forecasts and per-country what-if responses are not in this digest; direct users to the Forecasts and What-if views for any country-specific figure.",
     "Factor numbering is panel-specific. Factors are theoretical constructs; use their display names and, if asked what one measures, its member indicators.",
+    "Country ties (borders, trade, learned) tell the forecasting model which other countries to look at; they are not part of the causal structure between variables. The learned ties are a common set of reference countries, not pairwise ties. Why those countries has not been tested: present the closed-autocracy reading as a possibility, not a finding. In tests the ties improved forecasts only slightly.",
 ]
 
 def rnd(x, d=4):
@@ -43,6 +44,8 @@ def build(panel):
     labels = L(labels_p) if os.path.exists(labels_p) else {}
     fman = L(os.path.join(BASE, "fcst", panel, "manifest.json"))
     acc = L(os.path.join(BASE, "fcst", panel, "accuracy.json"))
+    ties_p = os.path.join(BASE, "ties", panel, "ties.json")
+    TI = L(ties_p) if os.path.exists(ties_p) else None
     wi_p = os.path.join(BASE, "whatif", panel, "whatif.json")
     WI = L(wi_p) if os.path.exists(wi_p) else None
 
@@ -112,6 +115,13 @@ def build(panel):
                      "overall": acc_overall, "nodes": acc_nodes,
                      "min_forecasts_per_country_figure": acc.get("min_forecasts_per_country_figure")},
         "whatif": whatif,
+        "ties": ({
+            "year": TI.get("year"), "trade_source_ends": TI.get("trade_source_ends"),
+            "definitions": TI.get("definitions"), "channel_shares": TI.get("channel_shares"),
+            "reference_countries": TI.get("reference_countries"),
+            "reference_countries_other": [r["name"] for r in TI.get("reference_countries_other", [])],
+            "note": "Per-country neighbours and trading partners are in the Country ties view. The learned ties are a common set of reference countries, not pairwise links; why those countries has not been tested, and in tests the ties improved forecasts only slightly.",
+        } if TI else None),
         "not_in_digest": "Per-country forecasts, per-country what-if responses, effect-curve values, and majority-only edges are not included; they are in the Forecasts, What-if, Effect curves and Edges views.",
     }
 

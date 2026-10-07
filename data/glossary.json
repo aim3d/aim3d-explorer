@@ -310,6 +310,56 @@
           "long": "To show what a change in one variable implies for the others, the fitted structure is read directly. For a country and a source variable, the country's last three observed years are taken, the source is shifted by half a standard deviation, upward and separately downward, and the change in next year's predicted value of every variable the source has an edge into is computed. The response is the change in the source's fitted contribution to that target, the same function the effect curve draws, evaluated at the country's own position and averaged over the three fitted models. A response therefore exists only where there is an edge, it has the edge's direction where the effect runs one way, and it differs between countries because the curves are nonlinear: on a saturating edge a country already at a high level responds little, and on a sign-changing edge the direction depends on where the country sits. A shift is shown only if it keeps the source inside the range ever observed for it. Responses are one-year, direct effects, so they are small: typically about one hundredth of a standard deviation. Responses below 0.002 are shown as no measurable response."
         }
       ]
+    },
+    {
+      "title": "Country ties",
+      "terms": [
+        {
+          "id": "ties",
+          "term": "Country ties",
+          "aliases": [
+            "country ties",
+            "ties",
+            "ties between countries"
+          ],
+          "short": "The links along which the forecasting model passes information between countries: borders, trade, and ties it learned. They connect countries, not variables, so they are not part of the causal matrix.",
+          "long": "The ties along which the forecasting model passes information between countries. They connect countries, not variables, so they are not part of the causal matrix. In tests, the ties improved forecasts by about 1% at three and five years on the century panel, mostly through trade, and by nothing measurable on the modern panel. The share of all cross-country influence on the forecasts that runs through borders, trade and the learned ties."
+        },
+        {
+          "id": "neighbours",
+          "term": "Neighbours",
+          "aliases": [
+            "neighbours",
+            "neighbors",
+            "borders"
+          ],
+          "short": "Countries whose borders lie within 100 km. The model passes information between neighbours each year; border length is not used.",
+          "long": "Countries whose borders lie within 100 km of this one in 2023. A yes-or-no tie; border length is not used."
+        },
+        {
+          "id": "trading_partners",
+          "term": "Trading partners",
+          "aliases": [
+            "trading partners",
+            "trade partners",
+            "trade share"
+          ],
+          "short": "A country's largest trading partners, weighted by their share of its trade. The trade data end in 2014; the model holds the last shares after that.",
+          "long": "The largest trading partners, with each partner's share of this country's trade. The trade source ends in 2014; later years hold the last shares."
+        },
+        {
+          "id": "learned_ties",
+          "term": "Learned ties and reference countries",
+          "aliases": [
+            "learned ties",
+            "reference countries",
+            "reference country",
+            "learned"
+          ],
+          "short": "Ties the forecaster learned for itself. They are not pairwise links: the model uses a small set of reference countries and draws on the same ones for nearly every country.",
+          "long": "Beyond borders and trade, the model learned to draw on a small set of reference countries, the same ones for nearly every country. It did not learn ties specific to pairs of countries: every tie on which at least five of the six fitted models agree leads to a reference country. Reference countries: those whose recent history most affects the forecasts of all other countries through the learned ties. Measured by removing each country from that channel and recording how far the other countries' forecasts move. in_top_five_of is the number of countries for which it is among the five most influential; agreed_for is the number for which at least four of the six fitted models agree on that. Why those countries has not been tested. On the century panel the core reference countries are long-standing closed autocracies, which suggests the model may use countries at a stable extreme as fixed points of comparison; that is a possibility, not a finding. In tests, the ties improved forecasts only slightly."
+        }
+      ]
     }
   ]
 }
