@@ -23,7 +23,7 @@ FRAMING_RULES = [
     "The 90% band is nominal: in the evaluation period it held the outcome 80 to 87% of the time at 1, 3 and 5 years. Never call it calibrated.",
     "Accuracy is read beside a no-change forecast. MAE is the headline measure; never lead with MAPE. These variables change slowly, so any forecast scores well; the forecast's margin over no change is small and narrows with horizon, and for some variables the point forecast is behind no change.",
     "Structural (source-only) variables are not forecast and are not moved in the what-if view. Say 'not forecast: structural', never that they were forecast as flat.",
-    "A what-if response is the change in a forecast when one variable is different today. It is a statement about prediction, not an estimate of a causal effect, and it does not confirm or test the edge signs in the Structure view. A variable missing from the what-if set has 'not enough observed moves of this size', not a zero response.",
+    "A what-if response is the change in next year's predicted value of a target if the source stood 0.5 SD higher or lower, read from the fitted NAVAR contribution behind that edge at the country's own position (direct effect, one year ahead). It exists only where the matrix has an edge and has the edge's direction where the effect runs one way. A null response means the shift would take the source outside its observed range; say 'outside the observed range', not zero. Responses below 0.002 SD are no measurable response.",
     "Per-country forecasts and per-country what-if responses are not in this digest; direct users to the Forecasts and What-if views for any country-specific figure.",
     "Factor numbering is panel-specific. Factors are theoretical constructs; use their display names and, if asked what one measures, its member indicators.",
 ]
@@ -43,8 +43,8 @@ def build(panel):
     labels = L(labels_p) if os.path.exists(labels_p) else {}
     fman = L(os.path.join(BASE, "fcst", panel, "manifest.json"))
     acc = L(os.path.join(BASE, "fcst", panel, "accuracy.json"))
-    agg_p = os.path.join(BASE, "dyn", panel, "irf_aggregate.json")
-    agg = L(agg_p) if os.path.exists(agg_p) else None
+    wi_p = os.path.join(BASE, "whatif", panel, "whatif.json")
+    WI = L(wi_p) if os.path.exists(wi_p) else None
 
     node_out = {}
     for n in nodes:
@@ -73,20 +73,15 @@ def build(panel):
                          for h, v in rec["by_h"].items()}
 
     whatif = None
-    if agg:
+    if WI:
         whatif = {
-            "definition": agg.get("definition"), "n_countries": agg.get("n_countries"),
-            "state_year": agg.get("state_year"), "min_support": agg.get("min_support"),
-            "horizons": agg.get("horizons"), "validated_horizons": agg.get("validated_horizons"),
-            "not_shocked": agg.get("not_shocked", []),
-            "not_supported": {k: v for k, v in (agg.get("not_supported") or {}).items()},
-            "observed_moves": agg.get("observed_moves", {}),
-            # Mean own-response (how much of the move remains) per shocked node, both directions.
-            "own_response_mean": {
-                "rise": {k: rnd(v.get(k)) for k, v in agg["shocks"].items() if k in v},
-                "fall": {k: rnd(v.get(k)) for k, v in agg["shocks_fall"].items() if k in v},
-            },
-            "note": "Cross-node responses are small (few exceed 0.05 SD) and vary several-fold across countries; per-node and per-country responses are in the What-if view.",
+            "definition": WI.get("definition"), "shift_sd": WI.get("shift_sd"), "horizon_years": WI.get("horizon_years"),
+            "state_year": WI.get("state_year"), "n_countries": len(WI.get("countries", {})),
+            "agreement_with_matrix": WI.get("agreement_with_matrix"),
+            "edge_schema": "[source, target, form_code, rise_mean, fall_mean]; all-countries means in SD of the target; consensus edges only; null = outside observed range for every country",
+            "edges": [[e["source"], e["target"], e.get("form_code"), rnd(e.get("rise_mean")), rnd(e.get("fall_mean"))]
+                      for e in WI["edges"] if e.get("consensus")],
+            "note": "Responses are one-year direct effects read from the fitted NAVAR contribution; typically about 0.01 SD; below 0.002 SD treated as no measurable response. Per-country responses are in the What-if view.",
         }
 
     return {

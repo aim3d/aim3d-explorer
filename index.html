@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=v33">
+<link rel="stylesheet" href="css/style.css?v=v34">
 </head>
 <body>
 
@@ -137,42 +137,23 @@
     <section class="view" id="view-whatif" hidden>
       <div class="view-head">
         <span class="eyebrow">What if</span>
-        <h2>How the forecast changes after a large move</h2>
-        <p class="view-lede">What would the forecast look like if one thing were different today? This view takes a country as it was last observed, raises or lowers one variable by a large amount — half a standard deviation — and shows how the forecasts for everything else change. The result says what the model would predict, not what causes what. Because the answer varies a great deal from country to country, start with a single country.</p>
+        <h2>How other forecasts change</h2>
+        <p class="view-lede">What would next year look like if one variable were different today? Pick a country and a variable, and the chart shows how next year's predicted value changes for every variable it has an edge into, if it stood half a standard deviation higher or lower. The responses are read from the same fitted relationships the matrix and the effect curves show, at this country's own position on each curve. These are one-year, direct effects, so they are small: a half standard deviation shift in one variable typically moves another by about one hundredth of a standard deviation the following year.</p>
       </div>
       <div class="controls-row">
-        <label class="ctl-label" for="wi-scope">Scope</label>
-        <select id="wi-scope" class="ctl-select" aria-label="Scope">
-          <option value="country">One country</option>
-          <option value="aggregate">Average across countries</option>
-        </select>
-        <span id="wi-country-wrap">
-          <label class="ctl-label" for="wi-country">Country</label>
-          <select id="wi-country" class="ctl-select" aria-label="Country"></select>
-        </span>
-        <label class="ctl-label" for="wi-shock">Variable moved</label>
-        <select id="wi-shock" class="ctl-select" aria-label="Variable moved"></select>
+        <label class="ctl-label" for="wi-country">Country</label>
+        <select id="wi-country" class="ctl-select" aria-label="Country"></select>
+        <label class="ctl-label" for="wi-source">Variable that changes</label>
+        <select id="wi-source" class="ctl-select" aria-label="Variable that changes"></select>
         <label class="ctl-label" for="wi-dir">Direction</label>
         <select id="wi-dir" class="ctl-select" aria-label="Direction">
-          <option value="rise">Rise (+0.5 SD)</option>
-          <option value="fall">Fall (−0.5 SD)</option>
+          <option value="rise">Higher (+0.5 SD)</option>
+          <option value="fall">Lower (−0.5 SD)</option>
         </select>
-        <label class="ctl-label" for="wi-h">Responses at</label>
-        <select id="wi-h" class="ctl-select" aria-label="Horizon">
-          <option value="1">1 year</option>
-          <option value="3">3 years</option>
-          <option value="5" selected>5 years</option>
-          <option value="10">10 years (not validated)</option>
-        </select>
+        <label class="ctl-toggle"><input type="checkbox" id="wi-majority"> Show majority edges (2 of 3 fits)</label>
       </div>
       <div id="wi-status" class="validation-block" hidden></div>
       <div id="wi-charts">
-        <h3 class="block-title" id="wi-title-own">The moved variable's own forecast</h3>
-        <div class="chart-card"><svg id="wi-own-chart" class="chart" role="img" aria-label="Own forecast, baseline and after the move"></svg>
-          <div class="chart-legend" id="wi-own-legend"></div>
-        </div>
-        <p class="footnote" id="wi-own-note"></p>
-        <h3 class="block-title" id="wi-title-resp">How other forecasts change</h3>
         <div class="chart-card"><svg id="wi-resp-chart" class="chart chart-tall" role="img" aria-label="Responses of other variables"></svg>
           <div class="chart-legend" id="wi-resp-legend"></div>
         </div>
@@ -205,7 +186,7 @@
   <span id="build-stamp" class="build-stamp"></span></p>
 </footer>
 
-<script src="js/app.js?v=v33"></script>
-<script src="js/assistant.js?v=v33"></script>
+<script src="js/app.js?v=v34"></script>
+<script src="js/assistant.js?v=v34"></script>
 </body>
 </html>

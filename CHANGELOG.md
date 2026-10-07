@@ -12,6 +12,57 @@ say when that needs re-pasting.
 
 ---
 
+## v34 — 2026-10-07 · What-if rebuilt on the causal structure
+The forecaster-based what-if view is withdrawn: its responses could not
+isolate one variable and carried the edge's sign only about half the time
+(the clean-elections example of 7 October, where a rise lowered the
+variables it has positive edges into). The replacement reads the response
+from the fitted NAVAR contribution behind each edge, so the view and the
+matrix agree by construction.
+
+Data: `data/whatif/{panel}/whatif.json` (1.9 and 3.2 MB) replaces
+everything under `data/dyn/`, which is removed from the package and should
+be deleted from the repository. The view no longer uses `country_index` or
+any file named by country. Verified before packaging: edge sets equal
+`struct/{panel}/edges.json` exactly, with matching form codes; 152 and 135
+countries; null rates 17%/6% and 16%/7% as the note states; typical response
+0.008 SD, 90th percentile 0.022. The clean-elections example now reads as
+it should (century, all countries, higher: freedom of expression +0.016,
+freedom of association +0.014, local government +0.011, legislative
+constraints +0.008).
+
+Sign rule, for the record: `rise_mean` has the sign of `edge_direction` for
+every non-SC/M edge above the 0.002 noise floor except four century edges
+from Age of head of state, all saturating, each with `p10 == p90 == mean`,
+i.e. a single country inside the observed range sitting on the flat end of
+the curve. Reported upstream; the test excludes single-country means.
+
+View: country (all-countries average first, then by name), variable that
+changes (by label), direction (higher / lower), and the matrix's majority
+toggle; heading "How other forecasts change"; one bar per edge out of the
+source, sorted by size, coloured by the direction of the response, with the
+form code beside the target's name and the SC hover sentence. Rule 1:
+responses below 0.002 SD are drawn as a neutral tick "no measurable
+response", not as a small bar. Rule 2: the axis scales to the largest bar
+with a 0.02 SD floor; the fixed ±0.05 reference lines are gone. All-countries
+shows the 10th–90th percentile across countries. Nulls are "outside the
+observed range", never zero, and a source with only nulls for a country
+says so. Captions as specified, including the one-hundredth-of-a-SD
+sentence.
+
+Methods: the what-if and functional-form paragraphs from the updated
+write-up replace the forecaster-based text (now in the causal structure
+section); the direction paragraph is updated. Glossary and digest updated;
+the digest's what-if block carries the all-countries means per consensus
+edge. Modern digest grows to 177 KB. Tests rewritten for the new data; lints
+fail if the app references `dyn/`, `cfact` or `irf_aggregate`.
+
+Changed files: `index.html`, `js/app.js`, `smoke_test.js`, `CHANGELOG.md`,
+`data/methods.json`, `data/glossary.json`, `data/digest/*.json`,
+`tier3/make_digests.py`, new `data/whatif/{panel}/whatif.json`. **Delete
+`data/dyn/` in the repository.** No Worker paste needed (the Worker reads the
+digest and methods live).
+
 ## v33 — 2026-10-06 · Forecasts view shows one forecast
 Per the pipeline note of 6 October (replacing the handoff's spec): the
 "Forecasts made along the way" chart is removed, with its legend, caption,

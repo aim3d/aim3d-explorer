@@ -5,7 +5,7 @@
    The portal reads committed files only and computes no statistics. */
 "use strict";
 
-const BUILD = "v33";
+const BUILD = "v34";
 const BUILD_DATE = "2026-10-05";
 
 /* Panel ids are kept as before for the UI; data directories use the short
@@ -35,13 +35,10 @@ const S = {
   fcCountry: null,   // country_id (number)
   fcNode: null,
   // what-if
-  wiAgg: {},         // per-panel aggregate, lazy
-  wiFiles: {},       // "panel/whatif_file" -> file
-  wiScope: "country",
-  wiCountry: null,   // country_id
-  wiShock: null,
+  whatif: {},        // per-panel file, lazy
+  wiCountry: "all",  // country id (string) or "all"
+  wiSource: null,
   wiDir: "rise",
-  wiH: "5",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -171,32 +168,13 @@ async function loadForecastFile(panel, entry) {
   return S.fcFiles[key];
 }
 
-async function loadWhatIfAggregate(panel) {
-  if (panel in S.wiAgg) return S.wiAgg[panel];
+async function loadWhatIf(panel) {
+  if (panel in S.whatif) return S.whatif[panel];
   try {
-    const r = await fetch(`data/dyn/${DIR(panel)}/irf_aggregate.json`);
-    S.wiAgg[panel] = r.ok ? await r.json() : null;
-  } catch (e) { S.wiAgg[panel] = null; }
-  return S.wiAgg[panel];
-}
-/* The what-if file name is taken verbatim from the country index (it records
-   the Unicode form Drive stores). Should that miss, the other normalization
-   form is tried before giving up. */
-async function loadWhatIfFile(panel, entry) {
-  if (!entry.whatif_file) return null;
-  const key = `${panel}/${entry.whatif_file}`;
-  if (key in S.wiFiles) return S.wiFiles[key];
-  const candidates = [entry.whatif_file];
-  ["NFC", "NFD"].forEach((f) => { const alt = entry.whatif_file.normalize(f); if (!candidates.includes(alt)) candidates.push(alt); });
-  let file = null;
-  for (const name of candidates) {
-    try {
-      const r = await fetch(`data/dyn/${DIR(panel)}/cfact/${encodeURIComponent(name)}`);
-      if (r.ok) { file = await r.json(); break; }
-    } catch (e) { /* try next form */ }
-  }
-  S.wiFiles[key] = file;
-  return file;
+    const r = await fetch(`data/whatif/${DIR(panel)}/whatif.json`);
+    S.whatif[panel] = r.ok ? await r.json() : null;
+  } catch (e) { S.whatif[panel] = null; }
+  return S.whatif[panel];
 }
 
 function orderedNodeIds(d) {
@@ -1195,11 +1173,10 @@ function init() {
   $("ice-edge").addEventListener("change", renderICE);
   $("fc-country").addEventListener("change", (e) => { S.fcCountry = +e.target.value; renderForecasts(); });
   $("fc-node").addEventListener("change", (e) => { S.fcNode = e.target.value; renderForecasts(); });
-  $("wi-scope").addEventListener("change", (e) => { S.wiScope = e.target.value; renderWhatIf(); });
-  $("wi-country").addEventListener("change", (e) => { S.wiCountry = +e.target.value; renderWhatIf(); });
-  $("wi-shock").addEventListener("change", (e) => { S.wiShock = e.target.value; renderWhatIf(); });
+  $("wi-country").addEventListener("change", (e) => { S.wiCountry = e.target.value; renderWhatIf(); });
+  $("wi-source").addEventListener("change", (e) => { S.wiSource = e.target.value; renderWhatIf(); });
   $("wi-dir").addEventListener("change", (e) => { S.wiDir = e.target.value; renderWhatIf(); });
-  $("wi-h").addEventListener("change", (e) => { S.wiH = e.target.value; renderWhatIf(); });
+  $("wi-majority").addEventListener("change", renderWhatIf);
   $("fc-btn-accuracy").addEventListener("click", () => {
     const b = $("fc-accuracy"); b.hidden = !b.hidden;
     $("fc-btn-accuracy").setAttribute("aria-expanded", String(!b.hidden));
@@ -1390,198 +1367,137 @@ async function renderAccuracyBlock(entry, C) {
 }
 
 
-/* ─────────────────────── View: What if ─────────────────────── */
+/* ─────────────────────── View: What if ───────────────────────
+   Responses read from the fitted NAVAR contribution behind each edge, so the
+   view and the matrix agree by construction. One file per panel. */
 
-const WI_H = ["1", "3", "5", "10"];
-const WI_HLAB = { "1": "1 year", "3": "3 years", "5": "5 years", "10": "10 years (not validated)" };
+const WI_NOISE = 0.002;   // below this, drawn as "no measurable response"
+const WI_FLOOR = 0.02;    // axis never narrower than this
 
 async function renderWhatIf() {
   const d = S.data[S.panel];
   const byId = nodeById(d);
-  const [idx, A] = await Promise.all([loadCountryIndex(S.panel), loadWhatIfAggregate(S.panel)]);
-  const withFile = [...idx.countries].filter((c) => c.whatif_file).sort((a, b) => a.name.localeCompare(b.name));
-  const without = idx.countries.length - withFile.length;
-
-  $("wi-scope").value = S.wiScope;
+  const W = await loadWhatIf(S.panel);
   $("wi-dir").value = S.wiDir;
-  $("wi-h").value = S.wiH;
-  $("wi-country-wrap").hidden = S.wiScope !== "country";
-
-  const cSel = $("wi-country");
-  if (cSel.dataset.panel !== S.panel) {
-    cSel.innerHTML = withFile.map((c) => `<option value="${c.country_id}">${esc(c.name)}</option>`).join("");
-    cSel.dataset.panel = S.panel;
-    if (!withFile.some((c) => c.country_id === S.wiCountry)) S.wiCountry = withFile[0].country_id;
-  }
-  cSel.value = String(S.wiCountry);
-  const entry = withFile.find((c) => c.country_id === S.wiCountry) || withFile[0];
-
-  // Shock selector: every node; status suffix tells the reader what to expect.
-  const src = S.wiScope === "country" ? await loadWhatIfFile(S.panel, entry) : A;
-  if (!src) {
-    $("wi-charts").hidden = true;
-    $("wi-status").hidden = false;
-    $("wi-status").innerHTML = `<h3>No what-if file</h3><p class="validation-note">No what-if responses are available for ${esc(entry.name)}.</p>`;
+  if (!W) {
+    $("wi-charts").hidden = true; $("wi-status").hidden = false;
+    $("wi-status").innerHTML = `<h3>No what-if file</h3><p class="validation-note">No what-if responses are available for this panel.</p>`;
     $("wi-def").textContent = "";
     return;
   }
-  const notShocked = new Set(src.not_shocked || []);
-  const ns = src.not_supported || {};
-  const moves = src.observed_moves || {};
-  const dirKey = S.wiDir === "rise" ? "shocks" : "shocks_fall";
-  const supported = (id) => !!(src[dirKey] && src[dirKey][id]);
 
-  const sSel = $("wi-shock");
-  const ids = alphaNodeIds(d);
-  const sKey = `${S.panel}/${S.wiScope}/${S.wiDir}`;
-  if (sSel.dataset.key !== sKey) {
-    sSel.innerHTML = ids.map((id) => {
-      const n = byId[id];
-      const suffix = notShocked.has(id) ? " (structural: not moved)" : (supported(id) ? "" : " (not enough observed moves)");
-      return `<option value="${esc(id)}">${esc(n ? n.label : id)}${suffix}</option>`;
-    }).join("");
-    sSel.dataset.key = sKey;
-    if (!ids.includes(S.wiShock)) S.wiShock = ids.find((id) => supported(id));
+  // Country selector: all countries first, then by name
+  const cSel = $("wi-country");
+  if (cSel.dataset.panel !== S.panel) {
+    const list = Object.entries(W.countries).sort((a, b) => a[1].name.localeCompare(b[1].name));
+    cSel.innerHTML = `<option value="all">All countries (average)</option>` +
+      list.map(([id, c]) => `<option value="${esc(id)}">${esc(c.name)}</option>`).join("");
+    cSel.dataset.panel = S.panel;
+    if (S.wiCountry !== "all" && !(S.wiCountry in W.countries)) S.wiCountry = "all";
   }
-  sSel.value = S.wiShock;
-  const shock = S.wiShock;
-  const label = byId[shock] ? byId[shock].label : shock;
-  const mv = moves[shock] || {};
-  const nObs = S.wiDir === "rise" ? mv.rises_observed : mv.falls_observed;
+  cSel.value = S.wiCountry;
 
-  $("wi-def").textContent = src.definition || "";
+  // Source selector: by display label
+  const sSel = $("wi-source");
+  if (sSel.dataset.panel !== S.panel) {
+    const srcs = [...W.sources].sort((a, b) => (byId[a] ? byId[a].label : a).localeCompare(byId[b] ? byId[b].label : b, undefined, { sensitivity: "base" }));
+    sSel.innerHTML = srcs.map((id) => `<option value="${esc(id)}">${esc(byId[id] ? byId[id].label : id)}</option>`).join("");
+    sSel.dataset.panel = S.panel;
+    if (!srcs.includes(S.wiSource)) S.wiSource = srcs.includes("v2xel_frefair") ? "v2xel_frefair" : srcs[0];
+  }
+  sSel.value = S.wiSource;
 
-  // States: structural, unsupported, or shown
-  if (notShocked.has(shock)) {
+  $("wi-def").textContent = W.definition || "";
+  const src = S.wiSource;
+  const label = byId[src] ? byId[src].label : src;
+  const showMajority = $("wi-majority").checked;
+  const isAll = S.wiCountry === "all";
+  const C = isAll ? null : W.countries[S.wiCountry];
+
+  // Rows: one per edge out of the source
+  const rows = [];
+  W.edges.forEach((e, k) => {
+    if (e.source !== src) return;
+    if (!e.consensus && !showMajority) return;
+    let v, lo = null, hi = null;
+    if (isAll) { v = S.wiDir === "rise" ? e.rise_mean : e.fall_mean; if (S.wiDir === "rise") { lo = e.rise_p10; hi = e.rise_p90; } }
+    else v = S.wiDir === "rise" ? C.rise[k] : C.fall[k];
+    rows.push({ e, v, lo, hi });
+  });
+  const drawn = rows.filter((r) => r.v !== null && r.v !== undefined);
+  const outside = rows.length - drawn.length;
+
+  if (!rows.length) {
     $("wi-charts").hidden = true; $("wi-status").hidden = false;
-    $("wi-status").innerHTML = `<h3>Not moved: structural</h3><p class="validation-note">${esc(label)} varies almost only between countries and does not make large moves within a country, so no what-if is computed for it.</p>`;
+    $("wi-status").innerHTML = `<h3>No edges</h3><p class="validation-note">${esc(label)} has no ${showMajority ? "retained" : "consensus"} edges into other variables.</p>`;
     return;
   }
-  if (!supported(shock)) {
+  if (!drawn.length) {
     $("wi-charts").hidden = true; $("wi-status").hidden = false;
-    const n = nObs === undefined ? "fewer than " + (src.min_support || 20) : String(nObs);
-    $("wi-status").innerHTML = `<h3>Not enough observed moves of this size</h3><p class="validation-note">A one-year ${S.wiDir} of half a standard deviation in ${esc(label)} has been observed ${esc(n)} times in the panel (minimum ${src.min_support || 20}). The forecaster has not seen enough such moves for a response to be shown.</p>`;
+    $("wi-status").innerHTML = `<h3>Outside the observed range</h3><p class="validation-note">A ${S.wiDir === "rise" ? "higher" : "lower"} value of ${esc(label)} by half a standard deviation would be outside the range ever observed for ${esc(C ? C.name : "this country")}, so no response is shown.</p>`;
     return;
   }
   $("wi-status").hidden = true; $("wi-charts").hidden = false;
-
-  const rec = src[dirKey][shock];
-  const H = src.horizons || [1, 3, 5, 10];
-  const evidence = nObs !== undefined ? `Based on ${nObs} observed ${S.wiDir}s of this size.` : "";
-
-  if (S.wiScope === "country") drawOwnPathCountry(src, rec, shock, label, H, entry);
-  else drawOwnPathAggregate(src, rec, shock, label, H);
-  drawResponses(src, rec, shock, label, H, byId, S.wiScope === "aggregate" ? A : null);
-
-  $("wi-own-note").textContent =
-    (S.wiScope === "country"
-      ? `${esc(entry.name)}, from its last observed year (${src.state_year}). `
-      : `Mean across the ${src.n_countries} countries observed in the panel's last year (${src.state_year}). `) +
-    evidence + " A large move is expected to persist: typically the forecast gives back little of it within the validated horizons.";
+  drawWhatIfBars(drawn, byId, label, isAll, C, outside);
 }
 
-function drawOwnPathCountry(src, rec, shock, label, H, entry) {
-  const base = src.baseline[shock], lo = src.baseline_q05[shock], hi = src.baseline_q95[shock];
-  const shocked = rec.shocked[shock];
-  $("wi-title-own").textContent = `${label} after a ${S.wiDir} of half a standard deviation — ${entry.name}`;
-  const ys = base.concat(lo, hi, shocked);
-  const ymin = Math.min(...ys), ymax = Math.max(...ys), pad = (ymax - ymin) * 0.15 || 0.1;
-  const f = chartFrame($("wi-own-chart"), {
-    xmin: 0, xmax: H[H.length - 1], ymin: ymin - pad, ymax: ymax + pad,
-    xlabel: "Years ahead", ylabel: `${label} (standardized)`, xticks: [0].concat(H),
-  });
-  const vmax = Math.max(...(src.validated_horizons || [5]));
-  f.svg.appendChild(el("rect", { x: f.x(vmax), y: f.m.top, width: Math.max(0, f.x(H[H.length - 1]) - f.x(vmax)), height: f.H - f.m.top - f.m.bottom, fill: "#f6f0ee" }));
-  f.svg.appendChild(el("text", { x: f.x(vmax) + 6, y: f.m.top + 14, "font-size": 10.5, fill: "#b3372e", "font-family": "IBM Plex Mono, monospace" }, "not validated"));
-  addBand(f, H, lo, hi, "#16233b", 0.12);
-  addLine(f, H.map((h, i) => [h, base[i]]), "#16233b", { width: 2.2 });
-  addLine(f, H.map((h, i) => [h, shocked[i]]), S.wiDir === "rise" ? SIGN.pos : SIGN.neg, { width: 2.2, dash: "6 4" });
-  H.forEach((h, i) => f.svg.appendChild(el("circle", {
-    cx: f.x(h), cy: f.y(shocked[i]), r: 3, fill: S.wiDir === "rise" ? SIGN.pos : SIGN.neg,
-    "data-tip": `${label}, ${WI_HLAB[String(h)]}\u0001baseline ${fmt(base[i], 3)} · after the move ${fmt(shocked[i], 3)} · change ${fmt(shocked[i] - base[i], 3)}`,
-  })));
-  attachMatrixTooltip($("wi-own-chart").parentElement);
-  $("wi-own-legend").innerHTML =
-    `<span class="key"><span class="key-line" style="border-color:#16233b"></span>published forecast (baseline)</span>` +
-    `<span class="key"><span class="key-band" style="background:#16233b;opacity:.12"></span>baseline 90% band</span>` +
-    `<span class="key"><span class="key-line dashed" style="border-color:${S.wiDir === "rise" ? SIGN.pos : SIGN.neg}"></span>forecast after the move</span>`;
-}
-
-function drawOwnPathAggregate(src, rec, shock, label, H) {
-  // Aggregate files carry responses, not baselines: show the mean own-response with its spread.
-  const resp = rec[shock];
-  const p10 = src.shocks_p10 && (S.wiDir === "rise" ? src.shocks_p10 : src.shocks_fall_p10)[shock];
-  const p90 = src.shocks_p90 && (S.wiDir === "rise" ? src.shocks_p90 : src.shocks_fall_p90)[shock];
-  const lo = p10 ? p10[shock] : null, hi = p90 ? p90[shock] : null;
-  $("wi-title-own").textContent = `${label}: how much of the move remains in its own forecast — average across countries`;
-  const ys = resp.concat(lo || [], hi || [], [0]);
-  const ymin = Math.min(...ys), ymax = Math.max(...ys), pad = (ymax - ymin) * 0.15 || 0.05;
-  const f = chartFrame($("wi-own-chart"), {
-    xmin: 0, xmax: H[H.length - 1], ymin: ymin - pad, ymax: ymax + pad,
-    xlabel: "Years ahead", ylabel: "Change in own forecast (standardized)", xticks: [0].concat(H),
-  });
-  const vmax = Math.max(...(src.validated_horizons || [5]));
-  f.svg.appendChild(el("rect", { x: f.x(vmax), y: f.m.top, width: Math.max(0, f.x(H[H.length - 1]) - f.x(vmax)), height: f.H - f.m.top - f.m.bottom, fill: "#f6f0ee" }));
-  f.svg.appendChild(el("line", { x1: f.m.left, x2: f.W - f.m.right, y1: f.y(0), y2: f.y(0), stroke: "#b8bdc7", "stroke-dasharray": "3 3" }));
-  if (lo && hi) addBand(f, H, lo, hi, "#6b7486", 0.15);
-  addLine(f, H.map((h, i) => [h, resp[i]]), S.wiDir === "rise" ? SIGN.pos : SIGN.neg, { width: 2.2 });
-  $("wi-own-legend").innerHTML =
-    `<span class="key"><span class="key-line" style="border-color:${S.wiDir === "rise" ? SIGN.pos : SIGN.neg}"></span>mean change across countries</span>` +
-    (lo ? `<span class="key"><span class="key-band" style="background:#6b7486;opacity:.15"></span>10th–90th percentile across countries</span>` : "");
-}
-
-/* Ranked responses of other variables at the chosen horizon. */
-function drawResponses(src, rec, shock, label, H, byId, A) {
-  const h = S.wiH, hi = H.indexOf(+h);
-  const resp = S.wiScope === "country" ? rec.response : rec;   // aggregate rec is the response map itself
-  const p10 = A ? (S.wiDir === "rise" ? A.shocks_p10 : A.shocks_fall_p10)[shock] : null;
-  const p90 = A ? (S.wiDir === "rise" ? A.shocks_p90 : A.shocks_fall_p90)[shock] : null;
-  const rows = Object.keys(resp).filter((k) => k !== shock)
-    .map((k) => ({ id: k, v: resp[k][hi], lo: p10 && p10[k] ? p10[k][hi] : null, hi: p90 && p90[k] ? p90[k][hi] : null }))
-    .sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
-  const top = rows.slice(0, 14);
-  const nAbove = rows.filter((r) => Math.abs(r.v) > 0.05).length;
-
-  $("wi-title-resp").textContent = `How other forecasts change at ${WI_HLAB[h]} — largest ${top.length} of ${rows.length}`;
+function drawWhatIfBars(drawn, byId, label, isAll, C, outside) {
+  drawn.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
   const svg = $("wi-resp-chart");
   svg.innerHTML = "";
-  const W = svg.clientWidth || 760, Hh = svg.clientHeight || 400;
-  const m = { top: 14, right: 70, bottom: 36, left: 230 };
-  const ext = Math.max(0.01, ...top.flatMap((r) => [Math.abs(r.v), Math.abs(r.lo || 0), Math.abs(r.hi || 0)]));
+  const W = svg.clientWidth || 760;
+  const rowH = 22;
+  const m = { top: 14, right: 84, bottom: 36, left: 250 };
+  const Hh = Math.max(160, m.top + m.bottom + rowH * drawn.length);
+  svg.setAttribute("style", `height:${Hh}px`);
+  const ext = Math.max(WI_FLOOR, ...drawn.flatMap((r) => [Math.abs(r.v), Math.abs(r.lo || 0), Math.abs(r.hi || 0)])) * 1.08;
   const x = linScale(-ext, ext, m.left, W - m.right);
-  const rowH = (Hh - m.top - m.bottom) / Math.max(1, top.length);
-  // reference: 0.05 SD, the handoff's "barely responds" threshold
-  [-0.05, 0.05].forEach((t) => { if (Math.abs(t) < ext) svg.appendChild(el("line", { x1: x(t), x2: x(t), y1: m.top, y2: Hh - m.bottom, stroke: "#e3d3a8", "stroke-dasharray": "3 3" })); });
   svg.appendChild(el("line", { x1: x(0), x2: x(0), y1: m.top, y2: Hh - m.bottom, stroke: "#2a3342" }));
-  x.ticks(5).forEach((t) => {
-    svg.appendChild(el("text", { x: x(t), y: Hh - m.bottom + 16, "text-anchor": "middle", "font-size": 10.5, fill: "#6b7486", "font-family": "IBM Plex Mono, monospace" }, fmtTick(t)));
-  });
-  svg.appendChild(el("text", { x: (m.left + W - m.right) / 2, y: Hh - 4, "text-anchor": "middle", "font-size": 11.5, fill: "#2a3342" }, "Change in the forecast (standardized units)"));
-  top.forEach((r, i) => {
+  x.ticks(5).forEach((t) => svg.appendChild(el("text", { x: x(t), y: Hh - m.bottom + 16, "text-anchor": "middle", "font-size": 10.5, fill: "#6b7486", "font-family": "IBM Plex Mono, monospace" }, fmtTick(t))));
+  svg.appendChild(el("text", { x: (m.left + W - m.right) / 2, y: Hh - 4, "text-anchor": "middle", "font-size": 11.5, fill: "#2a3342" }, "Change in next year's predicted value (standard deviations of the target)"));
+
+  let nNoise = 0;
+  drawn.forEach((r, i) => {
     const y = m.top + i * rowH + rowH / 2;
-    const n = byId[r.id]; const lab = n ? n.label : r.id;
-    const col = r.v >= 0 ? SIGN.pos : SIGN.neg;
-    svg.appendChild(el("rect", {
-      x: Math.min(x(0), x(r.v)), y: y - rowH * 0.32, width: Math.abs(x(r.v) - x(0)), height: rowH * 0.64, fill: col, opacity: 0.8,
-      "data-tip": `${lab}\u0001${r.id}\nchange ${fmt(r.v, 4)} at ${WI_HLAB[h]}` + (r.lo !== null ? `\n10th–90th pct across countries ${fmt(r.lo, 4)} to ${fmt(r.hi, 4)}` : ""),
-    }));
+    const e = r.e; const n = byId[e.target]; const lab = n ? n.label : e.target;
+    const tip = `${lab}\u0001${e.target} · ${formName(e)} (${e.form_code})` +
+      `\nresponse ${fmt(r.v, 4)} SD` + (r.lo !== null ? ` · 10th–90th percentile across countries ${fmt(r.lo, 4)} to ${fmt(r.hi, 4)}` : "") +
+      (e.form_code === "SC" ? "\nThe direction of this effect depends on where the country sits on the curve." : "") +
+      (e.consensus ? "" : "\nMajority edge (2 of 3 fits)");
+    if (Math.abs(r.v) < WI_NOISE) {
+      nNoise++;
+      svg.appendChild(el("line", { x1: x(0) - 4, x2: x(0) + 4, y1: y, y2: y, stroke: "#8a93a5", "stroke-width": 2, "data-tip": tip + "\nNo measurable response: this country sits on a flat part of the curve.", class: "ego-edge-line" }));
+    } else {
+      const col = r.v >= 0 ? SIGN.pos : SIGN.neg;
+      svg.appendChild(el("rect", {
+        x: Math.min(x(0), x(r.v)), y: y - rowH * 0.32, width: Math.max(1, Math.abs(x(r.v) - x(0))), height: rowH * 0.64,
+        fill: col, opacity: e.consensus ? 0.85 : 0.45, "data-tip": tip, class: "ego-edge-line",
+      }));
+      svg.appendChild(el("text", { x: r.v >= 0 ? x(r.v) + 5 : x(r.v) - 5, y: y + 3.5, "text-anchor": r.v >= 0 ? "start" : "end", "font-size": 10, fill: "#6b7486", "font-family": "IBM Plex Mono, monospace" }, fmt(r.v, 3)));
+    }
     if (r.lo !== null && r.hi !== null) {
-      svg.appendChild(el("line", { x1: x(r.lo), x2: x(r.hi), y1: y, y2: y, stroke: "#16233b", "stroke-width": 1.4 }));
+      svg.appendChild(el("line", { x1: x(r.lo), x2: x(r.hi), y1: y, y2: y, stroke: "#16233b", "stroke-width": 1.2 }));
       svg.appendChild(el("line", { x1: x(r.lo), x2: x(r.lo), y1: y - 4, y2: y + 4, stroke: "#16233b" }));
       svg.appendChild(el("line", { x1: x(r.hi), x2: x(r.hi), y1: y - 4, y2: y + 4, stroke: "#16233b" }));
     }
-    svg.appendChild(el("text", { x: m.left - 8, y: y + 3.5, "text-anchor": "end", "font-size": 11, fill: "#2a3342", "font-family": "IBM Plex Sans, sans-serif" }, lab.length > 34 ? lab.slice(0, 33) + "…" : lab));
-    svg.appendChild(el("text", { x: (r.v >= 0 ? x(r.v) + 5 : x(r.v) - 5), y: y + 3.5, "text-anchor": r.v >= 0 ? "start" : "end", "font-size": 10, fill: "#6b7486", "font-family": "IBM Plex Mono, monospace" }, fmt(r.v, 3)));
+    // target name with form code beside it
+    const short = lab.length > 30 ? lab.slice(0, 29) + "…" : lab;
+    svg.appendChild(el("text", { x: m.left - 34, y: y + 3.5, "text-anchor": "end", "font-size": 11, fill: "#2a3342", "font-family": "IBM Plex Sans, sans-serif", "data-tip": `${lab}\u0001${e.target}` }, short));
+    svg.appendChild(el("text", { x: m.left - 8, y: y + 3.5, "text-anchor": "end", "font-size": 9.5, "font-weight": 600, fill: e.form_code === "SC" ? "#8a93a5" : "#16233b", "font-family": "IBM Plex Mono, monospace" }, e.form_code));
   });
   attachMatrixTooltip(svg.parentElement);
+
   $("wi-resp-legend").innerHTML =
-    `<span class="key"><span class="key-band" style="background:${SIGN.pos};opacity:.8"></span>forecast moves up</span>` +
-    `<span class="key"><span class="key-band" style="background:${SIGN.neg};opacity:.8"></span>forecast moves down</span>` +
-    `<span class="key"><span class="key-line dashed" style="border-color:#e3d3a8"></span>±0.05 SD reference</span>` +
-    (A ? `<span class="key"><span class="key-line" style="border-color:#16233b"></span>10th–90th percentile across countries</span>` : "");
+    `<span class="key"><span class="key-band" style="background:${SIGN.pos};opacity:.85"></span>predicted value rises</span>` +
+    `<span class="key"><span class="key-band" style="background:${SIGN.neg};opacity:.85"></span>predicted value falls</span>` +
+    `<span class="key"><span class="key-line" style="border-color:#8a93a5"></span>no measurable response</span>` +
+    (isAll ? `<span class="key"><span class="key-line" style="border-color:#16233b"></span>10th–90th percentile across countries</span>` : "") +
+    `<span class="key">letters: L linear · ST saturating · T threshold · N nonlinear · SC sign-changing · M mixed</span>`;
   $("wi-resp-note").textContent =
-    `Of ${rows.length} other variables, ${nAbove} change by more than 0.05 standard deviations at ${WI_HLAB[h]}. ` +
-    (A ? "The spread across countries is typically several times the mean response, which is why the view opens on a single country. " : "") +
-    "These responses say how the forecaster's prediction changes, not what causes what; they do not confirm or test the edge signs in the Structure view." +
-    (h === "10" ? " Ten-year responses are published without validation." : "");
+    `The change in next year's predicted value of each variable ${label} has an edge into, if it stood half a standard deviation ${S.wiDir === "rise" ? "higher" : "lower"}` +
+    (isAll ? ", averaged across countries. " : ` in ${C.name}. `) +
+    "Read from the same fitted relationship as the effect curve, at this country's position on it. Direct effects, one year ahead. A response appears only where the matrix has an edge." +
+    (nNoise ? ` ${nNoise} ${nNoise === 1 ? "edge shows" : "edges show"} no measurable response (below ${WI_NOISE} SD), where the country sits on a flat part of the curve.` : "") +
+    (outside ? ` ${outside} ${outside === 1 ? "edge is" : "edges are"} not shown because the shift would take ${label} outside its observed range${C ? ` for ${C.name}` : ""}.` : "");
 }
+
